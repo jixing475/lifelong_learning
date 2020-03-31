@@ -1,0 +1,43 @@
+---
+title: Just say hello
+author: ZERO
+date: '2020-03-31'
+slug: just-say-hello
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T13:04:51+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="barlpot" class="section level2">
+<h2>barlpot</h2>
+<pre class="r"><code># how to create a bar plot with ggplot2
+library(ggthemes)
+library(ggplot2)
+#how to create a barplot with label using ggplot2 package
+iris %&gt;%
+  group_by(Species) %&gt;%
+  summarise(counts = n()) %&gt;%
+  mutate(Species = fct_reorder(Species, counts)) %&gt;%
+  ggplot(aes(x = Species, y = counts, fill = Species)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  geom_text(aes(label = counts), hjust = 1.6, color = &quot;white&quot;, size = 5) +
+  coord_flip() +
+  theme_minimal()+ scale_color_tableau() + scale_fill_tableau()+
+  labs(caption = &quot;figure 01&quot;) +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+        legend.position = &quot;bottom&quot;,
+        plot.caption=element_text(size=12,family = &quot;Arial&quot;,face = &quot;bold&quot;,
+                                  hjust=0, margin=margin(t=15)))</code></pre>
+<p><img src="/post/2020-03-31-just-say-hello_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>

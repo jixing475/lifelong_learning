@@ -1,0 +1,55 @@
+---
+title: Just say hello
+author: ZERO
+date: '2020-03-31'
+slug: just-say-hello
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T13:04:51+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+```
+
+## barlpot
+
+```{r}
+# how to create a bar plot with ggplot2
+library(ggthemes)
+library(ggplot2)
+#how to create a barplot with label using ggplot2 package
+iris %>%
+  group_by(Species) %>%
+  summarise(counts = n()) %>%
+  mutate(Species = fct_reorder(Species, counts)) %>%
+  ggplot(aes(x = Species, y = counts, fill = Species)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = counts), hjust = 1.6, color = "white", size = 5) +
+  coord_flip() +
+  theme_minimal()+ scale_color_tableau() + scale_fill_tableau()+
+  labs(caption = "figure 01") +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+        legend.position = "bottom",
+        plot.caption=element_text(size=12,family = "Arial",face = "bold",
+                                  hjust=0, margin=margin(t=15)))
+```
+
