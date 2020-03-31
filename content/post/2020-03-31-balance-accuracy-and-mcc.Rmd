@@ -1,0 +1,138 @@
+---
+title: Balance Accuracy and MCC
+author: ZERO
+date: '2020-03-31'
+slug: balance-accuracy-and-mcc
+categories:
+  - reading
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T16:55:13+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+library(yardstick)
+suppressMessages(library(manuscriptsJX))
+library(kableExtra)
+```
+
+## Balanced accuracy
+
+> Accuracy is the proportion of the data that are predicted correctly.
+
+> Balanced accuracy is computed here as the average of sens() and spec()
+
+
+$$\mathrm{BA}=\frac{0.5 \mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}+\frac{0.5 \mathrm{TN}}{\mathrm{TN}+\mathrm{FP}}$$
+
+
+### Multiclass
+
+> Macro, micro, and macro-weighted averaging is available for this metric.
+
+```{r}
+library(dplyr)
+data(hpc_cv)
+
+hpc_cv %>%
+  count(obs, sort = TRUE) %>%
+  kable("html") %>%
+  kable_styling("hover", full_width = F)
+
+```
+
+
+```{r}
+hpc_cv %>%
+  filter(Resample == "Fold01") %>%
+  #bal_accuracy(obs, pred, estimator = "macro")
+  bal_accuracy(obs, pred, estimator = "macro_weighted") 
+  #bal_accuracy(obs, pred, estimator = "micro")
+
+```
+
+### multi-class prob sum is equal 1? 
+
+The Answer Is Yes.
+
+
+```{r}
+hpc_cv %>% 
+  head(6) %>% 
+  rowwise() %>% 
+  mutate(prob = sum(VF, `F`, M, L)) %>% 
+  select(prob)
+  
+```
+
+### what is the mean of Macro, micro, and macro-weighted averaging?
+
+
+**Macro-averaging**
+
+宏平均（Macro-averaging）是指所有类别的每一个统计指标值的算数平均值，也就是宏精确率（Macro-Precision），宏召回率（Macro-Recall），宏F值（Macro-F Score），其计算公式如下：
+
+$$
+P_{\text {macro}}=\frac{1}{n} \sum_{i=1}^{n} P_{i}
+$$
+
+
+**Micro-averaging**
+
+微平均（Micro-averaging）是对数据集中的每一个示例不分类别进行统计建立全局混淆矩阵，然后计算相应的指标。其计算公式如下：
+
+$$
+P_{\text {micro}}=\frac{T \bar{P}}{T \bar{P}+\overline{F P}}=\frac{\sum_{i=1}^{n} T P_{i}}{\sum_{i=1}^{n} T P_{i}+\sum_{i=1}^{n} F P_{i}}
+$$
+
+
+> Macro-averaging与Micro-averaging的不同之处在于：Macro-averaging赋予每个类相同的权重，然而Micro-averaging赋予每个样本决策相同的权重。
+
+
+### summary
+
+![](https://i.loli.net/2020/03/31/ymsZY5W4XuDPA8H.png)
+
+## MCC: Matthews correlation coefficient
+
+$$
+\mathrm{MCC}=\frac{\mathrm{TP} \times \mathrm{TN}-\mathrm{FP} \times \mathrm{FN}}{\sqrt{(\mathrm{TP}+\mathrm{FP})(\mathrm{TP}+\mathrm{FN})(\mathrm{TN}+\mathrm{FP})(\mathrm{TN}+\mathrm{FN})}}
+$$
+
+```{r}
+# Multiclass
+# mcc() has a natural multiclass extension
+# pred is predicted class results (that is also factor)
+hpc_cv %>%
+  group_by(Resample) %>%
+  mcc(obs, pred)
+
+```
+## notes
+
+where TP means “true positives”, TN “true negatives”, FP “false positives”, and FN “false negatives”.
+
+## links
+
++ [Balanced accuracy — bal_accuracy • yardstick](https://tidymodels.github.io/yardstick/reference/bal_accuracy.html)
+
++ [Matthews correlation coefficient — mcc • yardstick](https://tidymodels.github.io/yardstick/reference/mcc.html)

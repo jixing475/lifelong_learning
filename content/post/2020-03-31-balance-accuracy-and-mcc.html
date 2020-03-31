@@ -1,0 +1,179 @@
+---
+title: Balance Accuracy and MCC
+author: ZERO
+date: '2020-03-31'
+slug: balance-accuracy-and-mcc
+categories:
+  - reading
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T16:55:13+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="balanced-accuracy" class="section level2">
+<h2>Balanced accuracy</h2>
+<blockquote>
+<p>Accuracy is the proportion of the data that are predicted correctly.</p>
+</blockquote>
+<blockquote>
+<p>Balanced accuracy is computed here as the average of sens() and spec()</p>
+</blockquote>
+<p><span class="math display">\[\mathrm{BA}=\frac{0.5 \mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}+\frac{0.5 \mathrm{TN}}{\mathrm{TN}+\mathrm{FP}}\]</span></p>
+<div id="multiclass" class="section level3">
+<h3>Multiclass</h3>
+<blockquote>
+<p>Macro, micro, and macro-weighted averaging is available for this metric.</p>
+</blockquote>
+<pre class="r"><code>library(dplyr)
+data(hpc_cv)
+
+hpc_cv %&gt;%
+  count(obs, sort = TRUE) %&gt;%
+  kable(&quot;html&quot;) %&gt;%
+  kable_styling(&quot;hover&quot;, full_width = F)</code></pre>
+<table class="table table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+obs
+</th>
+<th style="text-align:right;">
+n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+VF
+</td>
+<td style="text-align:right;">
+1769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+F
+</td>
+<td style="text-align:right;">
+1078
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M
+</td>
+<td style="text-align:right;">
+412
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+L
+</td>
+<td style="text-align:right;">
+208
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>hpc_cv %&gt;%
+  filter(Resample == &quot;Fold01&quot;) %&gt;%
+  #bal_accuracy(obs, pred, estimator = &quot;macro&quot;)
+  bal_accuracy(obs, pred, estimator = &quot;macro_weighted&quot;) </code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   .metric      .estimator     .estimate
+##   &lt;chr&gt;        &lt;chr&gt;              &lt;dbl&gt;
+## 1 bal_accuracy macro_weighted     0.771</code></pre>
+<pre class="r"><code>  #bal_accuracy(obs, pred, estimator = &quot;micro&quot;)</code></pre>
+</div>
+<div id="multi-class-prob-sum-is-equal-1" class="section level3">
+<h3>multi-class prob sum is equal 1?</h3>
+<p>The Answer Is Yes.</p>
+<pre class="r"><code>hpc_cv %&gt;% 
+  head(6) %&gt;% 
+  rowwise() %&gt;% 
+  mutate(prob = sum(VF, `F`, M, L)) %&gt;% 
+  select(prob)</code></pre>
+<pre><code>## Source: local data frame [6 x 1]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 6 x 1
+##    prob
+##   &lt;dbl&gt;
+## 1  1   
+## 2  1.00
+## 3  1.00
+## 4  1.00
+## 5  1.00
+## 6  1.</code></pre>
+</div>
+<div id="what-is-the-mean-of-macro-micro-and-macro-weighted-averaging" class="section level3">
+<h3>what is the mean of Macro, micro, and macro-weighted averaging?</h3>
+<p><strong>Macro-averaging</strong></p>
+<p>宏平均（Macro-averaging）是指所有类别的每一个统计指标值的算数平均值，也就是宏精确率（Macro-Precision），宏召回率（Macro-Recall），宏F值（Macro-F Score），其计算公式如下：</p>
+<p><span class="math display">\[
+P_{\text {macro}}=\frac{1}{n} \sum_{i=1}^{n} P_{i}
+\]</span></p>
+<p><strong>Micro-averaging</strong></p>
+<p>微平均（Micro-averaging）是对数据集中的每一个示例不分类别进行统计建立全局混淆矩阵，然后计算相应的指标。其计算公式如下：</p>
+<p><span class="math display">\[
+P_{\text {micro}}=\frac{T \bar{P}}{T \bar{P}+\overline{F P}}=\frac{\sum_{i=1}^{n} T P_{i}}{\sum_{i=1}^{n} T P_{i}+\sum_{i=1}^{n} F P_{i}}
+\]</span></p>
+<blockquote>
+<p>Macro-averaging与Micro-averaging的不同之处在于：Macro-averaging赋予每个类相同的权重，然而Micro-averaging赋予每个样本决策相同的权重。</p>
+</blockquote>
+</div>
+<div id="summary" class="section level3">
+<h3>summary</h3>
+<p><img src="https://i.loli.net/2020/03/31/ymsZY5W4XuDPA8H.png" /></p>
+</div>
+</div>
+<div id="mcc-matthews-correlation-coefficient" class="section level2">
+<h2>MCC: Matthews correlation coefficient</h2>
+<p><span class="math display">\[
+\mathrm{MCC}=\frac{\mathrm{TP} \times \mathrm{TN}-\mathrm{FP} \times \mathrm{FN}}{\sqrt{(\mathrm{TP}+\mathrm{FP})(\mathrm{TP}+\mathrm{FN})(\mathrm{TN}+\mathrm{FP})(\mathrm{TN}+\mathrm{FN})}}
+\]</span></p>
+<pre class="r"><code># Multiclass
+# mcc() has a natural multiclass extension
+# pred is predicted class results (that is also factor)
+hpc_cv %&gt;%
+  group_by(Resample) %&gt;%
+  mcc(obs, pred)</code></pre>
+<pre><code>## # A tibble: 10 x 4
+##    Resample .metric .estimator .estimate
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+##  1 Fold01   mcc     multiclass     0.542
+##  2 Fold02   mcc     multiclass     0.521
+##  3 Fold03   mcc     multiclass     0.602
+##  4 Fold04   mcc     multiclass     0.519
+##  5 Fold05   mcc     multiclass     0.520
+##  6 Fold06   mcc     multiclass     0.494
+##  7 Fold07   mcc     multiclass     0.461
+##  8 Fold08   mcc     multiclass     0.538
+##  9 Fold09   mcc     multiclass     0.459
+## 10 Fold10   mcc     multiclass     0.498</code></pre>
+</div>
+<div id="notes" class="section level2">
+<h2>notes</h2>
+<p>where TP means “true positives”, TN “true negatives”, FP “false positives”, and FN “false negatives”.</p>
+</div>
+<div id="links" class="section level2">
+<h2>links</h2>
+<ul>
+<li><p><a href="https://tidymodels.github.io/yardstick/reference/bal_accuracy.html">Balanced accuracy — bal_accuracy • yardstick</a></p></li>
+<li><p><a href="https://tidymodels.github.io/yardstick/reference/mcc.html">Matthews correlation coefficient — mcc • yardstick</a></p></li>
+</ul>
+</div>
