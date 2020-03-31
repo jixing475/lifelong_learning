@@ -1,0 +1,1272 @@
+---
+title: Tidymodels Machine Learning Ecosystem
+author: ZERO
+date: '2020-03-31'
+slug: tidymodels-machine-learning-ecosystem
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T13:24:54+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<blockquote>
+<p>{tidyverse} ecosystem that has become the defacto standard for data importation, manipulation, and visualization in R.</p>
+</blockquote>
+<blockquote>
+<p>My graduate training left me with a deep understanding of linear models and design-based causal inference, but with little or no training in other types of predictive modeling, unsupervised machine learning, version control, or putting models into production.</p>
+</blockquote>
+<blockquote>
+<p>I chose the Applied Machine Learning workshop in order to fill the gap in my knowledge about machine learning models beyond OLS and logistic regression.</p>
+</blockquote>
+<blockquote>
+<p>Max Kuhn and Davis Vaughn were the two workshop leaders and I knew they were in the process of developing the {tidymodels} ecosystem, which stands to be a successor to their popular {caret} package and promises fill the modeling gap in the {tidyverse} ecosystem.</p>
+</blockquote>
+</div>
+<div id="load-data" class="section level1">
+<h1>load data</h1>
+<pre class="r"><code>library(tidymodels)
+library(AmesHousing)
+
+data &lt;- make_ames()
+
+data %&gt;% 
+  head() %&gt;% 
+  str()</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    6 obs. of  81 variables:
+##  $ MS_SubClass       : Factor w/ 16 levels &quot;One_Story_1946_and_Newer_All_Styles&quot;,..: 1 1 1 1 6 6
+##  $ MS_Zoning         : Factor w/ 7 levels &quot;Floating_Village_Residential&quot;,..: 3 2 3 3 3 3
+##  $ Lot_Frontage      : num  141 80 81 93 74 78
+##  $ Lot_Area          : int  31770 11622 14267 11160 13830 9978
+##  $ Street            : Factor w/ 2 levels &quot;Grvl&quot;,&quot;Pave&quot;: 2 2 2 2 2 2
+##  $ Alley             : Factor w/ 3 levels &quot;Gravel&quot;,&quot;No_Alley_Access&quot;,..: 2 2 2 2 2 2
+##  $ Lot_Shape         : Factor w/ 4 levels &quot;Regular&quot;,&quot;Slightly_Irregular&quot;,..: 2 1 2 1 2 2
+##  $ Land_Contour      : Factor w/ 4 levels &quot;Bnk&quot;,&quot;HLS&quot;,&quot;Low&quot;,..: 4 4 4 4 4 4
+##  $ Utilities         : Factor w/ 3 levels &quot;AllPub&quot;,&quot;NoSeWa&quot;,..: 1 1 1 1 1 1
+##  $ Lot_Config        : Factor w/ 5 levels &quot;Corner&quot;,&quot;CulDSac&quot;,..: 1 5 1 1 5 5
+##  $ Land_Slope        : Factor w/ 3 levels &quot;Gtl&quot;,&quot;Mod&quot;,&quot;Sev&quot;: 1 1 1 1 1 1
+##  $ Neighborhood      : Factor w/ 28 levels &quot;North_Ames&quot;,&quot;College_Creek&quot;,..: 1 1 1 1 7 7
+##  $ Condition_1       : Factor w/ 9 levels &quot;Artery&quot;,&quot;Feedr&quot;,..: 3 2 3 3 3 3
+##  $ Condition_2       : Factor w/ 8 levels &quot;Artery&quot;,&quot;Feedr&quot;,..: 3 3 3 3 3 3
+##  $ Bldg_Type         : Factor w/ 5 levels &quot;OneFam&quot;,&quot;TwoFmCon&quot;,..: 1 1 1 1 1 1
+##  $ House_Style       : Factor w/ 8 levels &quot;One_and_Half_Fin&quot;,..: 3 3 3 3 8 8
+##  $ Overall_Qual      : Factor w/ 10 levels &quot;Very_Poor&quot;,&quot;Poor&quot;,..: 6 5 6 7 5 6
+##  $ Overall_Cond      : Factor w/ 10 levels &quot;Very_Poor&quot;,&quot;Poor&quot;,..: 5 6 6 5 5 6
+##  $ Year_Built        : int  1960 1961 1958 1968 1997 1998
+##  $ Year_Remod_Add    : int  1960 1961 1958 1968 1998 1998
+##  $ Roof_Style        : Factor w/ 6 levels &quot;Flat&quot;,&quot;Gable&quot;,..: 4 2 4 4 2 2
+##  $ Roof_Matl         : Factor w/ 8 levels &quot;ClyTile&quot;,&quot;CompShg&quot;,..: 2 2 2 2 2 2
+##  $ Exterior_1st      : Factor w/ 16 levels &quot;AsbShng&quot;,&quot;AsphShn&quot;,..: 4 14 15 4 14 14
+##  $ Exterior_2nd      : Factor w/ 17 levels &quot;AsbShng&quot;,&quot;AsphShn&quot;,..: 11 15 16 4 15 15
+##  $ Mas_Vnr_Type      : Factor w/ 5 levels &quot;BrkCmn&quot;,&quot;BrkFace&quot;,..: 5 4 2 4 4 2
+##  $ Mas_Vnr_Area      : num  112 0 108 0 0 20
+##  $ Exter_Qual        : Factor w/ 4 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 4 4 4 3 4 4
+##  $ Exter_Cond        : Factor w/ 5 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 5 5 5 5 5 5
+##  $ Foundation        : Factor w/ 6 levels &quot;BrkTil&quot;,&quot;CBlock&quot;,..: 2 2 2 2 3 3
+##  $ Bsmt_Qual         : Factor w/ 6 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 6 6 6 6 3 6
+##  $ Bsmt_Cond         : Factor w/ 6 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 3 6 6 6 6 6
+##  $ Bsmt_Exposure     : Factor w/ 5 levels &quot;Av&quot;,&quot;Gd&quot;,&quot;Mn&quot;,..: 2 4 4 4 4 4
+##  $ BsmtFin_Type_1    : Factor w/ 7 levels &quot;ALQ&quot;,&quot;BLQ&quot;,&quot;GLQ&quot;,..: 2 6 1 1 3 3
+##  $ BsmtFin_SF_1      : num  2 6 1 1 3 3
+##  $ BsmtFin_Type_2    : Factor w/ 7 levels &quot;ALQ&quot;,&quot;BLQ&quot;,&quot;GLQ&quot;,..: 7 4 7 7 7 7
+##  $ BsmtFin_SF_2      : num  0 144 0 0 0 0
+##  $ Bsmt_Unf_SF       : num  441 270 406 1045 137 ...
+##  $ Total_Bsmt_SF     : num  1080 882 1329 2110 928 ...
+##  $ Heating           : Factor w/ 6 levels &quot;Floor&quot;,&quot;GasA&quot;,..: 2 2 2 2 2 2
+##  $ Heating_QC        : Factor w/ 5 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 2 5 5 1 3 1
+##  $ Central_Air       : Factor w/ 2 levels &quot;N&quot;,&quot;Y&quot;: 2 2 2 2 2 2
+##  $ Electrical        : Factor w/ 6 levels &quot;FuseA&quot;,&quot;FuseF&quot;,..: 5 5 5 5 5 5
+##  $ First_Flr_SF      : int  1656 896 1329 2110 928 926
+##  $ Second_Flr_SF     : int  0 0 0 0 701 678
+##  $ Low_Qual_Fin_SF   : int  0 0 0 0 0 0
+##  $ Gr_Liv_Area       : int  1656 896 1329 2110 1629 1604
+##  $ Bsmt_Full_Bath    : num  1 0 0 1 0 0
+##  $ Bsmt_Half_Bath    : num  0 0 0 0 0 0
+##  $ Full_Bath         : int  1 1 1 2 2 2
+##  $ Half_Bath         : int  0 0 1 1 1 1
+##  $ Bedroom_AbvGr     : int  3 2 3 3 3 3
+##  $ Kitchen_AbvGr     : int  1 1 1 1 1 1
+##  $ Kitchen_Qual      : Factor w/ 5 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 5 5 3 1 5 3
+##  $ TotRms_AbvGrd     : int  7 5 6 8 6 7
+##  $ Functional        : Factor w/ 8 levels &quot;Maj1&quot;,&quot;Maj2&quot;,..: 8 8 8 8 8 8
+##  $ Fireplaces        : int  2 0 0 2 1 1
+##  $ Fireplace_Qu      : Factor w/ 6 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 3 4 4 6 6 3
+##  $ Garage_Type       : Factor w/ 7 levels &quot;Attchd&quot;,&quot;Basment&quot;,..: 1 1 1 1 1 1
+##  $ Garage_Finish     : Factor w/ 4 levels &quot;Fin&quot;,&quot;No_Garage&quot;,..: 1 4 4 1 1 1
+##  $ Garage_Cars       : num  2 1 1 2 2 2
+##  $ Garage_Area       : num  528 730 312 522 482 470
+##  $ Garage_Qual       : Factor w/ 6 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 6 6 6 6 6 6
+##  $ Garage_Cond       : Factor w/ 6 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 6 6 6 6 6 6
+##  $ Paved_Drive       : Factor w/ 3 levels &quot;Dirt_Gravel&quot;,..: 2 3 3 3 3 3
+##  $ Wood_Deck_SF      : int  210 140 393 0 212 360
+##  $ Open_Porch_SF     : int  62 0 36 0 34 36
+##  $ Enclosed_Porch    : int  0 0 0 0 0 0
+##  $ Three_season_porch: int  0 0 0 0 0 0
+##  $ Screen_Porch      : int  0 120 0 0 0 0
+##  $ Pool_Area         : int  0 0 0 0 0 0
+##  $ Pool_QC           : Factor w/ 5 levels &quot;Excellent&quot;,&quot;Fair&quot;,..: 4 4 4 4 4 4
+##  $ Fence             : Factor w/ 5 levels &quot;Good_Privacy&quot;,..: 5 3 5 5 3 5
+##  $ Misc_Feature      : Factor w/ 6 levels &quot;Elev&quot;,&quot;Gar2&quot;,..: 3 3 2 3 3 3
+##  $ Misc_Val          : int  0 0 12500 0 0 0
+##  $ Mo_Sold           : int  5 6 6 4 3 6
+##  $ Year_Sold         : int  2010 2010 2010 2010 2010 2010
+##  $ Sale_Type         : Factor w/ 10 levels &quot;COD&quot;,&quot;Con&quot;,&quot;ConLD&quot;,..: 10 10 10 10 10 10
+##  $ Sale_Condition    : Factor w/ 6 levels &quot;Abnorml&quot;,&quot;AdjLand&quot;,..: 5 5 5 5 5 5
+##  $ Sale_Price        : int  215000 105000 172000 244000 189900 195500
+##  $ Longitude         : num  -93.6 -93.6 -93.6 -93.6 -93.6 ...
+##  $ Latitude          : num  42.1 42.1 42.1 42.1 42.1 ...</code></pre>
+</div>
+<div id="eda" class="section level1">
+<h1>EDA</h1>
+<pre class="r"><code># data %&gt;%
+#     select_if(is.factor) %&gt;%
+#     #select(-State_Of_Origin) %&gt;%
+#     gather() %&gt;%
+#     ggplot(aes(x = value)) +
+#     facet_wrap( ~ key, scales = &quot;free&quot;, ncol = 3) +
+#     geom_bar()
+
+
+
+
+# data %&gt;%
+#     select_if(is.numeric) %&gt;%
+#     gather() %&gt;%
+#     ggplot(aes(x = value)) +
+#     facet_wrap( ~ key, scales = &quot;free&quot;, ncol = 4) +
+#     geom_density()</code></pre>
+</div>
+<div id="data-type" class="section level1">
+<h1>data type</h1>
+<pre class="r"><code># dt_new &lt;- 
+# dt_new %&gt;% 
+#   mutate(Promoted_or_Not = factor(Promoted_or_Not))
+
+# numeric_variables &lt;- c(
+#   &quot;total_years_dispatcher&quot;, &quot;total_years_present_job&quot;,
+#   &quot;childrendependents&quot;, &quot;children_under_2_yrs&quot;, 
+#   &quot;sick_days_in_last_year&quot;, &quot;avg_work_hrs_week&quot;
+# )
+# 
+# factor_variables &lt;- setdiff(colnames(sleep), numeric_variables)
+# 
+# sleep &lt;- mutate_at(sleep, vars(factor_variables), as.factor)</code></pre>
+</div>
+<div id="stratified-trainingtest-splits" class="section level1">
+<h1>Stratified training/test splits</h1>
+<pre class="r"><code>## Setting seed
+set.seed(1)
+
+## Generate split
+data_split &lt;- initial_split(data, 
+                            prop = 4/5, 
+                            strata = &quot;Sale_Price&quot;)
+
+## Printing the function gives us &lt;Num Rows in Training Set/Num Rows in Testing Set/Total Num Rows&gt;
+data_split</code></pre>
+<pre><code>## &lt;2346/584/2930&gt;</code></pre>
+<pre class="r"><code>## Calling training() on this object will give us our training set, and calling testing() on it will give us our testing set
+data_train &lt;- training(data_split)
+data_test &lt;- testing(data_split)
+
+data_train %&gt;% 
+  head() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">MS_SubClass</th>
+<th align="left">MS_Zoning</th>
+<th align="right">Lot_Frontage</th>
+<th align="right">Lot_Area</th>
+<th align="left">Street</th>
+<th align="left">Alley</th>
+<th align="left">Lot_Shape</th>
+<th align="left">Land_Contour</th>
+<th align="left">Utilities</th>
+<th align="left">Lot_Config</th>
+<th align="left">Land_Slope</th>
+<th align="left">Neighborhood</th>
+<th align="left">Condition_1</th>
+<th align="left">Condition_2</th>
+<th align="left">Bldg_Type</th>
+<th align="left">House_Style</th>
+<th align="left">Overall_Qual</th>
+<th align="left">Overall_Cond</th>
+<th align="right">Year_Built</th>
+<th align="right">Year_Remod_Add</th>
+<th align="left">Roof_Style</th>
+<th align="left">Roof_Matl</th>
+<th align="left">Exterior_1st</th>
+<th align="left">Exterior_2nd</th>
+<th align="left">Mas_Vnr_Type</th>
+<th align="right">Mas_Vnr_Area</th>
+<th align="left">Exter_Qual</th>
+<th align="left">Exter_Cond</th>
+<th align="left">Foundation</th>
+<th align="left">Bsmt_Qual</th>
+<th align="left">Bsmt_Cond</th>
+<th align="left">Bsmt_Exposure</th>
+<th align="left">BsmtFin_Type_1</th>
+<th align="right">BsmtFin_SF_1</th>
+<th align="left">BsmtFin_Type_2</th>
+<th align="right">BsmtFin_SF_2</th>
+<th align="right">Bsmt_Unf_SF</th>
+<th align="right">Total_Bsmt_SF</th>
+<th align="left">Heating</th>
+<th align="left">Heating_QC</th>
+<th align="left">Central_Air</th>
+<th align="left">Electrical</th>
+<th align="right">First_Flr_SF</th>
+<th align="right">Second_Flr_SF</th>
+<th align="right">Low_Qual_Fin_SF</th>
+<th align="right">Gr_Liv_Area</th>
+<th align="right">Bsmt_Full_Bath</th>
+<th align="right">Bsmt_Half_Bath</th>
+<th align="right">Full_Bath</th>
+<th align="right">Half_Bath</th>
+<th align="right">Bedroom_AbvGr</th>
+<th align="right">Kitchen_AbvGr</th>
+<th align="left">Kitchen_Qual</th>
+<th align="right">TotRms_AbvGrd</th>
+<th align="left">Functional</th>
+<th align="right">Fireplaces</th>
+<th align="left">Fireplace_Qu</th>
+<th align="left">Garage_Type</th>
+<th align="left">Garage_Finish</th>
+<th align="right">Garage_Cars</th>
+<th align="right">Garage_Area</th>
+<th align="left">Garage_Qual</th>
+<th align="left">Garage_Cond</th>
+<th align="left">Paved_Drive</th>
+<th align="right">Wood_Deck_SF</th>
+<th align="right">Open_Porch_SF</th>
+<th align="right">Enclosed_Porch</th>
+<th align="right">Three_season_porch</th>
+<th align="right">Screen_Porch</th>
+<th align="right">Pool_Area</th>
+<th align="left">Pool_QC</th>
+<th align="left">Fence</th>
+<th align="left">Misc_Feature</th>
+<th align="right">Misc_Val</th>
+<th align="right">Mo_Sold</th>
+<th align="right">Year_Sold</th>
+<th align="left">Sale_Type</th>
+<th align="left">Sale_Condition</th>
+<th align="right">Sale_Price</th>
+<th align="right">Longitude</th>
+<th align="right">Latitude</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">One_Story_1946_and_Newer_All_Styles</td>
+<td align="left">Residential_Low_Density</td>
+<td align="right">141</td>
+<td align="right">31770</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Slightly_Irregular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Corner</td>
+<td align="left">Gtl</td>
+<td align="left">North_Ames</td>
+<td align="left">Norm</td>
+<td align="left">Norm</td>
+<td align="left">OneFam</td>
+<td align="left">One_Story</td>
+<td align="left">Above_Average</td>
+<td align="left">Average</td>
+<td align="right">1960</td>
+<td align="right">1960</td>
+<td align="left">Hip</td>
+<td align="left">CompShg</td>
+<td align="left">BrkFace</td>
+<td align="left">Plywood</td>
+<td align="left">Stone</td>
+<td align="right">112</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">CBlock</td>
+<td align="left">Typical</td>
+<td align="left">Good</td>
+<td align="left">Gd</td>
+<td align="left">BLQ</td>
+<td align="right">2</td>
+<td align="left">Unf</td>
+<td align="right">0</td>
+<td align="right">441</td>
+<td align="right">1080</td>
+<td align="left">GasA</td>
+<td align="left">Fair</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">1656</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1656</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="left">Typical</td>
+<td align="right">7</td>
+<td align="left">Typ</td>
+<td align="right">2</td>
+<td align="left">Good</td>
+<td align="left">Attchd</td>
+<td align="left">Fin</td>
+<td align="right">2</td>
+<td align="right">528</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Partial_Pavement</td>
+<td align="right">210</td>
+<td align="right">62</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">No_Fence</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">215000</td>
+<td align="right">-93.61975</td>
+<td align="right">42.05403</td>
+</tr>
+<tr class="even">
+<td align="left">One_Story_1946_and_Newer_All_Styles</td>
+<td align="left">Residential_High_Density</td>
+<td align="right">80</td>
+<td align="right">11622</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Regular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Inside</td>
+<td align="left">Gtl</td>
+<td align="left">North_Ames</td>
+<td align="left">Feedr</td>
+<td align="left">Norm</td>
+<td align="left">OneFam</td>
+<td align="left">One_Story</td>
+<td align="left">Average</td>
+<td align="left">Above_Average</td>
+<td align="right">1961</td>
+<td align="right">1961</td>
+<td align="left">Gable</td>
+<td align="left">CompShg</td>
+<td align="left">VinylSd</td>
+<td align="left">VinylSd</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">CBlock</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">No</td>
+<td align="left">Rec</td>
+<td align="right">6</td>
+<td align="left">LwQ</td>
+<td align="right">144</td>
+<td align="right">270</td>
+<td align="right">882</td>
+<td align="left">GasA</td>
+<td align="left">Typical</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">896</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">896</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="left">Typical</td>
+<td align="right">5</td>
+<td align="left">Typ</td>
+<td align="right">0</td>
+<td align="left">No_Fireplace</td>
+<td align="left">Attchd</td>
+<td align="left">Unf</td>
+<td align="right">1</td>
+<td align="right">730</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Paved</td>
+<td align="right">140</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">120</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">Minimum_Privacy</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">105000</td>
+<td align="right">-93.61976</td>
+<td align="right">42.05301</td>
+</tr>
+<tr class="odd">
+<td align="left">One_Story_1946_and_Newer_All_Styles</td>
+<td align="left">Residential_Low_Density</td>
+<td align="right">81</td>
+<td align="right">14267</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Slightly_Irregular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Corner</td>
+<td align="left">Gtl</td>
+<td align="left">North_Ames</td>
+<td align="left">Norm</td>
+<td align="left">Norm</td>
+<td align="left">OneFam</td>
+<td align="left">One_Story</td>
+<td align="left">Above_Average</td>
+<td align="left">Above_Average</td>
+<td align="right">1958</td>
+<td align="right">1958</td>
+<td align="left">Hip</td>
+<td align="left">CompShg</td>
+<td align="left">Wd Sdng</td>
+<td align="left">Wd Sdng</td>
+<td align="left">BrkFace</td>
+<td align="right">108</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">CBlock</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">No</td>
+<td align="left">ALQ</td>
+<td align="right">1</td>
+<td align="left">Unf</td>
+<td align="right">0</td>
+<td align="right">406</td>
+<td align="right">1329</td>
+<td align="left">GasA</td>
+<td align="left">Typical</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">1329</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1329</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="left">Good</td>
+<td align="right">6</td>
+<td align="left">Typ</td>
+<td align="right">0</td>
+<td align="left">No_Fireplace</td>
+<td align="left">Attchd</td>
+<td align="left">Unf</td>
+<td align="right">1</td>
+<td align="right">312</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Paved</td>
+<td align="right">393</td>
+<td align="right">36</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">No_Fence</td>
+<td align="left">Gar2</td>
+<td align="right">12500</td>
+<td align="right">6</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">172000</td>
+<td align="right">-93.61939</td>
+<td align="right">42.05266</td>
+</tr>
+<tr class="even">
+<td align="left">Two_Story_1946_and_Newer</td>
+<td align="left">Residential_Low_Density</td>
+<td align="right">74</td>
+<td align="right">13830</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Slightly_Irregular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Inside</td>
+<td align="left">Gtl</td>
+<td align="left">Gilbert</td>
+<td align="left">Norm</td>
+<td align="left">Norm</td>
+<td align="left">OneFam</td>
+<td align="left">Two_Story</td>
+<td align="left">Average</td>
+<td align="left">Average</td>
+<td align="right">1997</td>
+<td align="right">1998</td>
+<td align="left">Gable</td>
+<td align="left">CompShg</td>
+<td align="left">VinylSd</td>
+<td align="left">VinylSd</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">PConc</td>
+<td align="left">Good</td>
+<td align="left">Typical</td>
+<td align="left">No</td>
+<td align="left">GLQ</td>
+<td align="right">3</td>
+<td align="left">Unf</td>
+<td align="right">0</td>
+<td align="right">137</td>
+<td align="right">928</td>
+<td align="left">GasA</td>
+<td align="left">Good</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">928</td>
+<td align="right">701</td>
+<td align="right">0</td>
+<td align="right">1629</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="left">Typical</td>
+<td align="right">6</td>
+<td align="left">Typ</td>
+<td align="right">1</td>
+<td align="left">Typical</td>
+<td align="left">Attchd</td>
+<td align="left">Fin</td>
+<td align="right">2</td>
+<td align="right">482</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Paved</td>
+<td align="right">212</td>
+<td align="right">34</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">Minimum_Privacy</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">189900</td>
+<td align="right">-93.63893</td>
+<td align="right">42.06090</td>
+</tr>
+<tr class="odd">
+<td align="left">Two_Story_1946_and_Newer</td>
+<td align="left">Residential_Low_Density</td>
+<td align="right">78</td>
+<td align="right">9978</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Slightly_Irregular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Inside</td>
+<td align="left">Gtl</td>
+<td align="left">Gilbert</td>
+<td align="left">Norm</td>
+<td align="left">Norm</td>
+<td align="left">OneFam</td>
+<td align="left">Two_Story</td>
+<td align="left">Above_Average</td>
+<td align="left">Above_Average</td>
+<td align="right">1998</td>
+<td align="right">1998</td>
+<td align="left">Gable</td>
+<td align="left">CompShg</td>
+<td align="left">VinylSd</td>
+<td align="left">VinylSd</td>
+<td align="left">BrkFace</td>
+<td align="right">20</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">PConc</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">No</td>
+<td align="left">GLQ</td>
+<td align="right">3</td>
+<td align="left">Unf</td>
+<td align="right">0</td>
+<td align="right">324</td>
+<td align="right">926</td>
+<td align="left">GasA</td>
+<td align="left">Excellent</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">926</td>
+<td align="right">678</td>
+<td align="right">0</td>
+<td align="right">1604</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="left">Good</td>
+<td align="right">7</td>
+<td align="left">Typ</td>
+<td align="right">1</td>
+<td align="left">Good</td>
+<td align="left">Attchd</td>
+<td align="left">Fin</td>
+<td align="right">2</td>
+<td align="right">470</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Paved</td>
+<td align="right">360</td>
+<td align="right">36</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">No_Fence</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">195500</td>
+<td align="right">-93.63893</td>
+<td align="right">42.06078</td>
+</tr>
+<tr class="even">
+<td align="left">One_Story_PUD_1946_and_Newer</td>
+<td align="left">Residential_Low_Density</td>
+<td align="right">41</td>
+<td align="right">4920</td>
+<td align="left">Pave</td>
+<td align="left">No_Alley_Access</td>
+<td align="left">Regular</td>
+<td align="left">Lvl</td>
+<td align="left">AllPub</td>
+<td align="left">Inside</td>
+<td align="left">Gtl</td>
+<td align="left">Stone_Brook</td>
+<td align="left">Norm</td>
+<td align="left">Norm</td>
+<td align="left">TwnhsE</td>
+<td align="left">One_Story</td>
+<td align="left">Very_Good</td>
+<td align="left">Average</td>
+<td align="right">2001</td>
+<td align="right">2001</td>
+<td align="left">Gable</td>
+<td align="left">CompShg</td>
+<td align="left">CemntBd</td>
+<td align="left">CmentBd</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="left">Good</td>
+<td align="left">Typical</td>
+<td align="left">PConc</td>
+<td align="left">Good</td>
+<td align="left">Typical</td>
+<td align="left">Mn</td>
+<td align="left">GLQ</td>
+<td align="right">3</td>
+<td align="left">Unf</td>
+<td align="right">0</td>
+<td align="right">722</td>
+<td align="right">1338</td>
+<td align="left">GasA</td>
+<td align="left">Excellent</td>
+<td align="left">Y</td>
+<td align="left">SBrkr</td>
+<td align="right">1338</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1338</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="left">Good</td>
+<td align="right">6</td>
+<td align="left">Typ</td>
+<td align="right">0</td>
+<td align="left">No_Fireplace</td>
+<td align="left">Attchd</td>
+<td align="left">Fin</td>
+<td align="right">2</td>
+<td align="right">582</td>
+<td align="left">Typical</td>
+<td align="left">Typical</td>
+<td align="left">Paved</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">170</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">No_Pool</td>
+<td align="left">No_Fence</td>
+<td align="left">None</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">2010</td>
+<td align="left">WD</td>
+<td align="left">Normal</td>
+<td align="right">213500</td>
+<td align="right">-93.63379</td>
+<td align="right">42.06298</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-pre-processing" class="section level1">
+<h1>Data pre-processing</h1>
+<div id="recipe" class="section level2">
+<h2>recipe</h2>
+<pre class="r"><code>data_rec &lt;- recipe(
+  Sale_Price ~ .,
+  data = data_train
+) %&gt;% 
+  step_log(Sale_Price, base = 10) %&gt;%
+  step_rm(matches(&quot;Qual&quot;), matches(&quot;Cond&quot;)) %&gt;% # Remove unwanted variables 
+  step_dummy(all_nominal()) %&gt;% 
+  #step_downsample(Promoted_or_Not) %&gt;% 
+  step_center(all_predictors()) %&gt;% 
+  step_scale(all_predictors()) %&gt;% 
+  step_pca(contains(&quot;SF&quot;), contains(&quot;Area&quot;), threshold = .75) %&gt;% #will convert numeric data into one or more principal components.
+  step_nzv(all_predictors()) # 👍 #
+
+data_rec</code></pre>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor         80
+## 
+## Operations:
+## 
+## Log transformation on Sale_Price
+## Delete terms matches, Qual, matches, Cond
+## Dummy variables from all_nominal
+## Centering for all_predictors
+## Scaling for all_predictors
+## No PCA components were extracted.
+## Sparse, unbalanced variable filter on all_predictors</code></pre>
+</div>
+<div id="prep" class="section level2">
+<h2>prep</h2>
+<pre class="r"><code>data_rec_trained &lt;- prep(data_rec, training = data_train, verbose = TRUE)</code></pre>
+<pre><code>## oper 1 step log [training] 
+## oper 2 step rm [training] 
+## oper 3 step dummy [training] 
+## oper 4 step center [training] 
+## oper 5 step scale [training] 
+## oper 6 step pca [training] 
+## oper 7 step nzv [training] 
+## The retained training set is ~ 1.57 Mb  in memory.</code></pre>
+<pre class="r"><code>data_rec_trained</code></pre>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor         80
+## 
+## Training data contained 2346 data points and no missing data.
+## 
+## Operations:
+## 
+## Log transformation on Sale_Price [trained]
+## Variables removed Overall_Qual, Exter_Qual, Bsmt_Qual, ... [trained]
+## Dummy variables from MS_SubClass, MS_Zoning, Street, Alley, ... [trained]
+## Centering for Lot_Frontage, Lot_Area, ... [trained]
+## Scaling for Lot_Frontage, Lot_Area, ... [trained]
+## PCA extraction with BsmtFin_SF_1, BsmtFin_SF_2, ... [trained]
+## Sparse, unbalanced variable filter removed Kitchen_AbvGr, ... [trained]</code></pre>
+</div>
+<div id="juice" class="section level2">
+<h2>juice</h2>
+<blockquote>
+<p>Not bad, we’ve reduced 13 variables down to 7. This probably wasn’t the best use case of PCA, but it provides a good example of some advanced preprocessing made simple in {recipes}.</p>
+</blockquote>
+<pre class="r"><code>data_rec_trained %&gt;% 
+  juice() %&gt;% 
+  select(starts_with(&quot;PC&quot;)) # select principal component</code></pre>
+<pre><code>## # A tibble: 2,346 x 7
+##        PC1    PC2     PC3     PC4    PC5     PC6     PC7
+##      &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 -1.63    1.16   0.650  -0.440  -0.264 -0.601  -2.05  
+##  2  0.874   0.305  0.311  -0.656  -0.345 -0.475   0.143 
+##  3 -0.613   1.57   0.0386 -0.106  -0.610 -1.44   -0.0504
+##  4  0.381   0.953  0.421   0.341  -0.105 -0.989  -0.548 
+##  5  0.166   0.957  0.363   0.458  -0.486 -1.57    0.0933
+##  6 -0.0448 -0.268 -0.665  -0.337  -0.121  0.258   0.389 
+##  7 -0.174  -0.249 -0.612   0.215   0.607  0.664   0.287 
+##  8 -1.61    0.459 -0.0692  0.765   0.622  0.0958  0.471 
+##  9  0.0192 -1.53   0.449   0.0537 -0.312 -0.149   0.251 
+## 10 -0.0231  1.90   0.0478  0.197  -0.799 -1.95    0.531 
+## # … with 2,336 more rows</code></pre>
+</div>
+</div>
+<div id="modeling" class="section level1">
+<h1>Modeling</h1>
+<blockquote>
+<p>The beauty of {parsnip} is that it unifies the interface for model specifications so that you don’t need to remember dozens of different interfaces for each implementation of a model.</p>
+</blockquote>
+<div id="lasso" class="section level2">
+<h2>lasso</h2>
+<p>Now let’s specify our model. We’re going to go with a Lasso model with a penalty of 0.001 using the {parsnip} package.</p>
+<div id="model" class="section level3">
+<h3>model</h3>
+<pre class="r"><code>data_lasso &lt;- linear_reg(penalty = 0.001, mixture = 1) %&gt;% 
+  set_engine(&quot;glmnet&quot;)</code></pre>
+</div>
+<div id="workflow" class="section level3">
+<h3>workflow</h3>
+<p>Using workflows, we don’t need to go through the prep() and juice() steps we went through earlier when we go to fit our model (I demonstrated prep() and juice() as they can be useful for being able to inspect your pre-processed data as we did earlier).</p>
+<pre class="r"><code>data_lasso_wfl &lt;- workflow() %&gt;% 
+  add_recipe(data_rec) %&gt;% #recipe
+  add_model(data_lasso) # model
+
+data_lasso_wfl</code></pre>
+<pre><code>## ══ Workflow ═══════════════════════════════════════════════════════
+## Preprocessor: Recipe
+## Model: linear_reg()
+## 
+## ── Preprocessor ───────────────────────────────────────────────────
+## 7 Recipe Steps
+## 
+## ● step_log()
+## ● step_rm()
+## ● step_dummy()
+## ● step_center()
+## ● step_scale()
+## ● step_pca()
+## ● step_nzv()
+## 
+## ── Model ──────────────────────────────────────────────────────────
+## Linear Regression Model Specification (regression)
+## 
+## Main Arguments:
+##   penalty = 0.001
+##   mixture = 1
+## 
+## Computational engine: glmnet</code></pre>
+</div>
+<div id="fit-model" class="section level3">
+<h3>fit model</h3>
+<pre class="r"><code>data_lasso_fit &lt;- fit(data_lasso_wfl, data_train)</code></pre>
+</div>
+<div id="predict" class="section level3">
+<h3>predict</h3>
+<pre class="r"><code>predict(data_lasso_fit, data_train) %&gt;% 
+    slice(1:5)</code></pre>
+<pre><code>## # A tibble: 5 x 1
+##   .pred
+##   &lt;dbl&gt;
+## 1  5.32
+## 2  5.04
+## 3  5.17
+## 4  5.30
+## 5  5.31</code></pre>
+</div>
+</div>
+</div>
+<div id="model-evaluation" class="section level1">
+<h1>Model evaluation</h1>
+<p>using metrics from the {yardstick} package</p>
+<p>metrics:</p>
+<ol style="list-style-type: decimal">
+<li>Root Mean Squared Error (RMSE)</li>
+<li>R squared</li>
+<li>the concordance correlation coefficient (ccc)</li>
+</ol>
+<div id="all-in-sample" class="section level3">
+<h3>all in sample</h3>
+<pre class="r"><code>perf_metrics &lt;- metric_set(rmse, rsq, ccc)
+
+perf_lasso &lt;- data_lasso_fit %&gt;% 
+  predict(data_train) %&gt;% 
+  bind_cols(juice(data_rec_trained)) %&gt;% 
+  perf_metrics(truth = Sale_Price, estimate = .pred)
+
+perf_lasso %&gt;% 
+  arrange(.metric)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 ccc     standard      0.925 
+## 2 rmse    standard      0.0648
+## 3 rsq     standard      0.864</code></pre>
+</div>
+<div id="cross-validation" class="section level3">
+<h3>cross-validation</h3>
+<pre class="r"><code># create 10-fold cross-validation sets for evaluating our training set models using vfold_cv(), which defaults to creating 10 folds.
+cv_splits &lt;- vfold_cv(data_train)
+cv_splits</code></pre>
+<pre><code>## #  10-fold cross-validation 
+## # A tibble: 10 x 2
+##    splits             id    
+##    &lt;named list&gt;       &lt;chr&gt; 
+##  1 &lt;split [2.1K/235]&gt; Fold01
+##  2 &lt;split [2.1K/235]&gt; Fold02
+##  3 &lt;split [2.1K/235]&gt; Fold03
+##  4 &lt;split [2.1K/235]&gt; Fold04
+##  5 &lt;split [2.1K/235]&gt; Fold05
+##  6 &lt;split [2.1K/235]&gt; Fold06
+##  7 &lt;split [2.1K/234]&gt; Fold07
+##  8 &lt;split [2.1K/234]&gt; Fold08
+##  9 &lt;split [2.1K/234]&gt; Fold09
+## 10 &lt;split [2.1K/234]&gt; Fold10</code></pre>
+<pre class="r"><code># take our workflow and use it to fit 10 models on these 10 splits using the fit_resamples() function from the {tune} package (also a part of the tidymodels ecosystem), as well as tell it to compute the performance metrics we set earlier.
+
+cv_eval &lt;- fit_resamples(data_lasso_wfl, resamples = cv_splits, metrics = perf_metrics)
+cv_eval</code></pre>
+<pre><code>## #  10-fold cross-validation 
+## # A tibble: 10 x 4
+##    splits             id     .metrics         .notes          
+##  * &lt;list&gt;             &lt;chr&gt;  &lt;list&gt;           &lt;list&gt;          
+##  1 &lt;split [2.1K/235]&gt; Fold01 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  2 &lt;split [2.1K/235]&gt; Fold02 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  3 &lt;split [2.1K/235]&gt; Fold03 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  4 &lt;split [2.1K/235]&gt; Fold04 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  5 &lt;split [2.1K/235]&gt; Fold05 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  6 &lt;split [2.1K/235]&gt; Fold06 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  7 &lt;split [2.1K/234]&gt; Fold07 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  8 &lt;split [2.1K/234]&gt; Fold08 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+##  9 &lt;split [2.1K/234]&gt; Fold09 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;
+## 10 &lt;split [2.1K/234]&gt; Fold10 &lt;tibble [3 × 3]&gt; &lt;tibble [0 × 1]&gt;</code></pre>
+<pre class="r"><code>collect_metrics(cv_eval)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   .metric .estimator   mean     n std_err
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 ccc     standard   0.915     10 0.00660
+## 2 rmse    standard   0.0673    10 0.00345
+## 3 rsq     standard   0.854     10 0.0122</code></pre>
+</div>
+<div id="in-sample-vs-cross-validation" class="section level3">
+<h3>in-sample VS cross-validation</h3>
+<pre class="r"><code>perf_lasso %&gt;% 
+  arrange(.metric)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 ccc     standard      0.925 
+## 2 rmse    standard      0.0648
+## 3 rsq     standard      0.864</code></pre>
+<pre class="r"><code>collect_metrics(cv_eval)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   .metric .estimator   mean     n std_err
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 ccc     standard   0.915     10 0.00660
+## 2 rmse    standard   0.0673    10 0.00345
+## 3 rsq     standard   0.854     10 0.0122</code></pre>
+</div>
+</div>
+<div id="model-tuning" class="section level1">
+<h1>Model tuning</h1>
+<blockquote>
+<p>its real power comes in allowing us to easily tune the hyperparameters in our model.</p>
+</blockquote>
+<div id="tuning-lasso" class="section level2">
+<h2>📌 tuning lasso</h2>
+<pre class="r"><code>data_mixture &lt;- linear_reg(penalty = tune(), mixture = tune()) %&gt;% 
+  set_engine(&quot;glmnet&quot;)
+
+data_mixture_wfl &lt;- update_model(data_lasso_wfl, data_mixture)</code></pre>
+</div>
+<div id="set-regular-paraments-for-grid-search" class="section level2">
+<h2>set regular paraments for grid search</h2>
+<p>Next, we will define a parameter space to search. {tune} allows you to perform either grid search (where the candidate values are pre-defined) or iterative search (ex: Bayesian optimization) where the results of the previous model are used to select the next parameter values to try.</p>
+<p>There are pros/cons to each. A big plus of grid search is that it allows you to take advantage of parallel processing to speed up your search, while iterative search is, by construction, sequential. A big plus of iterative search is that it can quickly rule out areas of parameter space which can be efficient when covering many values of a high dimensional parameter space (where a grid may require many, many models to comfortably cover the entire parameter space, where many of them may turn out to be redundant).</p>
+<p>For this post, we’re going to stick with grid search. The simplest form of grid search uses regular grids, where you provide a vector of values for each parameter and the grid is composed of every possible value combination.</p>
+<p>{tune} provides useful defaults for searching parameter spaces of many common hyperparameters, for example, creating grids for the “penalty” parameter in log-10 space. We can simply specify the parameters, pass these to grid_regular(), and specify that we want 5 levels of penalization and 5 levels of mixture.</p>
+<pre class="r"><code>mixture_param &lt;- parameters(penalty(), mixture())
+
+regular_grid &lt;- grid_regular(mixture_param, levels = c(5, 5))
+
+regular_grid %&gt;% 
+  ggplot(aes(x = mixture, y = penalty)) +
+  geom_point() +
+  scale_y_log10()</code></pre>
+<p><img src="/post/2020-03-31-tidymodels-machine-learning-ecosystem_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="set-non-regular-paraments-for-grid-search" class="section level2">
+<h2>set non-regular paraments for grid search</h2>
+<p>{tune} also provides ways to create non-regular grids as well.</p>
+<p>Random grids generated using grid_random() will uniformly sample the parameter space.</p>
+<p>Space-filling designs (SFD) generated using grid_max_entropy() will try to keep candidate values away from one another in order to more efficiently cover the parameter space.</p>
+<p>The below shows how to create a SFD grid and plots 25 candidate values.</p>
+<pre class="r"><code>sfd_grid &lt;- grid_max_entropy(mixture_param, size = 25)
+
+sfd_grid</code></pre>
+<pre><code>## # A tibble: 25 x 2
+##     penalty mixture
+##       &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1.19e- 7 0.997  
+##  2 6.06e- 1 0.0986 
+##  3 5.44e- 9 0.718  
+##  4 2.27e- 5 0.215  
+##  5 2.20e- 7 0.826  
+##  6 1.24e- 1 0.929  
+##  7 3.25e- 4 0.693  
+##  8 6.89e- 3 0.00913
+##  9 1.01e- 6 0.517  
+## 10 1.71e-10 0.970  
+## # … with 15 more rows</code></pre>
+<pre class="r"><code>sfd_grid %&gt;% 
+  ggplot(aes(x = mixture, y = penalty)) +
+  geom_point() +
+  scale_y_log10()</code></pre>
+<p><img src="/post/2020-03-31-tidymodels-machine-learning-ecosystem_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="parallelization-set-up" class="section level2">
+<h2>parallelization set up</h2>
+<pre class="r"><code>library(doParallel)
+
+all_cores &lt;- parallel::detectCores(logical = FALSE)
+
+cl &lt;- makePSOCKcluster(all_cores-1)
+registerDoParallel(cl)
+
+clusterEvalQ(cl, {library(tidymodels)})</code></pre>
+<pre><code>## [[1]]
+##  [1] &quot;yardstick&quot;  &quot;workflows&quot;  &quot;tune&quot;       &quot;tibble&quot;     &quot;rsample&quot;   
+##  [6] &quot;tidyr&quot;      &quot;recipes&quot;    &quot;purrr&quot;      &quot;parsnip&quot;    &quot;infer&quot;     
+## [11] &quot;ggplot2&quot;    &quot;dplyr&quot;      &quot;dials&quot;      &quot;scales&quot;     &quot;broom&quot;     
+## [16] &quot;tidymodels&quot; &quot;stats&quot;      &quot;graphics&quot;   &quot;grDevices&quot;  &quot;utils&quot;     
+## [21] &quot;datasets&quot;   &quot;methods&quot;    &quot;base&quot;      
+## 
+## [[2]]
+##  [1] &quot;yardstick&quot;  &quot;workflows&quot;  &quot;tune&quot;       &quot;tibble&quot;     &quot;rsample&quot;   
+##  [6] &quot;tidyr&quot;      &quot;recipes&quot;    &quot;purrr&quot;      &quot;parsnip&quot;    &quot;infer&quot;     
+## [11] &quot;ggplot2&quot;    &quot;dplyr&quot;      &quot;dials&quot;      &quot;scales&quot;     &quot;broom&quot;     
+## [16] &quot;tidymodels&quot; &quot;stats&quot;      &quot;graphics&quot;   &quot;grDevices&quot;  &quot;utils&quot;     
+## [21] &quot;datasets&quot;   &quot;methods&quot;    &quot;base&quot;      
+## 
+## [[3]]
+##  [1] &quot;yardstick&quot;  &quot;workflows&quot;  &quot;tune&quot;       &quot;tibble&quot;     &quot;rsample&quot;   
+##  [6] &quot;tidyr&quot;      &quot;recipes&quot;    &quot;purrr&quot;      &quot;parsnip&quot;    &quot;infer&quot;     
+## [11] &quot;ggplot2&quot;    &quot;dplyr&quot;      &quot;dials&quot;      &quot;scales&quot;     &quot;broom&quot;     
+## [16] &quot;tidymodels&quot; &quot;stats&quot;      &quot;graphics&quot;   &quot;grDevices&quot;  &quot;utils&quot;     
+## [21] &quot;datasets&quot;   &quot;methods&quot;    &quot;base&quot;      
+## 
+## [[4]]
+##  [1] &quot;yardstick&quot;  &quot;workflows&quot;  &quot;tune&quot;       &quot;tibble&quot;     &quot;rsample&quot;   
+##  [6] &quot;tidyr&quot;      &quot;recipes&quot;    &quot;purrr&quot;      &quot;parsnip&quot;    &quot;infer&quot;     
+## [11] &quot;ggplot2&quot;    &quot;dplyr&quot;      &quot;dials&quot;      &quot;scales&quot;     &quot;broom&quot;     
+## [16] &quot;tidymodels&quot; &quot;stats&quot;      &quot;graphics&quot;   &quot;grDevices&quot;  &quot;utils&quot;     
+## [21] &quot;datasets&quot;   &quot;methods&quot;    &quot;base&quot;      
+## 
+## [[5]]
+##  [1] &quot;yardstick&quot;  &quot;workflows&quot;  &quot;tune&quot;       &quot;tibble&quot;     &quot;rsample&quot;   
+##  [6] &quot;tidyr&quot;      &quot;recipes&quot;    &quot;purrr&quot;      &quot;parsnip&quot;    &quot;infer&quot;     
+## [11] &quot;ggplot2&quot;    &quot;dplyr&quot;      &quot;dials&quot;      &quot;scales&quot;     &quot;broom&quot;     
+## [16] &quot;tidymodels&quot; &quot;stats&quot;      &quot;graphics&quot;   &quot;grDevices&quot;  &quot;utils&quot;     
+## [21] &quot;datasets&quot;   &quot;methods&quot;    &quot;base&quot;</code></pre>
+</div>
+<div id="tuning-by-parallelization" class="section level2">
+<h2>tuning by parallelization</h2>
+<p>Now we’re going to create our tuning object, which will take our recipe, our model, our resamples, and our metrics, to fit our 25 models over 10 resamples and compute our performance metrics, then we’ll stop our parallelization.</p>
+<pre class="r"><code>data_tune &lt;- tune_grid(
+  data_rec,
+  model = data_mixture,
+  resamples = cv_splits,
+  grid = regular_grid,
+  metrics = perf_metrics
+)
+
+stopCluster(cl)
+
+# Naive Lasso performance
+collect_metrics(cv_eval)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   .metric .estimator   mean     n std_err
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 ccc     standard   0.915     10 0.00660
+## 2 rmse    standard   0.0673    10 0.00345
+## 3 rsq     standard   0.854     10 0.0122</code></pre>
+</div>
+<div id="show-best" class="section level2">
+<h2>show best</h2>
+<pre class="r"><code># Best tuned models
+show_best(data_tune, &quot;ccc&quot;)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##        penalty mixture .metric .estimator  mean     n std_err
+##          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 0.0000000001    0.25 ccc     standard   0.917    10 0.00660
+## 2 0.0000000316    0.25 ccc     standard   0.917    10 0.00660
+## 3 0.00001         0.25 ccc     standard   0.917    10 0.00660
+## 4 0.0000000001    0.75 ccc     standard   0.917    10 0.00661
+## 5 0.0000000316    0.75 ccc     standard   0.917    10 0.00661</code></pre>
+<pre class="r"><code>show_best(data_tune, &quot;rmse&quot;, maximize = FALSE)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##        penalty mixture .metric .estimator   mean     n std_err
+##          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 0.00316         0.25 rmse    standard   0.0672    10 0.00334
+## 2 0.0000000001    0    rmse    standard   0.0672    10 0.00302
+## 3 0.0000000316    0    rmse    standard   0.0672    10 0.00302
+## 4 0.00001         0    rmse    standard   0.0672    10 0.00302
+## 5 0.00316         0    rmse    standard   0.0672    10 0.00302</code></pre>
+<pre class="r"><code>show_best(data_tune, &quot;rsq&quot;)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##        penalty mixture .metric .estimator  mean     n std_err
+##          &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 0.00316         0.25 rsq     standard   0.855    10 0.0116 
+## 2 0.0000000001    0    rsq     standard   0.854    10 0.00997
+## 3 0.0000000316    0    rsq     standard   0.854    10 0.00997
+## 4 0.00001         0    rsq     standard   0.854    10 0.00997
+## 5 0.00316         0    rsq     standard   0.854    10 0.00997</code></pre>
+</div>
+<div id="vis" class="section level2">
+<h2>vis</h2>
+<pre class="r"><code>collect_metrics(data_tune) %&gt;% 
+  filter(.metric == &quot;rmse&quot;) %&gt;%
+  mutate(mixture = format(mixture)) %&gt;% 
+  ggplot(aes(x = penalty, y = mean, col = mixture)) +
+  geom_line() +
+  geom_point() +
+  scale_x_log10() +
+  geom_vline(xintercept = 0.001, color = &quot;purple&quot;, lty = &quot;dotted&quot;)</code></pre>
+<p><img src="/post/2020-03-31-tidymodels-machine-learning-ecosystem_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+<div id="select-best-model" class="section level2">
+<h2>select best model</h2>
+<pre class="r"><code>best_mixture &lt;- 
+    select_best(data_tune, metric = &quot;rmse&quot;, maximize = FALSE)
+
+best_mixture</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   penalty mixture
+##     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 0.00316    0.25</code></pre>
+<pre class="r"><code>data_mixture_final &lt;-
+    data_mixture_wfl %&gt;%
+    finalize_workflow(best_mixture) %&gt;%
+    fit(data = data_train)</code></pre>
+</div>
+<div id="how-our-model-did-again-our-test-set" class="section level2">
+<h2>how our model did again our test set</h2>
+<pre class="r"><code>data_mixture_final %&gt;% 
+  predict(data_test) %&gt;% 
+  bind_cols(select(data_test, Sale_Price)) %&gt;% 
+  mutate(Sale_Price = log10(Sale_Price)) %&gt;% 
+  perf_metrics(truth = Sale_Price, estimate = .pred)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard      0.0885
+## 2 rsq     standard      0.768 
+## 3 ccc     standard      0.867</code></pre>
+</div>
+</div>
+<div id="what-variables-turned-out-to-be-the-most-important-in-predicting-sale-price" class="section level1">
+<h1>What variables turned out to be the most important in predicting sale price?</h1>
+<pre class="r"><code>tidy_coefs &lt;- data_mixture_final$fit$fit$fit %&gt;% 
+  broom::tidy() %&gt;% 
+  filter(term != &quot;(Intercept)&quot;) %&gt;% 
+  select(-step, -dev.ratio)
+
+delta &lt;- abs(tidy_coefs$lambda - best_mixture$penalty)
+lambda_opt &lt;- tidy_coefs$lambda[which.min(delta)]
+
+label_coefs &lt;- tidy_coefs %&gt;% 
+  mutate(abs_estimate = abs(estimate)) %&gt;% 
+  filter(abs_estimate &gt;= 0.01) %&gt;% 
+  distinct(term) %&gt;% 
+  inner_join(tidy_coefs, by = &quot;term&quot;) %&gt;% 
+  filter(lambda == lambda_opt)
+
+label_coefs</code></pre>
+<pre><code>## # A tibble: 16 x 3
+##    term                              estimate  lambda
+##    &lt;chr&gt;                                &lt;dbl&gt;   &lt;dbl&gt;
+##  1 PC1                               -0.0340  0.00306
+##  2 Garage_Cars                        0.0132  0.00306
+##  3 Year_Built                         0.00666 0.00306
+##  4 Year_Remod_Add                     0.0247  0.00306
+##  5 Fireplaces                         0.0117  0.00306
+##  6 TotRms_AbvGrd                      0.0128  0.00306
+##  7 BsmtFin_Type_1_GLQ                 0.00617 0.00306
+##  8 Full_Bath                          0.0119  0.00306
+##  9 Central_Air_Y                      0.0114  0.00306
+## 10 MS_Zoning_Residential_Low_Density  0.0138  0.00306
+## 11 Functional_Typ                     0.0105  0.00306
+## 12 Neighborhood_Edwards              -0.0102  0.00306
+## 13 Sale_Type_New                      0.00905 0.00306
+## 14 Mas_Vnr_Type_None                  0.00765 0.00306
+## 15 Neighborhood_Somerset              0.00908 0.00306
+## 16 Mas_Vnr_Type_Stone                 0.00171 0.00306</code></pre>
+<pre class="r"><code>tidy_coefs %&gt;% 
+  ggplot(aes(x = lambda, y = estimate, group = term, col = term, label = term)) +
+  geom_vline(xintercept = lambda_opt, lty = 3) +
+  geom_line(alpha = .4) +
+  theme(legend.position = &quot;none&quot;) +
+  scale_x_log10() +
+  ggrepel::geom_text_repel(data = label_coefs)</code></pre>
+<p><img src="/post/2020-03-31-tidymodels-machine-learning-ecosystem_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>The above shows the coefficient estimates plotted against lambda, the dotted line indicating the optimal lambda that we selected during our tuning. Nice to see that one of our principal components ended up being important!</p>
+</div>
+<div id="links" class="section level1">
+<h1>links</h1>
+<ul>
+<li><a href="https://dnield.com/posts/tidymodels-intro/">Introduction to the {tidymodels} Machine Learning Ecosystem | David Nield</a></li>
+</ul>
+</div>

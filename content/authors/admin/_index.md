@@ -19,7 +19,7 @@ interests:
 name: Jixing Liu
 organizations:
 - name: DeepDrug
-  url: "http://www.deepdrug.cn/en/"
+  url: "http://www.deepdrug.cn"
 role: Data algorithm engineer
 social:
 - icon: envelope

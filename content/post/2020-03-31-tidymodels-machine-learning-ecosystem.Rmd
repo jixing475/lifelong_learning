@@ -1,0 +1,444 @@
+---
+title: Tidymodels Machine Learning Ecosystem
+author: ZERO
+date: '2020-03-31'
+slug: tidymodels-machine-learning-ecosystem
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-03-31T13:24:54+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+```
+
+
+# Introduction
+
+> {tidyverse} ecosystem that has become the defacto standard for data importation, manipulation, and visualization in R.
+
+>My graduate training left me with a deep understanding of linear models and design-based causal inference, but with little or no training in other types of predictive modeling, unsupervised machine learning, version control, or putting models into production.
+
+> I chose the Applied Machine Learning workshop in order to fill the gap in my knowledge about machine learning models beyond OLS and logistic regression. 
+
+>Max Kuhn and Davis Vaughn were the two workshop leaders and I knew they were in the process of developing the {tidymodels} ecosystem, which stands to be a successor to their popular {caret} package and promises fill the modeling gap in the {tidyverse} ecosystem.
+
+# load data
+
+```{r}
+library(tidymodels)
+library(AmesHousing)
+
+data <- make_ames()
+
+data %>% 
+  head() %>% 
+  str()
+```
+
+# EDA 
+
+```{r}
+# data %>%
+#     select_if(is.factor) %>%
+#     #select(-State_Of_Origin) %>%
+#     gather() %>%
+#     ggplot(aes(x = value)) +
+#     facet_wrap( ~ key, scales = "free", ncol = 3) +
+#     geom_bar()
+
+
+
+
+# data %>%
+#     select_if(is.numeric) %>%
+#     gather() %>%
+#     ggplot(aes(x = value)) +
+#     facet_wrap( ~ key, scales = "free", ncol = 4) +
+#     geom_density()
+
+
+```
+
+
+# data type 
+
+```{r}
+# dt_new <- 
+# dt_new %>% 
+#   mutate(Promoted_or_Not = factor(Promoted_or_Not))
+
+# numeric_variables <- c(
+#   "total_years_dispatcher", "total_years_present_job",
+#   "childrendependents", "children_under_2_yrs", 
+#   "sick_days_in_last_year", "avg_work_hrs_week"
+# )
+# 
+# factor_variables <- setdiff(colnames(sleep), numeric_variables)
+# 
+# sleep <- mutate_at(sleep, vars(factor_variables), as.factor)
+```
+
+
+
+# Stratified training/test splits
+
+```{r}
+## Setting seed
+set.seed(1)
+
+## Generate split
+data_split <- initial_split(data, 
+                            prop = 4/5, 
+                            strata = "Sale_Price")
+
+## Printing the function gives us <Num Rows in Training Set/Num Rows in Testing Set/Total Num Rows>
+data_split
+## Calling training() on this object will give us our training set, and calling testing() on it will give us our testing set
+data_train <- training(data_split)
+data_test <- testing(data_split)
+
+data_train %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+
+
+# Data pre-processing
+
+## recipe
+
+```{r}
+data_rec <- recipe(
+  Sale_Price ~ .,
+  data = data_train
+) %>% 
+  step_log(Sale_Price, base = 10) %>%
+  step_rm(matches("Qual"), matches("Cond")) %>% # Remove unwanted variables 
+  step_dummy(all_nominal()) %>% 
+  #step_downsample(Promoted_or_Not) %>% 
+  step_center(all_predictors()) %>% 
+  step_scale(all_predictors()) %>% 
+  step_pca(contains("SF"), contains("Area"), threshold = .75) %>% #will convert numeric data into one or more principal components.
+  step_nzv(all_predictors()) # 👍 #
+
+data_rec
+```
+
+## prep
+
+```{r}
+data_rec_trained <- prep(data_rec, training = data_train, verbose = TRUE)
+
+data_rec_trained
+```
+
+## juice
+
+> Not bad, we’ve reduced 13 variables down to 7. This probably wasn’t the best use case of PCA, but it provides a good example of some advanced preprocessing made simple in {recipes}.
+
+```{r}
+data_rec_trained %>% 
+  juice() %>% 
+  select(starts_with("PC")) # select principal component
+```
+
+
+
+# Modeling
+
+> The beauty of {parsnip} is that it unifies the interface for model specifications so that you don’t need to remember dozens of different interfaces for each implementation of a model.
+
+## lasso
+
+Now let’s specify our model. We’re going to go with a Lasso model with a penalty of 0.001 using the {parsnip} package.
+
+### model
+```{r}
+data_lasso <- linear_reg(penalty = 0.001, mixture = 1) %>% 
+  set_engine("glmnet")
+
+
+```
+
+### workflow 
+
+Using workflows, we don’t need to go through the prep() and juice() steps we went through earlier when we go to fit our model (I demonstrated prep() and juice() as they can be useful for being able to inspect your pre-processed data as we did earlier).
+
+```{r}
+data_lasso_wfl <- workflow() %>% 
+  add_recipe(data_rec) %>% #recipe
+  add_model(data_lasso) # model
+
+data_lasso_wfl
+```
+
+### fit model
+
+```{r}
+data_lasso_fit <- fit(data_lasso_wfl, data_train)
+```
+
+
+### predict
+
+```{r}
+predict(data_lasso_fit, data_train) %>% 
+    slice(1:5)
+```
+
+
+
+# Model evaluation
+
+using metrics from the {yardstick} package
+
+metrics: 
+
+1. Root Mean Squared Error (RMSE)
+2. R squared
+3. the concordance correlation coefficient (ccc)
+
+### all in sample
+
+```{r}
+perf_metrics <- metric_set(rmse, rsq, ccc)
+
+perf_lasso <- data_lasso_fit %>% 
+  predict(data_train) %>% 
+  bind_cols(juice(data_rec_trained)) %>% 
+  perf_metrics(truth = Sale_Price, estimate = .pred)
+
+perf_lasso %>% 
+  arrange(.metric)
+```
+
+### cross-validation
+
+```{r}
+# create 10-fold cross-validation sets for evaluating our training set models using vfold_cv(), which defaults to creating 10 folds.
+cv_splits <- vfold_cv(data_train)
+cv_splits
+
+# take our workflow and use it to fit 10 models on these 10 splits using the fit_resamples() function from the {tune} package (also a part of the tidymodels ecosystem), as well as tell it to compute the performance metrics we set earlier.
+
+cv_eval <- fit_resamples(data_lasso_wfl, resamples = cv_splits, metrics = perf_metrics)
+cv_eval
+
+collect_metrics(cv_eval)
+```
+
+
+### in-sample VS cross-validation
+
+```{r}
+perf_lasso %>% 
+  arrange(.metric)
+
+collect_metrics(cv_eval)
+```
+
+# Model tuning
+
+> its real power comes in allowing us to easily tune the hyperparameters in our model.
+
+## 📌  tuning lasso
+
+
+```{r}
+data_mixture <- linear_reg(penalty = tune(), mixture = tune()) %>% 
+  set_engine("glmnet")
+
+data_mixture_wfl <- update_model(data_lasso_wfl, data_mixture)
+```
+
+
+## set regular paraments for grid search
+
+Next, we will define a parameter space to search. {tune} allows you to perform either grid search (where the candidate values are pre-defined) or iterative search (ex: Bayesian optimization) where the results of the previous model are used to select the next parameter values to try.
+
+There are pros/cons to each. A big plus of grid search is that it allows you to take advantage of parallel processing to speed up your search, while iterative search is, by construction, sequential. A big plus of iterative search is that it can quickly rule out areas of parameter space which can be efficient when covering many values of a high dimensional parameter space (where a grid may require many, many models to comfortably cover the entire parameter space, where many of them may turn out to be redundant).
+
+For this post, we’re going to stick with grid search. The simplest form of grid search uses regular grids, where you provide a vector of values for each parameter and the grid is composed of every possible value combination.
+
+{tune} provides useful defaults for searching parameter spaces of many common hyperparameters, for example, creating grids for the “penalty” parameter in log-10 space. We can simply specify the parameters, pass these to grid_regular(), and specify that we want 5 levels of penalization and 5 levels of mixture.
+
+```{r}
+mixture_param <- parameters(penalty(), mixture())
+
+regular_grid <- grid_regular(mixture_param, levels = c(5, 5))
+
+regular_grid %>% 
+  ggplot(aes(x = mixture, y = penalty)) +
+  geom_point() +
+  scale_y_log10()
+```
+
+## set non-regular paraments for grid search
+
+{tune} also provides ways to create non-regular grids as well.
+
+Random grids generated using grid_random() will uniformly sample the parameter space.
+
+Space-filling designs (SFD) generated using grid_max_entropy() will try to keep candidate values away from one another in order to more efficiently cover the parameter space.
+
+The below shows how to create a SFD grid and plots 25 candidate values.
+
+```{r}
+sfd_grid <- grid_max_entropy(mixture_param, size = 25)
+
+sfd_grid
+
+sfd_grid %>% 
+  ggplot(aes(x = mixture, y = penalty)) +
+  geom_point() +
+  scale_y_log10()
+```
+
+## parallelization set up
+
+```{r}
+
+library(doParallel)
+
+all_cores <- parallel::detectCores(logical = FALSE)
+
+cl <- makePSOCKcluster(all_cores-1)
+registerDoParallel(cl)
+
+clusterEvalQ(cl, {library(tidymodels)})
+```
+
+
+## tuning by parallelization
+
+Now we’re going to create our tuning object, which will take our recipe, our model, our resamples, and our metrics, to fit our 25 models over 10 resamples and compute our performance metrics, then we’ll stop our parallelization.
+
+```{r}
+data_tune <- tune_grid(
+  data_rec,
+  model = data_mixture,
+  resamples = cv_splits,
+  grid = regular_grid,
+  metrics = perf_metrics
+)
+
+stopCluster(cl)
+
+# Naive Lasso performance
+collect_metrics(cv_eval)
+```
+
+
+## show best
+```{r}
+# Best tuned models
+show_best(data_tune, "ccc")
+
+show_best(data_tune, "rmse", maximize = FALSE)
+
+show_best(data_tune, "rsq")
+```
+
+## vis
+
+```{r}
+collect_metrics(data_tune) %>% 
+  filter(.metric == "rmse") %>%
+  mutate(mixture = format(mixture)) %>% 
+  ggplot(aes(x = penalty, y = mean, col = mixture)) +
+  geom_line() +
+  geom_point() +
+  scale_x_log10() +
+  geom_vline(xintercept = 0.001, color = "purple", lty = "dotted")
+```
+
+## select best model
+
+
+```{r}
+best_mixture <- 
+    select_best(data_tune, metric = "rmse", maximize = FALSE)
+
+best_mixture
+
+data_mixture_final <-
+    data_mixture_wfl %>%
+    finalize_workflow(best_mixture) %>%
+    fit(data = data_train)
+
+```
+
+## how our model did again our test set
+
+```{r}
+data_mixture_final %>% 
+  predict(data_test) %>% 
+  bind_cols(select(data_test, Sale_Price)) %>% 
+  mutate(Sale_Price = log10(Sale_Price)) %>% 
+  perf_metrics(truth = Sale_Price, estimate = .pred)
+```
+
+# What variables turned out to be the most important in predicting sale price?
+
+```{r}
+tidy_coefs <- data_mixture_final$fit$fit$fit %>% 
+  broom::tidy() %>% 
+  filter(term != "(Intercept)") %>% 
+  select(-step, -dev.ratio)
+
+delta <- abs(tidy_coefs$lambda - best_mixture$penalty)
+lambda_opt <- tidy_coefs$lambda[which.min(delta)]
+
+label_coefs <- tidy_coefs %>% 
+  mutate(abs_estimate = abs(estimate)) %>% 
+  filter(abs_estimate >= 0.01) %>% 
+  distinct(term) %>% 
+  inner_join(tidy_coefs, by = "term") %>% 
+  filter(lambda == lambda_opt)
+
+label_coefs
+
+
+
+tidy_coefs %>% 
+  ggplot(aes(x = lambda, y = estimate, group = term, col = term, label = term)) +
+  geom_vline(xintercept = lambda_opt, lty = 3) +
+  geom_line(alpha = .4) +
+  theme(legend.position = "none") +
+  scale_x_log10() +
+  ggrepel::geom_text_repel(data = label_coefs)
+```
+
+The above shows the coefficient estimates plotted against lambda, the dotted line indicating the optimal lambda that we selected during our tuning. Nice to see that one of our principal components ended up being important!
+
+
+
+
+
+
+# links
+
++ [Introduction to the {tidymodels} Machine Learning Ecosystem | David Nield](https://dnield.com/posts/tidymodels-intro/)
+

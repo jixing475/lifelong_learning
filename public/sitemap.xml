@@ -33,13 +33,38 @@
   </url>
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/just-say-hello/</loc>
     <lastmod>2020-03-31T13:04:51+08:00</lastmod>
   </url>
   
   <url>
+    <loc>/tags/machine-learning/</loc>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/</loc>
-    <lastmod>2020-03-31T13:04:51+08:00</lastmod>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/tidymodels-machine-learning-ecosystem/</loc>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/tools/</loc>
+    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
   </url>
   
   <url>
@@ -80,11 +105,6 @@
   <url>
     <loc>/tags/source-themes/</loc>
     <lastmod>2019-04-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -144,11 +164,6 @@
   
   <url>
     <loc>/post/getting-started/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
     <lastmod>2019-04-17T00:00:00+00:00</lastmod>
   </url>
   
