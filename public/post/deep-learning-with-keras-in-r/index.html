@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Jixing Liu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Load Libraries  Import Data Download theIBM Watson Telco Data Set here. Next, useread_csv()to import the data into a nice tidy data frame. We use theglimpse()function to quickly inspect the data.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/deep-learning-with-keras-in-r/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/deep-learning-with-keras-in-r/">
+
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@studentZero475">
+  <meta property="twitter:creator" content="@studentZero475">
+  
+  <meta property="og:site_name" content="Jixing Liu">
+  <meta property="og:url" content="/post/deep-learning-with-keras-in-r/">
+  <meta property="og:title" content="Deep Learning With Keras in R | Jixing Liu">
+  <meta property="og:description" content="Load Libraries  Import Data Download theIBM Watson Telco Data Set here. Next, useread_csv()to import the data into a nice tidy data frame. We use theglimpse()function to quickly inspect the data."><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
+  <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-04-18T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-04-18T09:53:53&#43;08:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/deep-learning-with-keras-in-r/"
+  },
+  "headline": "Deep Learning With Keras in R",
+  
+  "datePublished": "2020-04-18T00:00:00Z",
+  "dateModified": "2020-04-18T09:53:53+08:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Jixing Liu"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Jixing Liu",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "Load Libraries  Import Data Download theIBM Watson Telco Data Set here. Next, useread_csv()to import the data into a nice tidy data frame. We use theglimpse()function to quickly inspect the data."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Deep Learning With Keras in R | Jixing Liu</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-end" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Deep Learning With Keras in R</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Apr 18, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    23 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/tools/">Tools</a></span>
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<div id="load-libraries" class="section level2">
+<h2>Load Libraries</h2>
+</div>
+<div id="import-data" class="section level2">
+<h2>Import Data</h2>
+<p>Download the<a href="https://www.ibm.com/communities/analytics/watson-analytics-blog/predictive-insights-in-the-telco-customer-churn-data-set/">IBM Watson Telco Data Set here</a>. Next, use<code>read_csv()</code>to import the data into a nice tidy data frame. We use the<code>glimpse()</code>function to quickly inspect the data. We have the target “Churn” and all other variables are potential predictors. The raw data set needs to be cleaned and preprocessed for ML.</p>
+<p>Use sapply to check the number if missing values in each columns</p>
+</div>
+<div id="preprocess-data" class="section level2">
+<h2>📌 Preprocess Data</h2>
+<blockquote>
+<p>We’ll go through a few steps to preprocess the data for ML. First, we “prune” the data, which is nothing more than removing unnecessary columns and rows. Then we split into training and testing sets. After that we explore the training set to uncover transformations that will be needed for deep learning. We save the best for last. We end by preprocessing the data with the new <a href="https://topepo.github.io/recipes">recipes</a> package.</p>
+</blockquote>
+<ul>
+<li>prune: 去掉不要的行和列</li>
+<li>split: 切分数据</li>
+<li>EDA explore the data</li>
+</ul>
+<div id="prune-the-data" class="section level3">
+<h3>Prune The Data</h3>
+<p>The data has a few columns and rows we’d like to remove:</p>
+<ul>
+<li>The “customerID” column is a unique identifier for each observation that isn’t needed for modeling. We can de-select this column.</li>
+<li>The data has 11 <code>NA</code> values all in the “TotalCharges” column. Because it’s such a small percentage of the total population (99.8% complete cases), we can drop these observations with the <code>drop_na()</code> function from <a href="http://tidyr.tidyverse.org/">tidyr</a>. Note that these may be customers that have not yet been charged, and therefore an alternative is to replace with zero or -99 to segregate this population from the rest.</li>
+<li>My preference is to have the target in the first column so we’ll include a final select() ooperation to do so.</li>
+</ul>
+<p>We’ll perform the cleaning operation with one tidyverse pipe (%&gt;%) chain.</p>
+<p>Bar plots of categorical variables</p>
+</div>
+<div id="split-into-traintest-sets" class="section level3">
+<h3>Split Into Train/Test Sets</h3>
+<p>We have a new package, <a href="https://topepo.github.io/rsample/">rsample</a>, which is very useful for sampling methods. It has the <code>initial_split()</code> function for splitting data sets into training and testing sets. The return is a special <code>rsplit</code> object.</p>
+</div>
+<div id="exploration-what-transformation-steps-are-needed-for-ml" class="section level3">
+<h3>Exploration: What Transformation Steps Are Needed For ML?</h3>
+<p>This phase of the analysis is often called exploratory analysis, but basically <strong>we are trying to answer the question, “What steps are needed to prepare for ML?” The key concept is knowing what transformations are needed to run the algorithm most effectively</strong>. <font color="darkred"> <strong>Artificial Neural Networks are best when the data is one-hot encoded, scaled and centered</strong></font> . In addition, other transformations may be beneficial as well to make relationships easier for the algorithm to identify. A full exploratory analysis is not practical in this article. With that said we’ll cover a few tips on transformations that can help as they relate to this dataset. In the next section, we will implement the preprocessing techniques.</p>
+<p>回答一个问题: ML 需要什么样的数据? 数据需要做什么样的转换.</p>
+<blockquote>
+<p><font color="darkred">one-hot, scaled and centered</font> 比较适合神经网络</p>
+</blockquote>
+<div id="discretize-the-tenure-feature" class="section level4">
+<h4>Discretize The “tenure” Feature</h4>
+<p>Numeric features like age, years worked, length of time in a position can generalize a group (or <font color="darkred"> <strong>cohort</strong></font> ). We see this in marketing a lot (think “millennials”, which identifies a group born in a certain timeframe). The “tenure” feature falls into this category of numeric features that can be discretized into groups.</p>
+<p>连续变量的离散化</p>
+</div>
+<div id="transform-the-totalcharges-feature" class="section level4">
+<h4>Transform The “totalcharges” Feature</h4>
+<p>log transform</p>
+<p>What we don’t like to see is when a lot of observations are bunched within a small part of the range.</p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-11-1.png" /></p>
+<p><strong>We can use a log transformation to even out the data into more of a normal distribution.</strong> It’s not perfect, but it’s quick and easy to get our data spread out a bit more.</p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-12-1.png" /></p>
+</div>
+<div id="数据转换改变数据之间的相关性" class="section level4">
+<h4>数据转换改变数据之间的相关性</h4>
+<p><strong>Pro Tip: A quick test is to see if the log transformation increases the magnitude of the correlation</strong> between “TotalCharges” and “Churn”. We’ll use a few <a href="http://dplyr.tidyverse.org/">dplyr</a> operations along with the <a href="https://github.com/drsimonj/corrr">corrr</a> package to perform a quick correlation.</p>
+<ul>
+<li><code>correlate()</code>: Performs tidy correlations on numeric data</li>
+<li><code>focus()</code>: Similar to <code>select()</code>. Takes columns and focuses on only the rows/columns of importance.</li>
+<li><code>fashion()</code>: Makes the formatting aesthetically easier to read.</li>
+</ul>
+<p>The correlation between “Churn” and “LogTotalCharges” is greatest in magnitude indicating the <strong>log transformation should improve the accuracy of the ANN model</strong> we build. Therefore, we should perform the log transformation.</p>
+<p>x 和 y 之间的相关性, 经过转换后增强了, 这样有利于模型的训练</p>
+</div>
+<div id="one-hot-encoding" class="section level4">
+<h4>One-Hot Encoding</h4>
+<p>One-hot encoding is the process of <strong>converting categorical data to sparse data</strong>, which has columns of only zeros and ones (this is also called creating “dummy variables” or a “design matrix”). <strong>All non-numeric data will need to be converted to dummy variables</strong>. This is simple for binary Yes/No data because we can simply convert to 1’s and 0’s. It becomes slightly more complicated with multiple categories, which requires creating new columns of 1’s and 0`s for each category (actually one less). <strong>We have four features that are multi-category: Contract, Internet Service, Multiple Lines, and Payment Method.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-14-1.png" /></p>
+</div>
+<div id="feature-scaling" class="section level4">
+<h4>Feature Scaling</h4>
+<p>ANN’s typically perform faster and often times with higher accuracy when the features are scaled and/or normalized (aka centered and scaled, also known as <strong>standardizing</strong>). <strong>Because ANNs use gradient descent, weights tend to update faster</strong>. According to <a href="https://sebastianraschka.com/"><em>Sebastian Raschka</em></a>, an expert in the field of Deep Learning, several examples when feature scaling is important are:</p>
+<blockquote>
+<ul>
+<li>k-nearest neighbors with an Euclidean distance measure if want all features to contribute equally</li>
+<li>k-means (see k-nearest neighbors)</li>
+<li>logistic regression, SVMs, perceptrons, neural networks etc. if you are using gradient descent/ascent-based optimization, otherwise some weights will update much faster than others</li>
+<li>linear discriminant analysis, principal component analysis, kernel principal component analysis since you want to find directions of maximizing the variance (under the constraints that those directions/eigenvectors/principal components are orthogonal); <strong>you want to have features on the same scale since you’d emphasize variables on “larger measurement scales” more</strong>. There are many more cases than I can possibly list here … I always recommend you to think about the algorithm and what it’s doing, and then it typically becomes obvious whether we want to scale your features or not.</li>
+</ul>
+</blockquote>
+<p>The interested reader can read <a href="http://sebastianraschka.com/Articles/2014_about_feature_scaling.html">Sebastian Raschka’s article</a> for a full discussion on the scaling/normalization topic. <font color="darkred"> <strong>Pro Tip: When in doubt, standardize the data</strong></font>.</p>
+</div>
+</div>
+<div id="preprocessing-with-recipes" class="section level3">
+<h3>Preprocessing With Recipes</h3>
+<p>Let’s implement the preprocessing steps/transformations uncovered during our exploration. Max Kuhn (creator of <a href="http://topepo.github.io/caret/index.html">caret</a>) has been putting some work into <em>Rlang ML tools</em> lately, and the payoff is beginning to take shape. <strong>A new package, <a href="https://topepo.github.io/recipes">recipes</a>, makes creating ML data preprocessing workflows a breeze</strong>! It takes a little getting used to, but I’ve found that it really helps manage the preprocessing steps. We’ll go over the nitty gritty as it applies to this problem.</p>
+<div id="step-1-create-a-recipe" class="section level4">
+<h4>Step 1: Create A Recipe</h4>
+<p><strong>A “recipe” is nothing more than a series of steps you would like to perform on the training, testing and/or validation sets</strong>. Think of preprocessing data like baking a cake (I’m not a baker but stay with me). <strong>The recipe is our steps to make the cake</strong>. It doesn’t do anything other than create the playbook for baking.</p>
+<p>We use the <code>recipe()</code> function to implement our preprocessing steps. The function takes a familiar <code>object</code> argument, which is a modeling function such as <code>object = Churn ~ .</code> meaning “Churn” is the outcome (aka response, predictor, target) and all other features are predictors. The function also takes the <code>data</code> argument, which gives the “recipe steps” perspective on how to apply during baking (next).</p>
+<p>A recipe is not very useful until we add “steps”, which are used to transform the data during baking. The package contains a number of useful “step functions” that can be applied. The entire list of <a href="https://topepo.github.io/recipes/reference/index.html">Step Functions</a> can be viewed here. For our model, we use:</p>
+<ol style="list-style-type: decimal">
+<li><code>step_discretize()</code> with the <code>option = list(cuts = 6)</code> to cut the continuous variable for “tenure” (number of years as a customer) to group customers into cohorts. 数据离散化</li>
+<li><code>step_log()</code> to log transform “TotalCharges”.</li>
+<li><code>step_dummy()</code> to one-hot encode the categorical data. Note that this adds columns of one/zero for categorical data with three or more categories.</li>
+<li><code>step_center()</code> to mean-center the data. 所有数据减去平均值</li>
+<li><code>step_scale()</code> to scale the data.</li>
+</ol>
+<p>The last step is to prepare the recipe with the <code>prep()</code> function. This step is used to “estimate the required parameters from a training set that can later be applied to other data sets”. <strong>This is important for centering and scaling and other functions that use parameters defined from the training set</strong>.</p>
+<p><code>prep()</code>, 这一步非常重要, 可以评估需要的参数保存下来用于之后的 future raw data, 这对于数据标准化这一步是非常重要的.</p>
+<p><strong>Here’s how simple it is to implement the preprocessing steps that we went over!</strong></p>
+<p>We can print the recipe object if we ever forget what steps were used to prepare the data. <strong>Pro Tip: We can save the recipe object as an RDS file using <code>saveRDS()</code>, and then use it to <code>bake()</code> (discussed next) future raw data into ML-ready data in production!</strong></p>
+<p>我们可以保存下来这个 recipes 用于之后的数据准备, 这对于使用模型预测数据是非常重要的.</p>
+</div>
+<div id="step-2-baking-with-your-recipe" class="section level4">
+<h4>Step 2: Baking With Your Recipe</h4>
+<p>Now for the fun part! We can apply the “recipe” to any data set with the <code>bake()</code> function, and it processes the data following our recipe steps. We’ll apply to our training and testing data to convert from raw data to a machine learning dataset. Check our training set out with <code>glimpse()</code>. <strong>Now that’s an ML-ready dataset prepared for ANN modeling!!</strong></p>
+<p><font color="darkred">raw dataset to machine learning dataset</font></p>
+</div>
+<div id="step-3-dont-forget-the-target" class="section level4">
+<h4>Step 3: Don’t Forget The Target</h4>
+<p>One last step, we need to store the actual values (truth) as <code>y_train_vec</code> and <code>y_test_vec</code>, which are needed for modeling our ANN. We convert to a series of numeric ones and zeros which can be accepted by the Keras ANN modeling functions. We add “vec” to the name so we can easily remember the class of the object (it’s easy to get confused when working with tibbles, vectors, and matrix data types).</p>
+</div>
+</div>
+</div>
+<div id="keras-model-customer-churn-with-keras-deep-learning" class="section level2">
+<h2>📌 Keras: Model Customer Churn With Keras (Deep Learning)</h2>
+<p><strong>This is super exciting!! Finally, Deep Learning with Keras in R!</strong> The team at RStudio has done fantastic work recently to create the <a href="https://tensorflow.rstudio.com/keras/">keras</a> package, which implements <a href="https://keras.io/">Keras</a> in R. Very cool!</p>
+<div id="background-on-artifical-neural-networks" class="section level3">
+<h3>Background On Artifical Neural Networks</h3>
+<p>For those unfamiliar with Neural Networks (and those that need a refresher), <a href="https://www.xenonstack.com/blog/overview-of-artificial-neural-networks-and-its-applications">read this article</a>. It’s very comprehensive, and you’ll leave with a general understanding of the types of deep learning and how they work.</p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/Artificial-Neural-Network-Architecture.jpg" /></p>
+<p>Source: <a href="https://www.xenonstack.com/blog/overview-of-artificial-neural-networks-and-its-applications">Xenon Stack</a></p>
+<p>Deep Learning has been available in R for some time, but the primary packages used in the wild have not (this includes Keras, Tensor Flow, Theano, etc, which are all Python libraries). It’s worth mentioning that a number of other Deep Learning packages exist in R including <code>h2o</code>, <code>mxnet</code>, and others. The interested reader can check out <a href="http://www.rblog.uni-freiburg.de/2017/02/07/deep-learning-in-r/">this blog post for a comparison of deep learning packages in R</a>.</p>
+</div>
+<div id="building-a-deep-learning-model" class="section level3">
+<h3>Building A Deep Learning Model</h3>
+<p>We’re going to build a special class of ANN called a <a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">Multi-Layer Perceptron (MLP)</a>. MLPs are one of the simplest forms of deep learning, but they are both highly accurate and serve as a jumping-off point for more complex algorithms. MLPs are quite versatile as they can be used for regression, binary and multi classification (and are typically quite good at classification problems).</p>
+<p>We’ll build a three layer MLP with Keras. Let’s walk-through the steps before we implement in R.</p>
+<ol style="list-style-type: decimal">
+<li><p><font color="darkred"><strong>Initialize a sequential model</strong></font> : The first step is to initialize a sequential model with <code>keras_model_sequential()</code>, which is the beginning of our Keras model. The sequential model is composed of a linear stack of layers.</p></li>
+<li><p><strong>Apply layers to the sequential model</strong>: Layers consist of the input layer, hidden layers and an output layer. The <strong>input layer is the data and provided it’s formatted correctly there’s nothing more to discuss</strong>. The hidden layers and output layers are what controls the ANN inner workings.</p></li>
+</ol>
+<ul>
+<li><strong>Hidden Layers</strong>: Hidden layers form the neural network nodes that enable non-linear activation using weights. The hidden layers are created using <code>layer_dense()</code>. We’ll add two hidden layers. We’ll apply <code>units = 16</code>, which is the <strong>number of nodes</strong>. We’ll select <code>kernel_initializer = "uniform"</code> and <code>activation = "relu"</code> for both layers. The first layer needs to have the <code>input_shape = 35</code>, which is the number of columns in the training set (the number of feature) . <strong>Key Point: While we are arbitrarily selecting the number of hidden layers, units, kernel initializers and activation functions, these parameters can be optimized through a process called hyperparameter tuning that is discussed in <a href="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/#next-steps">Next Steps</a></strong>.</li>
+</ul>
+<blockquote>
+<p>关键点：尽管我们可以任意选择隐藏层，单元，内核初始化程序和激活函数的数量，但是可以通过称为“超参数调整”的过程来优化这些参数，该过程将在[后续步骤]中进行讨论。</p>
+</blockquote>
+<ul>
+<li><p><strong>Dropout Layers</strong>: Dropout layers are used to <strong>control overfitting</strong>. This eliminates weights below a cutoff threshold to prevent low weights from overfitting the layers. We use the <code>layer_dropout()</code> function add two drop out layers with <code>rate = 0.10</code> to remove weights below 10%.</p></li>
+<li><p><strong>Output Layer</strong>: The output layer specifies the shape of the output and the method of assimilating the learned information. The output layer is applied using the <code>layer_dense()</code>. For binary values, the shape should be <code>units = 1</code>. For multi-classification, the <code>units</code> should correspond to the number of classes. We set the <code>kernel_initializer = "uniform"</code> and the <code>activation = "sigmoid"</code> (common for binary classification).</p></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><strong>Compile the model</strong>: The last step is to compile the model with <code>compile()</code>. We’ll use <code>optimizer = "adam"</code>, which is one of the most popular optimization algorithms. We select <code>loss = "binary_crossentropy"</code> since this is a binary classification problem. We’ll select <code>metrics = c("accuracy")</code> to be evaluated during training and testing. <strong>Key Point: The optimizer is often included in the tuning process</strong>.</li>
+</ol>
+<div id="build-model-object" class="section level4">
+<h4>Build model object</h4>
+<p>Let’s codify the discussion above to build our Keras MLP-flavored ANN model.</p>
+</div>
+<div id="fit-model" class="section level4">
+<h4>Fit Model</h4>
+<p>We use the fit() function to run the ANN on our training data. The object is our model, and x and y are our training data in matrix and numeric vector forms, respectively. The <code>batch_size = 50</code> sets the number samples per gradient update within each epoch. We set <code>epochs = 35</code> to control the number training cycles. Typically we want to keep the batch size high since this decreases the error within each training cycle (epoch). We also want epochs to be large, which is important in visualizing the training history (discussed below). We set <code>validation_split = 0.30</code> to include 30% of the data for model validation, which prevents overfitting. The training process should complete in 15 seconds or so.</p>
+<p>我们将" validation_split = 0.30"设置为包括30％的数据用于模型验证，这可以防止过拟合。
+验证集弄大一点可以防止模型过拟合??</p>
+</div>
+<div id="vis-history" class="section level4">
+<h4>vis history</h4>
+<p>We can inspect the training history. We want to make sure there is minimal difference between the validation accuracy and the training accuracy.</p>
+<p>We can visualize the Keras training history using the <code>plot()</code> function. What we want to see is the validation accuracy and loss leveling off, which means the model has completed training. We see that there is some divergence between training loss/accuracy and validation loss/accuracy. This model indicates we can possibly stop training at an earlier epoch. <font color="darkred"><strong>Pro Tip: Only use enough epochs to get a high validation accuracy. Once validation accuracy curve begins to flatten or decrease, it’s time to stop training.</strong></font></p>
+<blockquote>
+<p>专家提示：请仅使用足够的 epochs 以获得较高的验证准确性。验证准确性曲线开始变平或减小后，就该停止训练了。</p>
+</blockquote>
+</div>
+</div>
+<div id="making-predictions" class="section level3">
+<h3>Making Predictions</h3>
+<p>We’ve got a good model based on the validation accuracy. Now let’s make some predictions from our <a href="https://tensorflow.rstudio.com/keras/">keras</a> model on the test data set, which was unseen during modeling (we use this for the true performance assessment). We have two functions to generate predictions:</p>
+<ul>
+<li><code>predict_classes()</code>: Generates class values as a matrix of ones and zeros. Since we are dealing with binary classification, we’ll convert the output to a vector.</li>
+<li><code>predict_proba()</code>: Generates the class probabilities as a numeric matrix indicating <strong>the probability of being a class</strong>. Again, we convert to a numeric vector because there is only one column output.</li>
+</ul>
+</div>
+</div>
+<div id="inspect-performance-with-yardstick" class="section level2">
+<h2>Inspect Performance With Yardstick</h2>
+<p>The <code>yardstick</code> package has a collection of handy functions for measuring performance of machine learning models. We’ll overview some metrics we can use to understand the performance of our model.</p>
+<p>First, let’s get the data formatted for <code>yardstick</code>. We create a data frame with the <strong>truth (actual values as factors)</strong>, <strong>estimate (predicted values as factors)</strong>, and <strong>the class probability (probability of yes as numeric)</strong>. We use the <code>fct_recode()</code> function from the <a href="http://forcats.tidyverse.org/">forcats</a> package to assist with recoding as Yes/No values.</p>
+<p>Now that we have the data formatted, we can take advantage of the <code>yardstick</code> package. The only other thing we need to do is to set <code>options(yardstick.event_first = FALSE)</code>. As pointed out by <a href="https://github.com/ad1729">ad1729</a> in <a href="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/options(yardstick.event_first%20=%20FALSE)">GitHub Issue 13</a>, the default is to classify 0 as the positive class instead of 1.</p>
+<p>这个问题在最新版的 yardstick 已经得到解决了</p>
+<div id="confusion-table" class="section level4">
+<h4>Confusion Table</h4>
+<p>We can use the <code>conf_mat()</code> function to get the confusion table. We see that the model was by no means perfect, but it did a decent job of identifying customers likely to churn.</p>
+</div>
+<div id="accuracy" class="section level4">
+<h4>Accuracy</h4>
+<p>We can use the <code>metrics()</code> function to get an accuracy measurement from the test set. We are getting roughly 82% accuracy.</p>
+</div>
+<div id="auc" class="section level4">
+<h4>AUC</h4>
+<p>We can also get the ROC Area Under the Curve (AUC) measurement. AUC is often a good metric used to compare different classifiers and to compare to randomly guessing (AUC_random = 0.50). Our model has AUC = 0.85, which is much better than randomly guessing. Tuning and testing different classification algorithms may yield even better results.</p>
+</div>
+<div id="precision-and-recall" class="section level4">
+<h4>Precision And Recall</h4>
+<p>Precision is when the model predicts “yes”, how often is it actually “yes”. Recall (also true positive rate or specificity) is when the actual value is “yes” how often is the model correct. We can get <code>precision()</code> and <code>recall()</code> measurements using <code>yardstick</code>.</p>
+<p>Precision and recall are very important to the business case: The organization is concerned with <strong>balancing the cost of targeting and retaining customers at risk of leaving with the cost of inadvertently targeting customers that are not planning to leave</strong> (and potentially decreasing revenue from this group). The threshold above which to predict Churn = “Yes” can be adjusted to optimize for the business problem. This becomes an <strong>Customer Lifetime Value optimization problem</strong> that is discussed further in <a href="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/#next-steps">Next Steps</a>.</p>
+</div>
+<div id="f1-score" class="section level4">
+<h4>F1 Score</h4>
+<p>We can also get the F1-score, which is a <strong>weighted average between the precision and recall.</strong> Machine learning classifier thresholds are often adjusted to maximize the F1-score. However, this is often not the optimal solution to the business problem.</p>
+</div>
+</div>
+<div id="explain-the-model-with-lime" class="section level2">
+<h2>📌 Explain The Model With LIME</h2>
+<p>LIME stands for <em>Local Interpretable Model-agnostic Explanations</em>, and is a method for explaining black-box machine learning model classifiers. For those new to LIME, this YouTube video does a really nice job explaining how LIME helps to identify feature importance with black box machine learning models (e.g. deep learning, stacked ensembles, random forest).</p>
+<div class="figure">
+<img src="https://i.loli.net/2020/04/18/5QsLvq1PdHUthGC.png" alt="why should I trust you" />
+<p class="caption">why should I trust you</p>
+</div>
+<p><a href="https://www.youtube.com/watch?v=hUnRCxnydCc&amp;feature=emb_logo">(28) KDD2016 paper 573 - YouTube</a></p>
+<div id="setup" class="section level4">
+<h4>Setup</h4>
+<p>The <a href="https://github.com/thomasp85/lime">lime</a> package implements <a href="https://github.com/marcotcr/lime">LIME</a> in R. One thing to note is that it’s not setup out-of-the-box to work with <code>keras</code>. The good news is with a few functions we can get everything working properly. We’ll need to make two custom functions:</p>
+<ul>
+<li><p><code>model_type</code>: Used to tell <code>lime</code> <strong>what type of model we are dealing with</strong>. It could be classification, regression, survival, etc.</p></li>
+<li><p><code>predict_model</code>: Used to allow <code>lime</code> to perform predictions that its algorithm can interpret.</p></li>
+</ul>
+<div id="model_type-fucntion-define" class="section level5">
+<h5>model_type fucntion define</h5>
+<p>The first thing we need to do is <strong>identify the class of our model object</strong>. We do this with the <code>class()</code> function.</p>
+<p>Next we create our <code>model_type()</code> function. It’s only input is x the keras model. <strong>The function simply returns “classification”, which tells LIME we are classifying.</strong></p>
+</div>
+<div id="predict_model-function-define" class="section level5">
+<h5>predict_model function define</h5>
+<p>Now we can create our <code>predict_model()</code> function, which wraps <code>keras::predict_proba()</code>. <strong>The trick here is to realize that it’s inputs must be x a model, newdata a dataframe object (this is important)</strong>, and type which is not used but can be use to switch the output type. The output is also a little tricky because it must be in the format of probabilities by classification (this is important; shown next).</p>
+<p>Run this next script to show you what the output looks like and to test our predict_model() function. See how it’s the probabilities by classification. It must be in this form for <code>model_type = "classification"</code>.</p>
+</div>
+<div id="predict_model-function" class="section level5">
+<h5>predict_model() function</h5>
+</div>
+</div>
+<div id="enjoy-lime" class="section level4">
+<h4>Enjoy LIME</h4>
+<p>Now the fun part, we create an explainer using the <code>lime()</code> function. Just pass the training data set without the “Attribution column”. The form must be a data frame, which is OK since our <code>predict_model</code> function will switch it to an keras object. Set <code>model = automl_leader</code> our leader model, and <code>bin_continuous = FALSE</code>. We could tell the algorithm to bin continuous variables, but this may not make sense for categorical numeric data that we didn’t change to factors.</p>
+<p>Now we run the <code>explain()</code> function, which returns our explanation. This can take a minute to run so we limit it to just the first ten rows of the test data set.</p>
+<ul>
+<li>We set <code>n_labels = 1</code> because we care about explaining a single class.</li>
+<li>Setting <code>n_features = 4</code> <strong>returns the top four features that are critical to each case</strong>.</li>
+<li>Finally, setting <code>kernel_width = 0.5</code> allows us to increase the “model_r2” value by shrinking the localized evaluation.</li>
+</ul>
+</div>
+<div id="feature-importance-visualization" class="section level4">
+<h4>Feature Importance Visualization</h4>
+<p>The payoff for the work we put in using LIME is this <strong>feature importance plot</strong>. This allows us to visualize each of the first ten cases (observations) from the test data. <strong>The top four features for each case are shown</strong>. Note that <strong>they are not the same for each case</strong>.</p>
+<p>The green bars mean that the feature <strong>supports the model conclusion</strong>, and the red bars contradict.</p>
+<p>A few important features based on frequency in first ten cases:</p>
+<ul>
+<li>Tenure (7 cases)</li>
+<li>Senior Citizen (5 cases)</li>
+<li>Online Security (4 cases)</li>
+</ul>
+<p>Another excellent visualization can be performed using <code>plot_explanations()</code>, which produces a facetted heatmap of all case/label/feature combinations. It’s a more condensed version of plot_features(), but we need to be careful because it does not provide exact statistics and it makes it less easy to investigate binned features (Notice that “tenure” would not be identified as a contributor even though it shows up as a top feature in 7 of 10 cases).</p>
+</div>
+</div>
+<div id="check-explanations-with-correlation-analysis" class="section level2">
+<h2>📌 Check Explanations With Correlation Analysis</h2>
+<p>One thing we need to be careful with the LIME visualization is that we are only doing a sample of the data, in our case the first 10 test observations. Therefore, we are <strong>gaining a very localized understanding of how the ANN works</strong>. However, we also want to know on from a global perspective what drives feature importance.</p>
+<p>We can perform a <strong>correlation analysis</strong> on the training set as well to help glean what features correlate globally to “Churn”. We’ll use the <code>corrr</code> package, which performs tidy correlations with the function <code>correlate()</code>. We can get the correlations as follows.</p>
+<p>The correlation visualization helps in distinguishing which features are relavant to Churn.</p>
+<p>The correlation analysis helps us quickly disseminate which features that the LIME analysis may be excluding. We can see that the following features are highly correlated (magnitude &gt; 0.25):</p>
+<ul>
+<li><p>Increases Likelihood of Churn (Red): - Tenure = Bin 1 (&lt;12 Months) - Internet Service = “Fiber Optic” - Payment Method = “Electronic Check”</p></li>
+<li><p>Decreases Likelihood of Churn (Blue): - Contract = “Two Year” - Total Charges (Note that this may be a biproduct of additional services such as Online Security)</p></li>
+</ul>
+</div>
+<div id="feature-investigation" class="section level2">
+<h2>📌 Feature Investigation</h2>
+<p>We can investigate features that are <strong>most frequent</strong> in the LIME feature importance visualization along with those that the <strong>correlation analysis shows an above normal magnitude</strong>. We’ll investigate:</p>
+<ul>
+<li>Tenure (7/10 LIME Cases, Highly Correlated)</li>
+<li>Contract (Highly Correlated)</li>
+<li>Internet Service (Highly Correlated)</li>
+<li>Payment Method (Highly Correlated)</li>
+<li>Senior Citizen (5/10 LIME Cases)</li>
+<li>Online Security (4/10 LIME Cases)</li>
+</ul>
+<div id="tenure-710-lime-cases-highly-correlated" class="section level4">
+<h4>Tenure (7/10 LIME Cases, Highly Correlated)</h4>
+<p>LIME cases indicate that the ANN model is using this feature frequently and high correlation agrees that this is important. Investigating the feature distribution, it appears that customers with lower tenure (bin 1) are more likely to leave. <strong>Opportunity: Target customers with less than 12 month tenure.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-45-1.png" /></p>
+</div>
+<div id="contract-highly-correlated" class="section level4">
+<h4>Contract (Highly Correlated)</h4>
+<p>While LIME did not indicate this as a primary feature in the first 10 cases, the feature is clearly correlated with those electing to stay. Customers with one and two year contracts are much less likely to churn. <strong>Opportunity: Offer promotion to switch to long term contracts.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-46-1.png" /></p>
+</div>
+<div id="internet-service-highly-correlated" class="section level4">
+<h4>Internet Service (Highly Correlated)</h4>
+<p>While LIME did not indicate this as a primary feature in the first 10 cases, the feature is clearly correlated with those electing to stay. Customers with fiber optic service are more likely to churn while those with no internet service are less likely to churn. <strong>Improvement Area: Customers may be dissatisfied with fiber optic service.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-47-1.png" /></p>
+</div>
+<div id="payment-method-highly-correlated" class="section level4">
+<h4>Payment Method (Highly Correlated)</h4>
+<p>While LIME did not indicate this as a primary feature in the first 10 cases, the feature is clearly correlated with those electing to stay. Customers with electronic check are more likely to leave. <strong>Opportunity: Offer customers a promotion to switch to automatic payments</strong>.</p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-48-1.png" /></p>
+</div>
+<div id="senior-citizen-510-lime-cases" class="section level4">
+<h4>Senior Citizen (5/10 LIME Cases)</h4>
+<p>Senior citizen appeared in several of the LIME cases indicating it was important to the ANN for the 10 samples. However, it was not highly correlated to Churn, which may indicate that the ANN is using in an more sophisticated manner (e.g. as an interaction). It’s difficult to say that senior citizens are more likely to leave, but non-senior citizens appear less at risk of churning. <strong>Opportunity: Target users in the lower age demographic.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-49-1.png" /></p>
+</div>
+<div id="online-security-410-lime-cases" class="section level4">
+<h4>Online Security (4/10 LIME Cases)</h4>
+<p>Customers that did not sign up for online security were more likely to leave while customers with no internet service or online security were less likely to leave. <strong>Opportunity: Promote online security and other packages that increase retention rates.</strong></p>
+<p><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/figure-html/unnamed-chunk-50-1.png" /></p>
+</div>
+</div>
+<div id="next-steps-business-science-universitydomain-knowledge" class="section level2">
+<h2>📌 Next Steps: Business Science University(Domain knowledge)</h2>
+<p>We’ve just scratched the surface with the solution to this problem, but unfortunately there’s only so much ground we can cover in an article. Here are a few next steps that I’m pleased to announce will be covered in a <a href="https://university.business-science.io/"><strong>Business Science University</strong></a> course coming in 2018!</p>
+<div id="customer-lifetime-value" class="section level3">
+<h3>Customer Lifetime Value</h3>
+<p><strong>Your organization needs to see the financial benefit so always tie your analysis to sales, profitability or ROI.</strong> <a href="https://en.wikipedia.org/wiki/Customer_lifetime_value">Customer Lifetime Value (<em>CLV</em>)</a> is a methodology that ties the business profitability to the retention rate. While we did not implement the CLV methodology herein, a full customer churn analysis would tie the churn to an classification cutoff (threshold) optimization to maximize the CLV with the predictive ANN model.</p>
+<p>The simplified CLV model is:</p>
+<p>CLV=GC∗11+d−rCLV=GC∗11+d−r</p>
+<p>Where,</p>
+<ul>
+<li><em>GC</em> is the gross contribution per customer</li>
+<li><em>d</em> is the annual discount rate</li>
+<li><em>r</em> is the retention rate</li>
+</ul>
+</div>
+<div id="ann-performance-evaluation-and-improvement" class="section level3">
+<h3>ANN Performance Evaluation and Improvement</h3>
+<p>The ANN model we built is good, but it could be better. How we understand our model accuracy and improve on it is through the combination of two techniques:</p>
+<ul>
+<li><strong>K-Fold Cross-Fold Validation</strong>: Used to obtain bounds for accuracy estimates.</li>
+<li><strong>Hyper Parameter Tuning</strong>: Used to improve model performance by searching for the best parameters possible.</li>
+</ul>
+<p>We need to implement <em>K-Fold Cross Validation</em> and <em>Hyper Parameter Tuning</em> if we want a best-in-class model.</p>
+</div>
+<div id="distributing-analytics" class="section level3">
+<h3>Distributing Analytics</h3>
+<p><strong>It’s critical to communicate data science insights to decision makers in the organization</strong>. Most decision makers in organizations are not data scientists, but these individuals make important decisions on a day-to-day basis. The Shiny application below includes a <strong>Customer Scorecard</strong> to monitor customer health (risk of churn).</p>
+<p><a href="https://jjallaire.shinyapps.io/keras-customer-churn/"><img src="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/images/shiny-application.png" /></a></p>
+</div>
+<div id="business-science-university" class="section level3">
+<h3>Business Science University</h3>
+<p>You’re probably wondering why we are going into so much detail on next steps. We are happy to announce a new project for 2018: <a href="https://university.business-science.io/"><strong>Business Science University</strong></a>, an online school dedicated to helping data science learners.</p>
+<p>Benefits to learners:</p>
+<ul>
+<li>Build your own <strong>online GitHub portfolio</strong> of data science projects to market your skills to future employers!</li>
+<li>Learn <strong>real-world applications</strong> in People Analytics (HR), Customer Analytics, Marketing Analytics, Social Media Analytics, Text Mining and Natural Language Processing (NLP), Financial and Time Series Analytics, and more!</li>
+<li>Use <strong>advanced machine learning techniques</strong> for both high accuracy modeling and explaining features that have an effect on the outcome!</li>
+<li>Create <strong>ML-powered web-applications</strong> that can be distributed throughout an organization, enabling non-data scientists to benefit from algorithms in a user-friendly way!</li>
+</ul>
+<p><strong>Enrollment is open</strong> so please signup for special perks. Just go to <a href="https://university.business-science.io/"><strong>Business Science University</strong></a> and select enroll.</p>
+</div>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p><strong>Customer churn is a costly problem</strong>. The good news is that <strong>machine learning can solve churn problems</strong>, making the organization more profitable in the process. In this article, we saw how <strong>Deep Learning can be used to predict customer churn</strong>. We built an ANN model using the new <a href="https://tensorflow.rstudio.com/keras/">keras</a> package that achieved <strong>82% predictive accuracy</strong> (without tuning)! We used three new machine learning packages to help with preprocessing and measuring performance: <a href="https://topepo.github.io/recipes">recipes</a>, <a href="https://topepo.github.io/rsample/">rsample</a> and <a href="https://github.com/topepo/yardstick">yardstick</a>. Finally we used <a href="https://github.com/thomasp85/lime">lime</a> to explain the Deep Learning model, which <strong>traditionally was impossible</strong>! We checked the LIME results with a <strong>Correlation Analysis</strong>, which brought to light other features to investigate. For the IBM Telco dataset, tenure, contract type, internet service type, payment menthod, senior citizen status, and online security status were useful in diagnosing customer churn. We hope you enjoyed this article!</p>
+</div>
+<div id="links" class="section level2">
+<h2>Links</h2>
+<ul>
+<li><p><a href="https://blogs.rstudio.com/tensorflow/posts/2018-01-11-keras-customer-churn/">RStudio AI Blog: Deep Learning With Keras To Predict Customer Churn</a></p></li>
+<li><p><a href="https://github.com/bennwei/Machine_Learning_projects/blob/6d3814a596bc2f9dee09fffbf45a8e052dcefc09/Churn_analysis_R/churn_analysis.Rmd">Machine_Learning_projects/churn_analysis.Rmd at 6d3814a596bc2f9dee09fffbf45a8e052dcefc09 · bennwei/Machine_Learning_projects</a></p></li>
+</ul>
+</div>
+<div id="error" class="section level2">
+<h2>Error</h2>
+<p>“Error in <code>dimnames&lt;-.data.frame</code>(<code>*tmp*</code>, value = list(n)) : invalid ‘dimnames’ given for data frame”</p>
+<p><a href="https://github.com/thomasp85/lime/issues/139">keras explanations with dataframe data · Issue #139 · thomasp85/lime</a></p>
+<p>I had the same error, and I managed to solve it by overwriting the correct output of class(model). It seems the newer version uses different name. So, it is fixed for by:</p>
+<pre><code>class(model_keras)
+# [1] &quot;keras.engine.sequential.Sequential&quot;
+# [2] &quot;keras.engine.training.Model&quot;       
+# [3] &quot;keras.engine.network.Network&quot;      
+# [4] &quot;keras.engine.base_layer.Layer&quot;     
+# [5] &quot;python.builtin.object&quot;    </code></pre>
+<p>Then use <code>keras.engine.sequential.Sequential</code> instead of <code>keras.models.Sequential</code>, i.e.:</p>
+<pre><code># gives error
+model_type.keras.models.Sequential &lt;- function(x, ...) {
+  &quot;classification&quot;
+}
+
+# works!
+model_type.keras.engine.sequential.Sequential &lt;- function(x, ...) {
+  &quot;classification&quot;
+}</code></pre>
+<p>The same for <code>predict_model()</code>, use <code>keras.engine.sequential.Sequential</code>, or what is the output of <code>class(model)</code></p>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/deep-learning/">Deep Learning</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/deep-learning-with-keras-in-r/&amp;text=Deep%20Learning%20With%20Keras%20in%20R" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/deep-learning-with-keras-in-r/&amp;t=Deep%20Learning%20With%20Keras%20in%20R" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Deep%20Learning%20With%20Keras%20in%20R&amp;body=/post/deep-learning-with-keras-in-r/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/deep-learning-with-keras-in-r/&amp;title=Deep%20Learning%20With%20Keras%20in%20R" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Deep%20Learning%20With%20Keras%20in%20R%20/post/deep-learning-with-keras-in-r/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/deep-learning-with-keras-in-r/&amp;title=Deep%20Learning%20With%20Keras%20in%20R" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hu07fc0e18af06276e9e6299e1311e0948_94601_270x270_fill_q90_lanczos_center.jpeg" alt="Jixing Liu">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Jixing Liu</a></h5>
+      <h6 class="card-subtitle">Data algorithm engineer</h6>
+      <p class="card-text">My research interests include Bioinformatics, Deep learning and data visualization matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/studentZero475" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/jixing475" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/project/internal-project/">Internal Project</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.37431be2d92d7fb0160054761ab79602.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

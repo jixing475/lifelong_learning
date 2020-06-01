@@ -239,7 +239,7 @@
   <meta property="og:description" content="Personal website for Jixing Liu"><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
   <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-03-31T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2020-04-26T00:00:00&#43;00:00">
   
 
   
@@ -544,6 +544,69 @@
   
 
   
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/a-gentle-introduction-to-tidymodels/" >a gentle introduction to tidymodels</a></h2>
+      <div class="article-style">
+        
+          SETUP  Load library library(tidymodels)  EDA iris %&gt;% janitor::clean_names() %&gt;% set_names(colnames(.) %&gt;% str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;% str_to_title()) %&gt;% select_if(is.numeric) %&gt;% gather() %&gt;% ggplot(aes(x = value)) + facet_wrap(~ key, scales = &quot;free&quot;, ncol = 4) + geom_histogram() iris %&gt;% janitor::clean_names() %&gt;% set_names(colnames(.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/ml-workflow/" >ML Workflow</a></h2>
+      <div class="article-style">
+        
+          Setup  Load pkg library(tidymodels) # Loads parsnip, rsample, recipes, yardstick library(skimr) # Quickly get a sense of data library(knitr)   Load Data telco &lt;- read_csv(&quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&quot;) telco %&gt;% head() %&gt;% kable()    customerID  gender  SeniorCitizen  Partner  Dependents  tenure  PhoneService  MultipleLines  InternetService  OnlineSecurity  OnlineBackup  DeviceProtection  TechSupport  StreamingTV  StreamingMovies  Contract  PaperlessBilling  PaymentMethod  MonthlyCharges  TotalCharges  Churn      7590-VHVEG  Female  0  Yes  No  1  No  No phone service  DSL  No  Yes  No  No  No  No  Month-to-month  Yes  Electronic check  29.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/tidymodels-tidy-machine-learning-in-r/" >Tidymodels: tidy machine learning in R</a></h2>
+      <div class="article-style">
+        
+          Setup  function x_to_na &lt;- function (s, x = 0) { sapply(s, function(y) ifelse(y %in% x, NA, y)) }  What is tidymodels Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/r-square-and-q-square-what-the-difference/" >R square and Q square , what the difference</a></h2>
+      <div class="article-style">
+        
+          R square 和 Q square 其实他们的计算方式是一模一样的, 只是一个是在训练数据集上算的结果, 一个是在测试集上的计算结果.
+R2 和 Q2 相差太多的话则说明回归的模型有过拟合
+\[ \begin{array}{l}R^{2}=1-R S S / T S S \\ R S S=\sum(y-\hat{\mathbf{y}})^{2} \\ T S S=\sum(y-\overline{\mathbf{y}})^{2}\end{array} \]
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/sklearn-classification/" >sklearn classification </a></h2>
+      <div class="article-style">
+        
+          set environment  links  dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.
+ dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.
+        
+      </div>
+    </div>
   
     
     

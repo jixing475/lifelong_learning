@@ -1,0 +1,80 @@
+---
+title: Recipes for machine learning
+author: ZERO
+date: '2020-04-18'
+slug: recipes
+categories:
+  - Tools
+tags:
+  - "\U0001F4E6"
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-18T09:08:38+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+```
+
+
+## select variable
+
+When recipe steps are used, there are different approaches that can be used to select which variables or features should be used.
+
+The three main characteristics of variables that can be queried:
+
+  * the name of the variable: the syntax as the same as dplyr
+  * the data type (e.g. numeric or nominal): nominal is character or factor
+  * the role that was declared by the recipe: can define by user self `add_role`
+
+## basic recipes ordering of steps
+
+While your project’s needs may vary, here is a suggested order of _potential_ steps that should work for most problems:
+
+  1. Impute
+  2. Individual transformations for skewness and other issues
+  3. Discretize (if needed and if you have no other choice)
+  4. Create dummy variables
+  5. Create interactions
+  6. Normalization steps (center, scale, range, etc)
+  7. Multivariate transformation (e.g. PCA, spatial sign, etc)
+
+
+
+
+## step_* function custom define
+
++ You can define yourself step_function
++ Be clear about the specific definition of each step_function
+
+## links
+
+[tidymodels/recipes: A preprocessing engine to generate design matrices](https://github.com/tidymodels/recipes)
+
+
+
+
+
+
+
+
+
+

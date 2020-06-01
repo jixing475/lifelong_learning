@@ -33,12 +33,162 @@
   </url>
   
   <url>
-    <loc>/post/balance-accuracy-and-mcc/</loc>
-    <lastmod>2020-03-31T16:55:13+08:00</lastmod>
+    <loc>/categories/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/post/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/taste-ggtext/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/tools/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/vis/</loc>
+    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/thematic/</loc>
+    <lastmod>2020-05-05T16:22:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/clinical/</loc>
+    <lastmod>2020-05-04T18:18:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/example-time-to-event-survival-analysis-using-visr/</loc>
+    <lastmod>2020-05-04T18:18:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/a-gentle-introduction-to-tidymodels/</loc>
+    <lastmod>2020-04-26T18:11:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/machine-learning/</loc>
+    <lastmod>2020-04-26T18:11:39+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/ml-workflow/</loc>
+    <lastmod>2020-04-26T15:31:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/tidymodels-tidy-machine-learning-in-r/</loc>
+    <lastmod>2020-04-26T16:01:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/deep-learning/</loc>
+    <lastmod>2020-04-18T09:53:53+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/deep-learning-with-keras-in-r/</loc>
+    <lastmod>2020-04-18T09:53:53+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/integrating-tableau-with-r-for-descriptive-inferential-and-predictive-analytics/</loc>
+    <lastmod>2020-04-18T18:13:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/r-square-and-q-square-what-the-difference/</loc>
+    <lastmod>2020-04-18T09:40:59+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/reading/</loc>
+    <lastmod>2020-04-18T09:40:59+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/recipes/</loc>
+    <lastmod>2020-04-18T09:08:38+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/shiny/</loc>
+    <lastmod>2020-04-18T18:13:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tableau/</loc>
+    <lastmod>2020-04-18T18:13:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/deep-work/</loc>
+    <lastmod>2020-04-16T07:40:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/principle-of-least-resistance/</loc>
+    <lastmod>2020-04-16T07:40:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/don-t-use-the-internet-for-entertainment/</loc>
+    <lastmod>2020-04-15T07:07:20+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/ggplot2-workshop/</loc>
+    <lastmod>2020-04-13T15:54:53+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sklearn/</loc>
+    <lastmod>2020-04-06T14:54:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/sklearn-classification/</loc>
+    <lastmod>2020-04-06T14:54:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/python/</loc>
+    <lastmod>2020-04-05T19:36:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/spider/</loc>
+    <lastmod>2020-04-05T19:36:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/use-selenium-in-python/</loc>
+    <lastmod>2020-04-05T19:36:57+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/how-to-create-bar-race-animation-charts-in-r/</loc>
+    <lastmod>2020-04-01T08:11:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/balance-accuracy-and-mcc/</loc>
     <lastmod>2020-03-31T16:55:13+08:00</lastmod>
   </url>
   
@@ -48,32 +198,7 @@
   </url>
   
   <url>
-    <loc>/tags/machine-learning/</loc>
-    <lastmod>2020-03-31T16:55:13+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2020-03-31T16:55:13+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/reading/</loc>
-    <lastmod>2020-03-31T16:55:13+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-03-31T16:55:13+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/post/tidymodels-machine-learning-ecosystem/</loc>
-    <lastmod>2020-03-31T13:24:54+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/tools/</loc>
     <lastmod>2020-03-31T13:24:54+08:00</lastmod>
   </url>
   
@@ -140,11 +265,6 @@
   <url>
     <loc>/terms/</loc>
     <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>

@@ -1,0 +1,82 @@
+---
+title: ggplot2 thematic
+author: ZERO
+date: '2020-05-05'
+slug: thematic
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-05-05T16:22:58+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+```
+
+## install pkg
+
+```{r}
+# remotes::install_github("rstudio/thematic")
+library(thematic)
+```
+
+
+
+```{r}
+library(thematic)
+thematic_on(
+  bg = "#222222", fg = "white", accent = "#0CE3AC",
+  font = "auto"
+)
+```
+
+
+
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(aes(color = factor(cyl))) +
+  geom_smooth(color = "white")
+```
+
+## links
+
+[Unified and Automatic Theming of ggplot2, lattice, and base R Graphics • thematic](https://rstudio.github.io/thematic/)

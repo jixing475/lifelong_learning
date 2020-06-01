@@ -1,0 +1,320 @@
+---
+title: 'Tidymodels: tidy machine learning in R'
+author: ZERO
+date: '2020-04-26'
+slug: tidymodels-tidy-machine-learning-in-r
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-26T16:01:04+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+## Setup 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+library(tidyquant)
+
+theme_set(theme_tq())
+```
+
+## function
+
+```{r}
+x_to_na <- function (s, x = 0)
+{
+    sapply(s, function(y)
+        ifelse(y %in% x, NA, y))
+}
+```
+## What is tidymodels
+
+Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including
+
+  * `rsample`: for sample splitting (e.g. train/test or cross-validation)
+
+  * `recipes`: for pre-processing
+
+  * `parsnip`: for specifying the model
+
+  * `yardstick`: for evaluating the model
+
+
+
+We will also be using the `tune` package (for parameter tuning procedure) and the `workflows` package (for putting everything together) that I had thought were a part of CRAN’s tidymodels package bundle, but apparently they aren’t. These will need to be loaded separately for now.
+
+## Getting set up
+
+```{r}
+# load the relevant tidymodels libraries
+library(tidymodels)
+library(tidyverse)
+library(workflows)
+library(tune)
+```
+
+## Load Data
+
+```{r}
+# load the Pima Indians dataset from the mlbench dataset
+library(mlbench)
+data(PimaIndiansDiabetes)
+# rename dataset to have shorter name because lazy
+df <- PimaIndiansDiabetes
+head(df)
+
+```
+
+## EDA
+
+### skim
+```{r}
+skimr::skim(df)
+```
+
+### distribution
+```{r}
+
+
+df %>%
+    janitor::clean_names() %>%
+    set_names(colnames(.) %>%
+                  str_replace_all(., "_", " ") %>%
+                  str_to_title()) %>%
+    select_if(is.numeric) %>%
+    gather() %>%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = "free", ncol = 4) +
+    geom_histogram()
+
+df %>%
+    janitor::clean_names() %>%
+    set_names(colnames(.) %>%
+                  str_replace_all(., "_", " ") %>%
+                  str_to_title()) %>%
+    select_if(is.factor) %>%
+    gather() %>%
+    ggplot(aes(x = value)) +
+    geom_bar()
+
+```
+
+### replace NA
+
+```{r}
+# df_clean <- df %>%
+#   mutate_at(vars(triceps, glucose, pressure, insulin, mass),
+#             function(.var) {
+#               if_else(condition = (.var == 0), # if true (i.e. the entry is 0)
+#                       true = as.numeric(NA),  # replace the value with NA
+#                       false = .var # otherwise leave it as it is
+#                       )
+#             })
+
+df_clean <- df %>%
+  mutate_at(vars(triceps, glucose, pressure, insulin, mass), ~ x_to_na(.x))
+
+```
+
+
+## Split into train/test
+
+```{r}
+set.seed(234589)
+# split the data into trainng (75%) and testing (25%)
+set.seed(seed = 1972) 
+
+train_test_split <-
+    rsample::initial_split(
+        data = df_clean,     
+        prop = 3/4 
+    ) 
+
+train_test_split
+
+train_tbl <- train_test_split %>% training() 
+test_tbl  <- train_test_split %>% testing() 
+```
+
+### cv-fold
+
+At some point we’re going to want to do some parameter tuning, and to do that we’re going to want to use cross-validation. So we can create a cross-validated version of the training set in preparation for that moment using vfold_cv().
+
+```{r}
+# create CV object from training data
+train_cv <- vfold_cv(train_tbl)
+```
+
+## Define a recipe
+
+```{r}
+# define the recipe function
+recipe_simple <- function(data) {
+  # which consists of the formula (outcome ~ predictors)
+  recipe(diabetes ~ pregnant + glucose + pressure + triceps +
+           insulin + mass + pedigree + age,
+         data = data) %>%
+    # and some pre-processing steps
+    step_normalize(all_numeric()) %>%
+    step_knnimpute(all_predictors()) %>% 
+    prep(data = data)
+}
+
+recipe_prepped <- recipe_simple(data = df_clean)
+
+train_baked <- bake(recipe_prepped, new_data = train_tbl)
+test_baked  <- bake(recipe_prepped, new_data = test_tbl)
+
+```
+
+## Specify the model
+
+> Parsnip offers a unified interface for the massive variety of models that exist in R.
+
+  1. The **model type**: what kind of model you want to fit, set using a different function depending on the model, such as `rand_forest()` for random forest, `logistic_reg()` for logistic regression, `svm_poly()` for a polynomial SVM model etc. The full list of models available via parsnip can be found [here](https://tidymodels.github.io/parsnip/articles/articles/Models.html).
+
+  2. The **arguments**: the model parameter values (now consistently named across different models), set using `set_args()`.
+
+  3. The **engine**: the underlying package the model should come from (e.g. “ranger” for the ranger implementation of Random Forest), set using `set_engine()`.
+
+  4. The **mode**: the type of prediction - since several packages can do both classification (binary/categorical prediction) and regression (continuous prediction), set using `set_mode()`.
+
+### RF
+
+> 📌 this code doesn’t actually fit the model. Like the recipe, it just outlines a description of the model.
+
+> setting a parameter to tune() means that it will be tuned later in the tune stage of the pipeline. You could also just specify a particular value of the parameter if you don’t want to tune it e.g. using set_args(mtry = 4).
+
+
+
+```{r}
+
+rf_model <- 
+  # specify that the model is a random forest
+  rand_forest() %>%
+  # specify that the `mtry` parameter needs to be tuned
+  set_args(mtry = tune()) %>%
+  # select the engine/package that underlies the model
+  set_engine("ranger") %>%
+  # choose either the continuous regression or binary classification mode
+  set_mode("classification")
+```
+
+### Put it all together in a workflow
+
+```{r}
+# set the workflow
+rf_workflow <- workflow() %>%
+  # add the recipe
+  add_recipe(recipe_prepped) %>%
+  # add the model
+  add_model(rf_model)
+
+```
+### Tune the parameters
+
+> 📌  You can tune multiple parameters at once by providing multiple parameters to the expand.grid() function, e.g. expand.grid(mtry = c(3, 4, 5), trees = c(100, 500)).
+
+
+```{r}
+# specify which values eant to try
+rf_grid <- expand.grid(mtry = c(3, 4, 5))
+# extract results
+rf_tune_results <- 
+  rf_workflow %>%
+  tune_grid(resamples = train_cv, #CV object
+            grid = rf_grid, # grid of values to try
+            metrics = metric_set(accuracy, roc_auc) # metrics we care about
+            )
+
+# print results
+rf_tune_results %>%
+  collect_metrics()
+```
+## Finalize the workflow
+
+```{r}
+param_final <- 
+  rf_tune_results %>%
+  select_best(metric = "accuracy", maximize = TRUE)
+param_final
+
+# add this parameter to the workflow using the finalize_workflow() function.
+rf_workflow <- 
+  rf_workflow %>%
+  finalize_workflow(param_final)
+```
+## Fit the final model
+
+```{r}
+rf_fit <- rf_workflow %>%
+  # fit on entire training set and evaluate on test set
+  last_fit(train_test_split)
+
+rf_fit
+```
+## Evaluate the model on the test set
+
+### performance
+```{r}
+test_performance <- rf_fit %>% collect_metrics()
+test_performance
+```
+
+
+### predict
+
+```{r}
+# generate predictions from the test set
+test_predictions <- rf_fit %>% collect_predictions()
+test_predictions
+
+# test_predictions <- rf_fit %>% pull(.predictions)
+# test_predictions
+```
+
+
+### confusion matrix
+
+```{r}
+# generate a confusion matrix
+test_predictions %>% 
+  conf_mat(truth = diabetes, estimate = .pred_class)
+
+
+test_predictions %>%
+  ggplot() +
+  geom_density(aes(x = .pred_pos, fill = diabetes), 
+               alpha = 0.5)
+```
+
+
+
+
+
+
+
+
+
+

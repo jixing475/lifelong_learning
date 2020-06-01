@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Jixing Liu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Setup  Load pkg library(tidymodels) # Loads parsnip, rsample, recipes, yardstick library(skimr) # Quickly get a sense of data library(knitr)   Load Data telco &lt;- read_csv(&quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&quot;) telco %&gt;% head() %&gt;% kable()    customerID  gender  SeniorCitizen  Partner  Dependents  tenure  PhoneService  MultipleLines  InternetService  OnlineSecurity  OnlineBackup  DeviceProtection  TechSupport  StreamingTV  StreamingMovies  Contract  PaperlessBilling  PaymentMethod  MonthlyCharges  TotalCharges  Churn      7590-VHVEG  Female  0  Yes  No  1  No  No phone service  DSL  No  Yes  No  No  No  No  Month-to-month  Yes  Electronic check  29.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/ml-workflow/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/ml-workflow/">
+
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@studentZero475">
+  <meta property="twitter:creator" content="@studentZero475">
+  
+  <meta property="og:site_name" content="Jixing Liu">
+  <meta property="og:url" content="/post/ml-workflow/">
+  <meta property="og:title" content="ML Workflow | Jixing Liu">
+  <meta property="og:description" content="Setup  Load pkg library(tidymodels) # Loads parsnip, rsample, recipes, yardstick library(skimr) # Quickly get a sense of data library(knitr)   Load Data telco &lt;- read_csv(&quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&quot;) telco %&gt;% head() %&gt;% kable()    customerID  gender  SeniorCitizen  Partner  Dependents  tenure  PhoneService  MultipleLines  InternetService  OnlineSecurity  OnlineBackup  DeviceProtection  TechSupport  StreamingTV  StreamingMovies  Contract  PaperlessBilling  PaymentMethod  MonthlyCharges  TotalCharges  Churn      7590-VHVEG  Female  0  Yes  No  1  No  No phone service  DSL  No  Yes  No  No  No  No  Month-to-month  Yes  Electronic check  29."><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
+  <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-04-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-04-26T15:31:21&#43;08:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/ml-workflow/"
+  },
+  "headline": "ML Workflow",
+  
+  "datePublished": "2020-04-26T00:00:00Z",
+  "dateModified": "2020-04-26T15:31:21+08:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Jixing Liu"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Jixing Liu",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "Setup  Load pkg library(tidymodels) # Loads parsnip, rsample, recipes, yardstick library(skimr) # Quickly get a sense of data library(knitr)   Load Data telco \u0026lt;- read_csv(\u0026quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv\u0026quot;) telco %\u0026gt;% head() %\u0026gt;% kable()    customerID  gender  SeniorCitizen  Partner  Dependents  tenure  PhoneService  MultipleLines  InternetService  OnlineSecurity  OnlineBackup  DeviceProtection  TechSupport  StreamingTV  StreamingMovies  Contract  PaperlessBilling  PaymentMethod  MonthlyCharges  TotalCharges  Churn      7590-VHVEG  Female  0  Yes  No  1  No  No phone service  DSL  No  Yes  No  No  No  No  Month-to-month  Yes  Electronic check  29."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>ML Workflow | Jixing Liu</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-end" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>ML Workflow</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Apr 26, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    5 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/tools/">Tools</a></span>
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+</div>
+<div id="load-pkg" class="section level2">
+<h2>Load pkg</h2>
+<pre class="r"><code>library(tidymodels)  # Loads parsnip, rsample, recipes, yardstick
+library(skimr)       # Quickly get a sense of data
+library(knitr) </code></pre>
+</div>
+<div id="load-data" class="section level2">
+<h2>Load Data</h2>
+<pre class="r"><code>telco &lt;- read_csv(&quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&quot;)
+
+telco %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+customerID
+</th>
+<th style="text-align:left;">
+gender
+</th>
+<th style="text-align:right;">
+SeniorCitizen
+</th>
+<th style="text-align:left;">
+Partner
+</th>
+<th style="text-align:left;">
+Dependents
+</th>
+<th style="text-align:right;">
+tenure
+</th>
+<th style="text-align:left;">
+PhoneService
+</th>
+<th style="text-align:left;">
+MultipleLines
+</th>
+<th style="text-align:left;">
+InternetService
+</th>
+<th style="text-align:left;">
+OnlineSecurity
+</th>
+<th style="text-align:left;">
+OnlineBackup
+</th>
+<th style="text-align:left;">
+DeviceProtection
+</th>
+<th style="text-align:left;">
+TechSupport
+</th>
+<th style="text-align:left;">
+StreamingTV
+</th>
+<th style="text-align:left;">
+StreamingMovies
+</th>
+<th style="text-align:left;">
+Contract
+</th>
+<th style="text-align:left;">
+PaperlessBilling
+</th>
+<th style="text-align:left;">
+PaymentMethod
+</th>
+<th style="text-align:right;">
+MonthlyCharges
+</th>
+<th style="text-align:right;">
+TotalCharges
+</th>
+<th style="text-align:left;">
+Churn
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+7590-VHVEG
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No phone service
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+29.85
+</td>
+<td style="text-align:right;">
+29.85
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5575-GNVDE
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+One year
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+56.95
+</td>
+<td style="text-align:right;">
+1889.50
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3668-QPYBK
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Mailed check
+</td>
+<td style="text-align:right;">
+53.85
+</td>
+<td style="text-align:right;">
+108.15
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7795-CFOCW
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No phone service
+</td>
+<td style="text-align:left;">
+DSL
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+One year
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Bank transfer (automatic)
+</td>
+<td style="text-align:right;">
+42.30
+</td>
+<td style="text-align:right;">
+1840.75
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9237-HQITU
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+70.70
+</td>
+<td style="text-align:right;">
+151.65
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+9305-CDSKC
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Fiber optic
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Month-to-month
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Electronic check
+</td>
+<td style="text-align:right;">
+99.65
+</td>
+<td style="text-align:right;">
+820.50
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="eda-skim-the-data" class="section level2">
+<h2>EDA: Skim the Data</h2>
+<pre class="r"><code>telco %&gt;% skim()</code></pre>
+<table style='width: auto;'
+        class='table table-condensed'>
+<caption>
+<span id="tab:unnamed-chunk-3">Table 1: </span>Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+Piped data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+7043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+17
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+empty
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+whitespace
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+customerID
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+7043
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+gender
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Partner
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dependents
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PhoneService
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MultipleLines
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+InternetService
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OnlineSecurity
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OnlineBackup
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DeviceProtection
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TechSupport
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+StreamingTV
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+StreamingMovies
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contract
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PaperlessBilling
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PaymentMethod
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Churn
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+SeniorCitizen
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▂
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tenure
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+32.37
+</td>
+<td style="text-align:right;">
+24.56
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+9.00
+</td>
+<td style="text-align:right;">
+29.00
+</td>
+<td style="text-align:right;">
+55.00
+</td>
+<td style="text-align:right;">
+72.00
+</td>
+<td style="text-align:left;">
+▇▃▃▃▆
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MonthlyCharges
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+64.76
+</td>
+<td style="text-align:right;">
+30.09
+</td>
+<td style="text-align:right;">
+18.25
+</td>
+<td style="text-align:right;">
+35.50
+</td>
+<td style="text-align:right;">
+70.35
+</td>
+<td style="text-align:right;">
+89.85
+</td>
+<td style="text-align:right;">
+118.75
+</td>
+<td style="text-align:left;">
+▇▅▆▇▅
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TotalCharges
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2283.30
+</td>
+<td style="text-align:right;">
+2266.77
+</td>
+<td style="text-align:right;">
+18.80
+</td>
+<td style="text-align:right;">
+401.45
+</td>
+<td style="text-align:right;">
+1397.47
+</td>
+<td style="text-align:right;">
+3794.74
+</td>
+<td style="text-align:right;">
+8684.80
+</td>
+<td style="text-align:left;">
+▇▂▂▂▁
+</td>
+</tr>
+</tbody>
+</table>
+<div id="data-processing" class="section level3">
+<h3>data processing</h3>
+<pre class="r"><code>telco &lt;- telco %&gt;%
+    select(-customerID) %&gt;%
+    drop_na()</code></pre>
+<pre class="r"><code>df &lt;- telco</code></pre>
+</div>
+</div>
+<div id="tidymodels-workflow" class="section level2">
+<h2>Tidymodels Workflow</h2>
+</div>
+<div id="traintest-split" class="section level2">
+<h2>Train/Test Split</h2>
+<pre class="r"><code>set.seed(seed = 1972) 
+
+train_test_split &lt;-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.80   
+    ) 
+
+train_test_split</code></pre>
+<pre><code>## &lt;5626/1406/7032&gt;</code></pre>
+<pre class="r"><code>train_tbl &lt;- train_test_split %&gt;% training() 
+test_tbl  &lt;- train_test_split %&gt;% testing() </code></pre>
+</div>
+<div id="prepare" class="section level2">
+<h2>Prepare</h2>
+<pre class="r"><code>recipe_simple &lt;- function(dataset) {
+    recipe(Churn ~ ., data = dataset) %&gt;%
+        step_string2factor(all_nominal(), -all_outcomes()) %&gt;%
+        prep(data = dataset)
+}
+
+recipe_prepped &lt;- recipe_simple(dataset = train_tbl)
+
+train_baked &lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &lt;- bake(recipe_prepped, new_data = test_tbl)</code></pre>
+<div id="generalized-linear-model-baseline" class="section level3">
+<h3>Generalized Linear Model (Baseline)</h3>
+<div id="fit-the-model" class="section level5">
+<h5>Fit the Model</h5>
+<pre class="r"><code>logistic_glm &lt;- logistic_reg(mode = &quot;classification&quot;) %&gt;%
+    set_engine(&quot;glm&quot;) %&gt;%
+    fit(Churn ~ ., data = train_baked)</code></pre>
+</div>
+<div id="assess-performance" class="section level5">
+<h5>Assess Performance</h5>
+<pre class="r"><code>predictions_glm &lt;- logistic_glm %&gt;%
+    predict(new_data = test_baked) %&gt;%
+    bind_cols(test_baked %&gt;% select(Churn))
+
+predictions_glm %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+.pred_class
+</th>
+<th style="text-align:left;">
+Churn
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Yes
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="accuracy-precision-recall-and-f1-score" class="section level5">
+<h5>Accuracy, Precision , Recall and F1 Score</h5>
+<pre class="r"><code>tibble(
+  &quot;accuracy&quot; =
+    accuracy(predictions_glm, Churn, .pred_class) %&gt;%
+    select(.estimate),
+  &quot;precision&quot; =
+    precision(predictions_glm, Churn, .pred_class) %&gt;%
+    select(.estimate),
+  &quot;recall&quot; =
+    recall(predictions_glm, Churn, .pred_class) %&gt;%
+    select(.estimate),
+  &quot;F1 score&quot; =
+    f_meas(predictions_glm, Churn, .pred_class) %&gt;%
+    select(.estimate),
+) %&gt;%
+  unnest(cols = c(accuracy, precision, recall, `F1 score`)) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+accuracy
+</th>
+<th style="text-align:right;">
+precision
+</th>
+<th style="text-align:right;">
+recall
+</th>
+<th style="text-align:right;">
+F1 score
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.8058321
+</td>
+<td style="text-align:right;">
+0.8376916
+</td>
+<td style="text-align:right;">
+0.909002
+</td>
+<td style="text-align:right;">
+0.8718911
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="random-forest" class="section level3">
+<h3>Random Forest</h3>
+<div id="cross-validation---10-fold" class="section level4">
+<h4>Cross Validation - 10-Fold</h4>
+<pre class="r"><code>cross_val_tbl &lt;- vfold_cv(train_tbl, v = 10)
+cross_val_tbl</code></pre>
+<pre><code>## #  10-fold cross-validation 
+## # A tibble: 10 x 2
+##    splits             id    
+##    &lt;named list&gt;       &lt;chr&gt; 
+##  1 &lt;split [5.1K/563]&gt; Fold01
+##  2 &lt;split [5.1K/563]&gt; Fold02
+##  3 &lt;split [5.1K/563]&gt; Fold03
+##  4 &lt;split [5.1K/563]&gt; Fold04
+##  5 &lt;split [5.1K/563]&gt; Fold05
+##  6 &lt;split [5.1K/563]&gt; Fold06
+##  7 &lt;split [5.1K/562]&gt; Fold07
+##  8 &lt;split [5.1K/562]&gt; Fold08
+##  9 &lt;split [5.1K/562]&gt; Fold09
+## 10 &lt;split [5.1K/562]&gt; Fold10</code></pre>
+<pre class="r"><code>cross_val_tbl %&gt;% pluck(&quot;splits&quot;, 1)</code></pre>
+<pre><code>## &lt;5063/563/5626&gt;</code></pre>
+</div>
+<div id="random-forest-1" class="section level4">
+<h4>Random Forest</h4>
+<pre class="r"><code>rf_fun &lt;- function(split, id, try, tree) {
+    
+    analysis_set &lt;- split %&gt;% analysis()
+    analysis_prepped &lt;- analysis_set %&gt;% recipe_simple()
+    analysis_baked &lt;- analysis_prepped %&gt;% bake(new_data = analysis_set)
+    
+    model_rf &lt;-
+        rand_forest(
+            mode = &quot;classification&quot;,
+            mtry = try,
+            trees = tree
+        ) %&gt;%
+        set_engine(&quot;ranger&quot;,
+                   importance = &quot;impurity&quot;
+        ) %&gt;%
+        fit(Churn ~ ., data = analysis_baked)
+    
+    assessment_set     &lt;- split %&gt;% assessment()
+    assessment_prepped &lt;- assessment_set %&gt;% recipe_simple()
+    assessment_baked   &lt;- assessment_prepped %&gt;% bake(new_data = assessment_set)
+    
+    tibble(
+        &quot;id&quot; = id,
+        &quot;truth&quot; = assessment_baked$Churn,
+        &quot;prediction&quot; = model_rf %&gt;%
+            predict(new_data = assessment_baked) %&gt;%
+            unlist()
+    )
+    
+}</code></pre>
+</div>
+<div id="modeling-with-purrr" class="section level4">
+<h4>Modeling with purrr</h4>
+<pre class="r"><code>pred_rf &lt;- map2_df(
+    .x = cross_val_tbl$splits,
+    .y = cross_val_tbl$id,
+    ~ rf_fun(split = .x, id = .y, try = 3, tree = 200)
+)
+
+head(pred_rf)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   id     truth prediction
+##   &lt;chr&gt;  &lt;fct&gt; &lt;fct&gt;     
+## 1 Fold01 No    No        
+## 2 Fold01 No    No        
+## 3 Fold01 Yes   No        
+## 4 Fold01 No    No        
+## 5 Fold01 No    No        
+## 6 Fold01 No    No</code></pre>
+</div>
+<div id="assess-performance-1" class="section level4">
+<h4>Assess Performance</h4>
+<pre class="r"><code>pred_rf %&gt;%
+    conf_mat(truth, prediction) %&gt;%
+    summary() %&gt;%
+    select(-.estimator) %&gt;%
+    filter(.metric %in% c(&quot;accuracy&quot;, &quot;precision&quot;, &quot;recall&quot;, &quot;f_meas&quot;)) %&gt;%
+    kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+.metric
+</th>
+<th style="text-align:right;">
+.estimate
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+accuracy
+</td>
+<td style="text-align:right;">
+0.7964806
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+precision
+</td>
+<td style="text-align:right;">
+0.8320035
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+recall
+</td>
+<td style="text-align:right;">
+0.9065443
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+f_meas
+</td>
+<td style="text-align:right;">
+0.8676760
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/machine-learning/">Machine learning</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/ml-workflow/&amp;text=ML%20Workflow" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/ml-workflow/&amp;t=ML%20Workflow" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=ML%20Workflow&amp;body=/post/ml-workflow/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/ml-workflow/&amp;title=ML%20Workflow" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=ML%20Workflow%20/post/ml-workflow/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/ml-workflow/&amp;title=ML%20Workflow" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hu07fc0e18af06276e9e6299e1311e0948_94601_270x270_fill_q90_lanczos_center.jpeg" alt="Jixing Liu">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Jixing Liu</a></h5>
+      <h6 class="card-subtitle">Data algorithm engineer</h6>
+      <p class="card-text">My research interests include Bioinformatics, Deep learning and data visualization matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/studentZero475" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/jixing475" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/post/tidymodels-tidy-machine-learning-in-r/">Tidymodels: tidy machine learning in R</a></li>
+      
+      <li><a href="/post/a-gentle-introduction-to-tidymodels/">a gentle introduction to tidymodels</a></li>
+      
+      <li><a href="/post/r-square-and-q-square-what-the-difference/">R square and Q square , what the difference</a></li>
+      
+      <li><a href="/post/sklearn-classification/">sklearn classification </a></li>
+      
+      <li><a href="/post/balance-accuracy-and-mcc/">Balance Accuracy and MCC</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.37431be2d92d7fb0160054761ab79602.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

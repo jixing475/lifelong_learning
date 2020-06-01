@@ -1,0 +1,162 @@
+---
+title: a gentle introduction to tidymodels
+author: ZERO
+date: '2020-04-26'
+slug: a-gentle-introduction-to-tidymodels
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-26T18:11:39+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+## SETUP
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+library(tidyquant)
+theme_set(theme_tq())
+```
+
+
+
+
+## Load library
+
+```{r}
+library(tidymodels)
+```
+
+
+
+## EDA
+
+```{r}
+
+
+iris %>%
+    janitor::clean_names() %>%
+    set_names(colnames(.) %>%
+                  str_replace_all(., "_", " ") %>%
+                  str_to_title()) %>%
+    select_if(is.numeric) %>%
+    gather() %>%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = "free", ncol = 4) +
+    geom_histogram()
+
+iris %>%
+    janitor::clean_names() %>%
+    set_names(colnames(.) %>%
+                  str_replace_all(., "_", " ") %>%
+                  str_to_title()) %>%
+    select_if(is.factor) %>%
+    gather() %>%
+    ggplot(aes(x = value)) +
+    geom_bar()
+
+```
+
+
+
+## split
+
+```{r}
+df  <- iris
+set.seed(seed = 1972) 
+
+train_test_split <-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.6   
+    ) 
+
+train_test_split
+
+train_tbl <- train_test_split %>% training() 
+test_tbl  <- train_test_split %>% testing() 
+```
+
+## recipes
+
+```{r}
+recipe_simple <- function(dataset) {
+  recipe(Species ~ ., data = dataset ) %>%
+    step_corr(all_predictors()) %>%
+    step_center(all_predictors(), -all_outcomes()) %>%
+    step_scale(all_predictors(), -all_outcomes()) %>%
+    prep(dataset)
+}
+
+recipe_prepped <- recipe_simple(dataset = train_tbl)
+
+train_baked <- bake(recipe_prepped, new_data = train_tbl)
+test_baked  <- bake(recipe_prepped, new_data = test_tbl)
+
+recipe_prepped
+```
+
+## Model Training
+
+```{r}
+iris_ranger <- 
+  rand_forest(trees = 100, mode = "classification") %>%
+  set_engine("ranger") %>%
+  fit(Species ~ ., data = train_baked)
+```
+
+## Predictions
+
+```{r}
+iris_ranger %>%
+  predict(test_baked) %>%
+  bind_cols(test_baked) %>%
+  glimpse()
+```
+## Model Validation
+
+```{r}
+iris_ranger %>%
+  predict(test_baked) %>%
+  bind_cols(test_baked) %>%
+  metrics(truth = Species, estimate = .pred_class)
+```
+
+## Per classifier metrics
+
+```{r}
+iris_ranger %>%
+  predict(test_baked, type = "prob") %>%
+  bind_cols(test_baked) %>%
+  roc_curve(Species, .pred_setosa:.pred_virginica) %>%
+  autoplot()
+```
+
+## links
+
+[A Gentle Introduction to tidymodels · R Views](https://rviews.rstudio.com/2019/06/19/a-gentle-intro-to-tidymodels/)
+
+

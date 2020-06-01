@@ -1,0 +1,190 @@
+---
+title: How To Create Bar Race Animation Charts In R
+author: ZERO
+date: '2020-04-01'
+slug: how-to-create-bar-race-animation-charts-in-r
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-01T08:11:04+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+library(here)
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+library(janitor)
+library(gganimate)
+```
+
+## load data
+
+```{r, include=FALSE}
+library(pins)
+# Register the board  -----------------------------------------------
+pins::board_register(board = "github", 
+                     repo = "jixing475/database", 
+                     branch = "master",
+                     token = Sys.getenv("GITHUB_PAT"))
+gdp_data <- 
+    pins::pin_get(
+        name = "gdp_pin",
+        board = "github"
+    )
+```
+# Packages
+
+The packages that are required to build animated plots in R are:
+
+  * ggplot2
+  * [gganimate](https://gganimate.com/index.html)
+
+While those above two are the essential packages, We have also used the entire `tidyverse`, `janitor` and `scales` in this project for Data Manipulation, Cleaning and Formatting.
+
+## data preprocessing
+
+```{r}
+
+gdp <- gdp_data[1:217,]
+
+gdp_tidy <- gdp %>%
+  mutate_at(vars(contains("YR")), as.numeric) %>%
+  #gather(year, value, 3:13) %>%
+  pivot_longer(cols = contains("YR"),
+               names_to = "year",
+               values_to = "value") %>%
+  janitor::clean_names(.) %>%
+  mutate(year = as.numeric(stringr::str_sub(year, 1, 4)))
+
+# write_csv(gdp_tidy,"./data/gdp_tidy.csv")
+```
+## Animated Plot
+
+An Animated Plot building process involves two primary sections:
+
+  * Building the entire __set of actual static plots__ using ggplot2
+  * Animating the static plots with desired parameters using __gganimate__
+
+The final step after these two primary steps is to render the animation in the desired file format, like GIF or MP4 (Video).
+
+
+## create label columns
+
+create a few more columns that will help us display labels in the plot.
+
+```{r}
+gdp_formatted <- gdp_tidy %>%
+  group_by(year) %>% # The * 1 makes it possible to have non-integer ranks while sliding
+  mutate(rank = rank(-value), # -100 最小, 排第一
+         Value_rel = value/value[rank==1],
+         Value_lbl = paste0(" ",round(value/1e9))) %>%
+  group_by(country_name) %>%
+  filter(rank <=10) %>%
+  ungroup() %>% 
+  filter(!is.na(value)) %>% 
+  select(-series_code, -series_name)
+```
+
+
+```{r}
+staticplot  <- 
+  gdp_formatted %>%
+  ggplot(aes(
+    rank,
+    group = country_name,
+    fill = as.factor(country_name),
+    color = as.factor(country_name)
+  )) +
+  geom_tile(aes(y = value/2,
+                height = value,
+                width = 0.9), 
+            alpha = 0.8, color = NA) +
+  geom_text(aes(y = 0, label = paste(country_name, " ")), vjust = 0.2, hjust = 1) +
+  geom_text(aes(y=value,label = Value_lbl, hjust=0)) +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  guides(color = FALSE, fill = FALSE) +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+         axis.title.y=element_blank(),
+        legend.position="none",
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.grid.major.x = element_line( size=.1, color="grey" ),
+        panel.grid.minor.x = element_line( size=.1, color="grey" ),
+        plot.title=element_text(size=25, hjust=0.5, face="bold", colour="grey", vjust=-1),
+        plot.subtitle=element_text(size=18, hjust=0.5, face="italic", color="grey"),
+        plot.caption =element_text(size=8, hjust=0.5, face="italic", color="grey"),
+        plot.background=element_blank(),
+       plot.margin = margin(2,2, 2, 4, "cm"))
+```
+
+
+## Animation
+
+The key function here is transition_states() which stitches the individual static plots together by year. view_follow() is used to give a view as if the background lines (gridlines) are moving as the animation is progressing.
+
+```{r}
+anim  <-
+  staticplot +
+  transition_states(year, transition_length = 4, state_length = 2) +
+  view_follow(fixed_x = TRUE)  +
+  labs(title = 'GDP per Year : {closest_state}',
+       subtitle  =  "Top 10 Countries",
+       caption  = "GDP in Billions USD | Data Source: World Bank Data")
+```
+
+## Rendering
+With the animation being built (ready) and saved in the object anim , It’s time for us to render the animation using animate() function. The renderer used in the animate() differs based on the type of output file required.
+
+For GIF File Format:
+
+### For GIF:
+```{r}
+animate(anim, 200, fps = 20,  width = 1200, height = 1000,
+        renderer = gifski_renderer(here("figure/gganim.gif")))
+```
+
+### For MP4
+
+```{r}
+# animate(anim, 200, fps = 20,  width = 1200, height = 1000,
+#         renderer = ffmpeg_renderer()) -> for_mp4anim_save("animation.mp4", animation = for_mp4 )
+```
+
+
+
+```{r gifed, out.width="30%", fig.align = "center", fig.margin=TRUE, echo=FALSE, eval=TRUE}
+knitr::include_graphics(here("figure/gganim.gif"))
+```
+
+
+
+# Links
+
++ [How to create Bar Race Animation Charts in R · Programming with R](https://www.programmingwithr.com/how-to-create-animated-bar-race-charts-in-r/)
+

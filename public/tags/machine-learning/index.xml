@@ -5,12 +5,2471 @@
     <link>/tags/machine-learning/</link>
       <atom:link href="/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     <description>Machine learning</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 26 Apr 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>Machine learning</title>
       <link>/tags/machine-learning/</link>
     </image>
+    
+    <item>
+      <title>a gentle introduction to tidymodels</title>
+      <link>/post/a-gentle-introduction-to-tidymodels/</link>
+      <pubDate>Sun, 26 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/a-gentle-introduction-to-tidymodels/</guid>
+      <description>
+
+
+&lt;div id=&#34;setup&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;SETUP&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div id=&#34;load-library&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Load library&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidymodels)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;eda&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;EDA&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+    janitor::clean_names() %&amp;gt;%
+    set_names(colnames(.) %&amp;gt;%
+                  str_replace_all(., &amp;quot;_&amp;quot;, &amp;quot; &amp;quot;) %&amp;gt;%
+                  str_to_title()) %&amp;gt;%
+    select_if(is.numeric) %&amp;gt;%
+    gather() %&amp;gt;%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = &amp;quot;free&amp;quot;, ncol = 4) +
+    geom_histogram()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+    janitor::clean_names() %&amp;gt;%
+    set_names(colnames(.) %&amp;gt;%
+                  str_replace_all(., &amp;quot;_&amp;quot;, &amp;quot; &amp;quot;) %&amp;gt;%
+                  str_to_title()) %&amp;gt;%
+    select_if(is.factor) %&amp;gt;%
+    gather() %&amp;gt;%
+    ggplot(aes(x = value)) +
+    geom_bar()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-2-2.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;split&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;split&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df  &amp;lt;- iris
+set.seed(seed = 1972) 
+
+train_test_split &amp;lt;-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.6   
+    ) 
+
+train_test_split&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;90/60/150&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;train_tbl &amp;lt;- train_test_split %&amp;gt;% training() 
+test_tbl  &amp;lt;- train_test_split %&amp;gt;% testing() &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;recipes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;recipes&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;recipe_simple &amp;lt;- function(dataset) {
+  recipe(Species ~ ., data = dataset ) %&amp;gt;%
+    step_corr(all_predictors()) %&amp;gt;%
+    step_center(all_predictors(), -all_outcomes()) %&amp;gt;%
+    step_scale(all_predictors(), -all_outcomes()) %&amp;gt;%
+    prep(dataset)
+}
+
+recipe_prepped &amp;lt;- recipe_simple(dataset = train_tbl)
+
+train_baked &amp;lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &amp;lt;- bake(recipe_prepped, new_data = test_tbl)
+
+recipe_prepped&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          4
+## 
+## Training data contained 90 data points and no missing data.
+## 
+## Operations:
+## 
+## Correlation filter removed Petal.Length [trained]
+## Centering for Sepal.Length, Sepal.Width, Petal.Width [trained]
+## Scaling for Sepal.Length, Sepal.Width, Petal.Width [trained]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-training&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model Training&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris_ranger &amp;lt;- 
+  rand_forest(trees = 100, mode = &amp;quot;classification&amp;quot;) %&amp;gt;%
+  set_engine(&amp;quot;ranger&amp;quot;) %&amp;gt;%
+  fit(Species ~ ., data = train_baked)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Predictions&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris_ranger %&amp;gt;%
+  predict(test_baked) %&amp;gt;%
+  bind_cols(test_baked) %&amp;gt;%
+  glimpse()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Rows: 60
+## Columns: 5
+## $ .pred_class  &amp;lt;fct&amp;gt; setosa, setosa, setosa, setosa, setosa, setosa, setosa, …
+## $ Sepal.Length &amp;lt;dbl&amp;gt; -0.8625644, -1.4471337, -0.9794783, -0.5118229, -0.97947…
+## $ Sepal.Width  &amp;lt;dbl&amp;gt; 1.2051348, 0.2410270, 1.4461618, 2.1692426, 0.9641078, 0…
+## $ Petal.Width  &amp;lt;dbl&amp;gt; -1.3494745, -1.3494745, -1.3494745, -1.0831309, -1.34947…
+## $ Species      &amp;lt;fct&amp;gt; setosa, setosa, setosa, setosa, setosa, setosa, setosa, …&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;model-validation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Model Validation&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris_ranger %&amp;gt;%
+  predict(test_baked) %&amp;gt;%
+  bind_cols(test_baked) %&amp;gt;%
+  metrics(truth = Species, estimate = .pred_class)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;          &amp;lt;dbl&amp;gt;
+## 1 accuracy multiclass     0.967
+## 2 kap      multiclass     0.950&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;per-classifier-metrics&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Per classifier metrics&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris_ranger %&amp;gt;%
+  predict(test_baked, type = &amp;quot;prob&amp;quot;) %&amp;gt;%
+  bind_cols(test_baked) %&amp;gt;%
+  roc_curve(Species, .pred_setosa:.pred_virginica) %&amp;gt;%
+  autoplot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://rviews.rstudio.com/2019/06/19/a-gentle-intro-to-tidymodels/&#34;&gt;A Gentle Introduction to tidymodels · R Views&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ML Workflow</title>
+      <link>/post/ml-workflow/</link>
+      <pubDate>Sun, 26 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/ml-workflow/</guid>
+      <description>
+
+
+&lt;div id=&#34;setup&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div id=&#34;load-pkg&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Load pkg&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidymodels)  # Loads parsnip, rsample, recipes, yardstick
+library(skimr)       # Quickly get a sense of data
+library(knitr) &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;load-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Load Data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;telco &amp;lt;- read_csv(&amp;quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&amp;quot;)
+
+telco %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+customerID
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+gender
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+SeniorCitizen
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Partner
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Dependents
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+tenure
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+PhoneService
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+MultipleLines
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+InternetService
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+OnlineSecurity
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+OnlineBackup
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+DeviceProtection
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+TechSupport
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+StreamingTV
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+StreamingMovies
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Contract
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+PaperlessBilling
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+PaymentMethod
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+MonthlyCharges
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+TotalCharges
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Churn
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+7590-VHVEG
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Female
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No phone service
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+DSL
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Month-to-month
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Electronic check
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+5575-GNVDE
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Male
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+34
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+DSL
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+One year
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Mailed check
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+56.95
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1889.50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+3668-QPYBK
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Male
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+DSL
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Month-to-month
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Mailed check
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+53.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+108.15
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+7795-CFOCW
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Male
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+45
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No phone service
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+DSL
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+One year
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Bank transfer (automatic)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+42.30
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1840.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+9237-HQITU
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Female
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Fiber optic
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Month-to-month
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Electronic check
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+70.70
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+151.65
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+9305-CDSKC
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Female
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Fiber optic
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Month-to-month
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Electronic check
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+99.65
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+820.50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;eda-skim-the-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;EDA: Skim the Data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;telco %&amp;gt;% skim()&lt;/code&gt;&lt;/pre&gt;
+&lt;table style=&#39;width: auto;&#39;
+        class=&#39;table table-condensed&#39;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-3&#34;&gt;Table 1: &lt;/span&gt;Data summary
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Name
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Piped data
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Number of rows
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+7043
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Number of columns
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+21
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+_______________________
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Column type frequency:
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+character
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+17
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+numeric
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+________________________
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Group variables
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+None
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: character&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+skim_variable
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_missing
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+complete_rate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+min
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+max
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+empty
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_unique
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+whitespace
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+customerID
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7043
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+gender
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Partner
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Dependents
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+PhoneService
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+MultipleLines
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+16
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+InternetService
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+OnlineSecurity
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+OnlineBackup
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+DeviceProtection
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+TechSupport
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+StreamingTV
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+StreamingMovies
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Contract
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+14
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+PaperlessBilling
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+PaymentMethod
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+12
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Churn
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: numeric&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+skim_variable
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_missing
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+complete_rate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+mean
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sd
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p0
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p25
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p50
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p75
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p100
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+hist
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+SeniorCitizen
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.16
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▁▁▁▂
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+tenure
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+32.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+24.56
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+55.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+72.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▃▃▃▆
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+MonthlyCharges
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+64.76
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+30.09
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+18.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+35.50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+70.35
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+89.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+118.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▅▆▇▅
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+TotalCharges
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2283.30
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2266.77
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+18.80
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+401.45
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1397.47
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3794.74
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8684.80
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▂▂▂▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div id=&#34;data-processing&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;data processing&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;telco &amp;lt;- telco %&amp;gt;%
+    select(-customerID) %&amp;gt;%
+    drop_na()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df &amp;lt;- telco&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tidymodels-workflow&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Tidymodels Workflow&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div id=&#34;traintest-split&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Train/Test Split&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(seed = 1972) 
+
+train_test_split &amp;lt;-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.80   
+    ) 
+
+train_test_split&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;5626/1406/7032&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;train_tbl &amp;lt;- train_test_split %&amp;gt;% training() 
+test_tbl  &amp;lt;- train_test_split %&amp;gt;% testing() &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;prepare&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Prepare&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;recipe_simple &amp;lt;- function(dataset) {
+    recipe(Churn ~ ., data = dataset) %&amp;gt;%
+        step_string2factor(all_nominal(), -all_outcomes()) %&amp;gt;%
+        prep(data = dataset)
+}
+
+recipe_prepped &amp;lt;- recipe_simple(dataset = train_tbl)
+
+train_baked &amp;lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &amp;lt;- bake(recipe_prepped, new_data = test_tbl)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;generalized-linear-model-baseline&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Generalized Linear Model (Baseline)&lt;/h3&gt;
+&lt;div id=&#34;fit-the-model&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Fit the Model&lt;/h5&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;logistic_glm &amp;lt;- logistic_reg(mode = &amp;quot;classification&amp;quot;) %&amp;gt;%
+    set_engine(&amp;quot;glm&amp;quot;) %&amp;gt;%
+    fit(Churn ~ ., data = train_baked)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;assess-performance&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Assess Performance&lt;/h5&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predictions_glm &amp;lt;- logistic_glm %&amp;gt;%
+    predict(new_data = test_baked) %&amp;gt;%
+    bind_cols(test_baked %&amp;gt;% select(Churn))
+
+predictions_glm %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+.pred_class
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Churn
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Yes
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+No
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;accuracy-precision-recall-and-f1-score&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Accuracy, Precision , Recall and F1 Score&lt;/h5&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tibble(
+  &amp;quot;accuracy&amp;quot; =
+    accuracy(predictions_glm, Churn, .pred_class) %&amp;gt;%
+    select(.estimate),
+  &amp;quot;precision&amp;quot; =
+    precision(predictions_glm, Churn, .pred_class) %&amp;gt;%
+    select(.estimate),
+  &amp;quot;recall&amp;quot; =
+    recall(predictions_glm, Churn, .pred_class) %&amp;gt;%
+    select(.estimate),
+  &amp;quot;F1 score&amp;quot; =
+    f_meas(predictions_glm, Churn, .pred_class) %&amp;gt;%
+    select(.estimate),
+) %&amp;gt;%
+  unnest(cols = c(accuracy, precision, recall, `F1 score`)) %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+accuracy
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+precision
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+recall
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+F1 score
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8058321
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8376916
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.909002
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8718911
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;random-forest&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Random Forest&lt;/h3&gt;
+&lt;div id=&#34;cross-validation---10-fold&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Cross Validation - 10-Fold&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cross_val_tbl &amp;lt;- vfold_cv(train_tbl, v = 10)
+cross_val_tbl&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## #  10-fold cross-validation 
+## # A tibble: 10 x 2
+##    splits             id    
+##    &amp;lt;named list&amp;gt;       &amp;lt;chr&amp;gt; 
+##  1 &amp;lt;split [5.1K/563]&amp;gt; Fold01
+##  2 &amp;lt;split [5.1K/563]&amp;gt; Fold02
+##  3 &amp;lt;split [5.1K/563]&amp;gt; Fold03
+##  4 &amp;lt;split [5.1K/563]&amp;gt; Fold04
+##  5 &amp;lt;split [5.1K/563]&amp;gt; Fold05
+##  6 &amp;lt;split [5.1K/563]&amp;gt; Fold06
+##  7 &amp;lt;split [5.1K/562]&amp;gt; Fold07
+##  8 &amp;lt;split [5.1K/562]&amp;gt; Fold08
+##  9 &amp;lt;split [5.1K/562]&amp;gt; Fold09
+## 10 &amp;lt;split [5.1K/562]&amp;gt; Fold10&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cross_val_tbl %&amp;gt;% pluck(&amp;quot;splits&amp;quot;, 1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;5063/563/5626&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;random-forest-1&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Random Forest&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rf_fun &amp;lt;- function(split, id, try, tree) {
+    
+    analysis_set &amp;lt;- split %&amp;gt;% analysis()
+    analysis_prepped &amp;lt;- analysis_set %&amp;gt;% recipe_simple()
+    analysis_baked &amp;lt;- analysis_prepped %&amp;gt;% bake(new_data = analysis_set)
+    
+    model_rf &amp;lt;-
+        rand_forest(
+            mode = &amp;quot;classification&amp;quot;,
+            mtry = try,
+            trees = tree
+        ) %&amp;gt;%
+        set_engine(&amp;quot;ranger&amp;quot;,
+                   importance = &amp;quot;impurity&amp;quot;
+        ) %&amp;gt;%
+        fit(Churn ~ ., data = analysis_baked)
+    
+    assessment_set     &amp;lt;- split %&amp;gt;% assessment()
+    assessment_prepped &amp;lt;- assessment_set %&amp;gt;% recipe_simple()
+    assessment_baked   &amp;lt;- assessment_prepped %&amp;gt;% bake(new_data = assessment_set)
+    
+    tibble(
+        &amp;quot;id&amp;quot; = id,
+        &amp;quot;truth&amp;quot; = assessment_baked$Churn,
+        &amp;quot;prediction&amp;quot; = model_rf %&amp;gt;%
+            predict(new_data = assessment_baked) %&amp;gt;%
+            unlist()
+    )
+    
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling-with-purrr&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Modeling with purrr&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_rf &amp;lt;- map2_df(
+    .x = cross_val_tbl$splits,
+    .y = cross_val_tbl$id,
+    ~ rf_fun(split = .x, id = .y, try = 3, tree = 200)
+)
+
+head(pred_rf)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 3
+##   id     truth prediction
+##   &amp;lt;chr&amp;gt;  &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt;     
+## 1 Fold01 No    No        
+## 2 Fold01 No    No        
+## 3 Fold01 Yes   No        
+## 4 Fold01 No    No        
+## 5 Fold01 No    No        
+## 6 Fold01 No    No&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;assess-performance-1&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Assess Performance&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_rf %&amp;gt;%
+    conf_mat(truth, prediction) %&amp;gt;%
+    summary() %&amp;gt;%
+    select(-.estimator) %&amp;gt;%
+    filter(.metric %in% c(&amp;quot;accuracy&amp;quot;, &amp;quot;precision&amp;quot;, &amp;quot;recall&amp;quot;, &amp;quot;f_meas&amp;quot;)) %&amp;gt;%
+    kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+.metric
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+.estimate
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+accuracy
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7964806
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+precision
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8320035
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+recall
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.9065443
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+f_meas
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8676760
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tidymodels: tidy machine learning in R</title>
+      <link>/post/tidymodels-tidy-machine-learning-in-r/</link>
+      <pubDate>Sun, 26 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/tidymodels-tidy-machine-learning-in-r/</guid>
+      <description>
+
+
+&lt;div id=&#34;setup&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div id=&#34;function&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;function&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x_to_na &amp;lt;- function (s, x = 0)
+{
+    sapply(s, function(y)
+        ifelse(y %in% x, NA, y))
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-is-tidymodels&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;What is tidymodels&lt;/h2&gt;
+&lt;p&gt;Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;rsample&lt;/code&gt;: for sample splitting (e.g. train/test or cross-validation)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;recipes&lt;/code&gt;: for pre-processing&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;parsnip&lt;/code&gt;: for specifying the model&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;yardstick&lt;/code&gt;: for evaluating the model&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We will also be using the &lt;code&gt;tune&lt;/code&gt; package (for parameter tuning procedure) and the &lt;code&gt;workflows&lt;/code&gt; package (for putting everything together) that I had thought were a part of CRAN’s tidymodels package bundle, but apparently they aren’t. These will need to be loaded separately for now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;getting-set-up&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Getting set up&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# load the relevant tidymodels libraries
+library(tidymodels)
+library(tidyverse)
+library(workflows)
+library(tune)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;load-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Load Data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# load the Pima Indians dataset from the mlbench dataset
+library(mlbench)
+data(PimaIndiansDiabetes)
+# rename dataset to have shorter name because lazy
+df &amp;lt;- PimaIndiansDiabetes
+head(df)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   pregnant glucose pressure triceps insulin mass pedigree age diabetes
+## 1        6     148       72      35       0 33.6    0.627  50      pos
+## 2        1      85       66      29       0 26.6    0.351  31      neg
+## 3        8     183       64       0       0 23.3    0.672  32      pos
+## 4        1      89       66      23      94 28.1    0.167  21      neg
+## 5        0     137       40      35     168 43.1    2.288  33      pos
+## 6        5     116       74       0       0 25.6    0.201  30      neg&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;eda&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;EDA&lt;/h2&gt;
+&lt;div id=&#34;skim&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;skim&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;skimr::skim(df)&lt;/code&gt;&lt;/pre&gt;
+&lt;table style=&#39;width: auto;&#39;
+        class=&#39;table table-condensed&#39;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-4&#34;&gt;Table 1: &lt;/span&gt;Data summary
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Name
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+df
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Number of rows
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+768
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Number of columns
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+_______________________
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Column type frequency:
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+factor
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+numeric
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+________________________
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Group variables
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+None
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: factor&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+skim_variable
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_missing
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+complete_rate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+ordered
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_unique
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+top_counts
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+diabetes
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+FALSE
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+neg: 500, pos: 268
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: numeric&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+skim_variable
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n_missing
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+complete_rate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+mean
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sd
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p0
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p25
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p50
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p75
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p100
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+hist
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pregnant
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+17.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▃▂▁▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+glucose
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+120.89
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+31.97
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+99.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+117.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+140.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+199.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▁▁▇▆▂
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pressure
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+69.11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19.36
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+62.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+72.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+80.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+122.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▁▁▇▇▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+triceps
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+20.54
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+15.95
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+23.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+32.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+99.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▇▂▁▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+insulin
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+79.80
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+115.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+30.50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+127.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+846.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▁▁▁▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+mass
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+31.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7.88
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+27.30
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+32.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+36.60
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+67.10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▁▃▇▂▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pedigree
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.47
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.33
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.08
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.63
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.42
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▃▁▁▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+age
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+33.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+11.76
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+21.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+24.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+41.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+81.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+▇▃▁▁▁
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;distribution&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;distribution&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df %&amp;gt;%
+    janitor::clean_names() %&amp;gt;%
+    set_names(colnames(.) %&amp;gt;%
+                  str_replace_all(., &amp;quot;_&amp;quot;, &amp;quot; &amp;quot;) %&amp;gt;%
+                  str_to_title()) %&amp;gt;%
+    select_if(is.numeric) %&amp;gt;%
+    gather() %&amp;gt;%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = &amp;quot;free&amp;quot;, ncol = 4) +
+    geom_histogram()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df %&amp;gt;%
+    janitor::clean_names() %&amp;gt;%
+    set_names(colnames(.) %&amp;gt;%
+                  str_replace_all(., &amp;quot;_&amp;quot;, &amp;quot; &amp;quot;) %&amp;gt;%
+                  str_to_title()) %&amp;gt;%
+    select_if(is.factor) %&amp;gt;%
+    gather() %&amp;gt;%
+    ggplot(aes(x = value)) +
+    geom_bar()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;replace-na&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;replace NA&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# df_clean &amp;lt;- df %&amp;gt;%
+#   mutate_at(vars(triceps, glucose, pressure, insulin, mass),
+#             function(.var) {
+#               if_else(condition = (.var == 0), # if true (i.e. the entry is 0)
+#                       true = as.numeric(NA),  # replace the value with NA
+#                       false = .var # otherwise leave it as it is
+#                       )
+#             })
+
+df_clean &amp;lt;- df %&amp;gt;%
+  mutate_at(vars(triceps, glucose, pressure, insulin, mass), ~ x_to_na(.x))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;split-into-traintest&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Split into train/test&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(234589)
+# split the data into trainng (75%) and testing (25%)
+set.seed(seed = 1972) 
+
+train_test_split &amp;lt;-
+    rsample::initial_split(
+        data = df_clean,     
+        prop = 3/4 
+    ) 
+
+train_test_split&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;lt;576/192/768&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;train_tbl &amp;lt;- train_test_split %&amp;gt;% training() 
+test_tbl  &amp;lt;- train_test_split %&amp;gt;% testing() &lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;cv-fold&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;cv-fold&lt;/h3&gt;
+&lt;p&gt;At some point we’re going to want to do some parameter tuning, and to do that we’re going to want to use cross-validation. So we can create a cross-validated version of the training set in preparation for that moment using vfold_cv().&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# create CV object from training data
+train_cv &amp;lt;- vfold_cv(train_tbl)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;define-a-recipe&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Define a recipe&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# define the recipe function
+recipe_simple &amp;lt;- function(data) {
+  # which consists of the formula (outcome ~ predictors)
+  recipe(diabetes ~ pregnant + glucose + pressure + triceps +
+           insulin + mass + pedigree + age,
+         data = data) %&amp;gt;%
+    # and some pre-processing steps
+    step_normalize(all_numeric()) %&amp;gt;%
+    step_knnimpute(all_predictors()) %&amp;gt;% 
+    prep(data = data)
+}
+
+recipe_prepped &amp;lt;- recipe_simple(data = df_clean)
+
+train_baked &amp;lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &amp;lt;- bake(recipe_prepped, new_data = test_tbl)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;specify-the-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Specify the model&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Parsnip offers a unified interface for the massive variety of models that exist in R.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;model type&lt;/strong&gt;: what kind of model you want to fit, set using a different function depending on the model, such as &lt;code&gt;rand_forest()&lt;/code&gt; for random forest, &lt;code&gt;logistic_reg()&lt;/code&gt; for logistic regression, &lt;code&gt;svm_poly()&lt;/code&gt; for a polynomial SVM model etc. The full list of models available via parsnip can be found &lt;a href=&#34;https://tidymodels.github.io/parsnip/articles/articles/Models.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;arguments&lt;/strong&gt;: the model parameter values (now consistently named across different models), set using &lt;code&gt;set_args()&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;engine&lt;/strong&gt;: the underlying package the model should come from (e.g. “ranger” for the ranger implementation of Random Forest), set using &lt;code&gt;set_engine()&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;mode&lt;/strong&gt;: the type of prediction - since several packages can do both classification (binary/categorical prediction) and regression (continuous prediction), set using &lt;code&gt;set_mode()&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;rf&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;RF&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📌 this code doesn’t actually fit the model. Like the recipe, it just outlines a description of the model.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;setting a parameter to tune() means that it will be tuned later in the tune stage of the pipeline. You could also just specify a particular value of the parameter if you don’t want to tune it e.g. using set_args(mtry = 4).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rf_model &amp;lt;- 
+  # specify that the model is a random forest
+  rand_forest() %&amp;gt;%
+  # specify that the `mtry` parameter needs to be tuned
+  set_args(mtry = tune()) %&amp;gt;%
+  # select the engine/package that underlies the model
+  set_engine(&amp;quot;ranger&amp;quot;) %&amp;gt;%
+  # choose either the continuous regression or binary classification mode
+  set_mode(&amp;quot;classification&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;put-it-all-together-in-a-workflow&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Put it all together in a workflow&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# set the workflow
+rf_workflow &amp;lt;- workflow() %&amp;gt;%
+  # add the recipe
+  add_recipe(recipe_prepped) %&amp;gt;%
+  # add the model
+  add_model(rf_model)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tune-the-parameters&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Tune the parameters&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;📌 You can tune multiple parameters at once by providing multiple parameters to the expand.grid() function, e.g. expand.grid(mtry = c(3, 4, 5), trees = c(100, 500)).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# specify which values eant to try
+rf_grid &amp;lt;- expand.grid(mtry = c(3, 4, 5))
+# extract results
+rf_tune_results &amp;lt;- 
+  rf_workflow %&amp;gt;%
+  tune_grid(resamples = train_cv, #CV object
+            grid = rf_grid, # grid of values to try
+            metrics = metric_set(accuracy, roc_auc) # metrics we care about
+            )
+
+# print results
+rf_tune_results %&amp;gt;%
+  collect_metrics()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 6
+##    mtry .metric  .estimator  mean     n std_err
+##   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;      &amp;lt;dbl&amp;gt; &amp;lt;int&amp;gt;   &amp;lt;dbl&amp;gt;
+## 1     3 accuracy binary     0.759    10  0.0216
+## 2     3 roc_auc  binary     0.843    10  0.0160
+## 3     4 accuracy binary     0.759    10  0.0211
+## 4     4 roc_auc  binary     0.841    10  0.0163
+## 5     5 accuracy binary     0.764    10  0.0200
+## 6     5 roc_auc  binary     0.841    10  0.0155&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;finalize-the-workflow&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Finalize the workflow&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;param_final &amp;lt;- 
+  rf_tune_results %&amp;gt;%
+  select_best(metric = &amp;quot;accuracy&amp;quot;, maximize = TRUE)
+param_final&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 1 x 1
+##    mtry
+##   &amp;lt;dbl&amp;gt;
+## 1     5&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# add this parameter to the workflow using the finalize_workflow() function.
+rf_workflow &amp;lt;- 
+  rf_workflow %&amp;gt;%
+  finalize_workflow(param_final)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fit-the-final-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Fit the final model&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rf_fit &amp;lt;- rf_workflow %&amp;gt;%
+  # fit on entire training set and evaluate on test set
+  last_fit(train_test_split)
+
+rf_fit&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # # Monte Carlo cross-validation (0.75/0.25) with 1 resamples  
+## # A tibble: 1 x 6
+##   splits        id           .metrics      .notes      .predictions    .workflow
+##   &amp;lt;list&amp;gt;        &amp;lt;chr&amp;gt;        &amp;lt;list&amp;gt;        &amp;lt;list&amp;gt;      &amp;lt;list&amp;gt;          &amp;lt;list&amp;gt;   
+## 1 &amp;lt;split [576/… train/test … &amp;lt;tibble [2 ×… &amp;lt;tibble [0… &amp;lt;tibble [192 ×… &amp;lt;workflo…&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;evaluate-the-model-on-the-test-set&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Evaluate the model on the test set&lt;/h2&gt;
+&lt;div id=&#34;performance&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;performance&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;test_performance &amp;lt;- rf_fit %&amp;gt;% collect_metrics()
+test_performance&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;          &amp;lt;dbl&amp;gt;
+## 1 accuracy binary         0.755
+## 2 roc_auc  binary         0.829&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;predict&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;predict&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# generate predictions from the test set
+test_predictions &amp;lt;- rf_fit %&amp;gt;% collect_predictions()
+test_predictions&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 192 x 6
+##    id               .pred_neg .pred_pos  .row .pred_class diabetes
+##    &amp;lt;chr&amp;gt;                &amp;lt;dbl&amp;gt;     &amp;lt;dbl&amp;gt; &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt;       &amp;lt;fct&amp;gt;   
+##  1 train/test split     0.249    0.751      1 pos         pos     
+##  2 train/test split     0.292    0.708      3 pos         pos     
+##  3 train/test split     0.402    0.598      5 pos         pos     
+##  4 train/test split     0.587    0.413     10 neg         pos     
+##  5 train/test split     0.428    0.572     14 pos         pos     
+##  6 train/test split     0.785    0.215     19 neg         neg     
+##  7 train/test split     0.417    0.583     25 pos         pos     
+##  8 train/test split     0.203    0.797     32 pos         pos     
+##  9 train/test split     0.973    0.0272    34 neg         neg     
+## 10 train/test split     0.277    0.723     37 pos         neg     
+## # … with 182 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# test_predictions &amp;lt;- rf_fit %&amp;gt;% pull(.predictions)
+# test_predictions&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;confusion-matrix&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;confusion matrix&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# generate a confusion matrix
+test_predictions %&amp;gt;% 
+  conf_mat(truth = diabetes, estimate = .pred_class)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           Truth
+## Prediction neg pos
+##        neg 104  25
+##        pos  22  41&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;test_predictions %&amp;gt;%
+  ggplot() +
+  geom_density(aes(x = .pred_pos, fill = diabetes), 
+               alpha = 0.5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>R square and Q square , what the difference</title>
+      <link>/post/r-square-and-q-square-what-the-difference/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/r-square-and-q-square-what-the-difference/</guid>
+      <description>
+
+
+&lt;div id=&#34;r-square-和-q-square&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;R square 和 Q square&lt;/h2&gt;
+&lt;p&gt;其实他们的计算方式是一模一样的, 只是一个是在训练数据集上算的结果, 一个是在测试集上的计算结果.&lt;/p&gt;
+&lt;p&gt;R2 和 Q2 相差太多的话则说明回归的模型有过拟合&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{array}{l}R^{2}=1-R S S / T S S \\ R S S=\sum(y-\hat{\mathbf{y}})^{2} \\ T S S=\sum(y-\overline{\mathbf{y}})^{2}\end{array}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Q2 is the R2 when the PLS built on a training set is applied to a test set. So a good value for Q2 is a value that is close to the R2. That means that your PLS model works independently of the specific data that was used to train the PLS model. Adding more variables always makes R2 go up, but might not make Q2 go up.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As I have seen that the “Difference between R2 and Q2 should not be more than 0.3” [International Journal of Drug Design and Discovery, 2011, 2 (3) 511-519].&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>sklearn classification </title>
+      <link>/post/sklearn-classification/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/sklearn-classification/</guid>
+      <description>
+
+
+&lt;div id=&#34;set-environment&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;set environment&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;links&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/dformoso/sklearn-classification&#34;&gt;dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/dformoso/sklearn-classification&#34;&gt;dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Balance Accuracy and MCC</title>

@@ -5,12 +5,162 @@
     <link>/categories/reading/</link>
       <atom:link href="/categories/reading/index.xml" rel="self" type="application/rss+xml" />
     <description>reading</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>reading</title>
       <link>/categories/reading/</link>
     </image>
+    
+    <item>
+      <title>R square and Q square , what the difference</title>
+      <link>/post/r-square-and-q-square-what-the-difference/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/r-square-and-q-square-what-the-difference/</guid>
+      <description>
+
+
+&lt;div id=&#34;r-square-和-q-square&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;R square 和 Q square&lt;/h2&gt;
+&lt;p&gt;其实他们的计算方式是一模一样的, 只是一个是在训练数据集上算的结果, 一个是在测试集上的计算结果.&lt;/p&gt;
+&lt;p&gt;R2 和 Q2 相差太多的话则说明回归的模型有过拟合&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{array}{l}R^{2}=1-R S S / T S S \\ R S S=\sum(y-\hat{\mathbf{y}})^{2} \\ T S S=\sum(y-\overline{\mathbf{y}})^{2}\end{array}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Q2 is the R2 when the PLS built on a training set is applied to a test set. So a good value for Q2 is a value that is close to the R2. That means that your PLS model works independently of the specific data that was used to train the PLS model. Adding more variables always makes R2 go up, but might not make Q2 go up.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As I have seen that the “Difference between R2 and Q2 should not be more than 0.3” [International Journal of Drug Design and Discovery, 2011, 2 (3) 511-519].&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Principle of least resistance</title>
+      <link>/post/principle-of-least-resistance/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/principle-of-least-resistance/</guid>
+      <description>
+
+
+&lt;blockquote&gt;
+&lt;p&gt;在缺乏度量或及时反馈的环境下, 大多数人都会选择最简单的行为和事情来做。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;什么是最小阻力原则&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;什么是最小阻力原则&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;最小阻力原则: 是指在工作环境下, 若各种行为对于底线的影响&lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;没有得到明确的反馈意见&lt;/strong&gt;&lt;/font&gt; , 那我们则倾向于采用当下最简单易行的行为。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div id=&#34;保持联结状态真的有助于工作&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;保持联结状态真的有助于工作?&lt;/h2&gt;
+&lt;p&gt;答案是否定的.&lt;/p&gt;
+&lt;p&gt;为了验证这个想法, 波士顿咨询集团采用了一些极端手段, 他迫使团队中每一名成员在工作日中选择一天不上班, 也就是说和公司内外的任何人都断开联系.&lt;/p&gt;
+&lt;p&gt;最初这个团队有些抵制这项实验, 据他回忆, 其中一些尝试负责的合伙人一直对我们的基本观点很支持, 但是这时也突然有些紧张, 害怕告诉客户, 他团队中的每一个成员每周都有一天不工作, 那些咨询员也同样很紧张担忧他们这样会置事业于危机, 但是这个团队并没有失去客户, 团队成员也没有丢掉工作, 相反这些咨询员在工作中找到了更多的乐趣, 内部的沟通也更顺畅, 也学到了更多的东西。或许最重要的是为客户提供更好的产品。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;为什么联结文化经久不衰&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;为什么联结文化经久不衰?&lt;/h2&gt;
+&lt;p&gt;一个有趣的问题: 为什么有那么多的公司像波士顿咨询集团一样培育一种连接的文化, 尽管在他的研究中发现, 此举会损害员工的幸福感和生产效率, 且很可能无助于提高底.&lt;/p&gt;
+&lt;p&gt;&lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;答案是这样更简单&lt;/strong&gt;&lt;/font&gt; , 原因有二:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;原因一,关乎于对个人需求的响应, 如果你所处的工作环境下提出问题能够立刻得到答案, 需要某一特定信息能够立刻得到(即时满足), 那么你的生活就会变得更简单, 至少在当时是这样的, 如果无法得到这样迅速的响应, 你就需要做更多的预先工作和计划, 需要根据条理性, 同时还要时刻准备暂时搁置工作, 将注意力转移到别处, 等待所有要求达成(延时满足), 所有的这些都将使你的日常工作生活更加艰难, 尽管从长期来讲这样做更能令人满意, 但是我们不想这么复杂。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;原因二, 在于它可以创造出一种环境, 在这种环境下利用收件箱管理一天的工作是可以被接受的, 欣然回复最新的邮件, 其他的则堆积在那里, 同时还感觉自己的效率令人满意, 如果将电子邮件转移为边远工作, 你就需要采用一种更深思熟虑的方式, 理清下一步的工作内容以及工作时长, 这种计划是很困难的。&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;例会的困境&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;例会的困境&lt;/h2&gt;
+&lt;p&gt;项目上频繁召开的例会, 这些会议往往使你无法持续专注, 导致日程无法及时完成, 变得支离破碎, 为什么还要坚持呢？&lt;/p&gt;
+&lt;p&gt;因为更简单, 对于很多人而言, 这些例会是一种简单的(但同时也是笨拙的人员管理形式), 他们不愿意自己去管理时间和工作任务, 而是让每周迫近的例会迫使他们在给定项目上采取一些行动或者提供&lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;一种取得进展的可视化幻象&lt;/strong&gt;&lt;/font&gt; 。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;负面影响&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;负面影响&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;最小阻力原则受到度量黑洞的保护, 很少有人对其加以审视, 在这种原则支配下的工作文化免去了我们短期内保持专注合作计划的忧虑, 却牺牲了长期的满足感和真实价值的产出, 这样一来最小主力原则就驱使我们在深度工作愈发受到青睐的经济形势下流于浮浅工作。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div id=&#34;解决办法&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;解决办法&lt;/h2&gt;
+&lt;p&gt;选择一件对你很重要的事情(这种事情一般是很难度量成功和即时反馈的), 设定一些小的虚拟反馈, 比如, 背了多少单词, 寄了多少分, 利用打游戏上瘾的一些原理来促进你在这些事情上取得推进.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>不要用网络来消遣, 用什么来消遣?</title>
+      <link>/post/don-t-use-the-internet-for-entertainment/</link>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/don-t-use-the-internet-for-entertainment/</guid>
+      <description>
+
+
+&lt;blockquote&gt;
+&lt;p&gt;脑力活动需要的是变化和切换, 不会感到疲倦&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;何为生活? 而不仅仅是生存&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;为什么不能用网络来消遣&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;为什么不能用网络来消遣?&lt;/h1&gt;
+&lt;p&gt;如何度过你的一天 24 小时, How To Live On 24 Hours A Day?&lt;/p&gt;
+&lt;p&gt;尽管不太喜欢自己的这一天的生活, 但是还是把 8:30-17:30 这段时间当做是这一天的生活, 这之前的和之后的时间是这一天的前奏和尾声.&lt;/p&gt;
+&lt;p&gt;应该要像贵族一样使用自己的时间&lt;/p&gt;
+&lt;p&gt;娱乐时间仍然是堕落的, 主要是胡乱点击一些没有价值的数字娱乐信息&lt;/p&gt;
+&lt;p&gt;你应该能够主动利用自己工作外的时间和精力&lt;/p&gt;
+&lt;p&gt;减少网络工具对你深度工作能力的干扰&lt;/p&gt;
+&lt;div id=&#34;尽可能吸引你时间和注意力的网站&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;尽可能吸引你时间和注意力的网站&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;facebook&lt;/li&gt;
+&lt;li&gt;reddit&lt;/li&gt;
+&lt;li&gt;wechat&lt;/li&gt;
+&lt;li&gt;Twitter&lt;/li&gt;
+&lt;li&gt;优酷&lt;/li&gt;
+&lt;li&gt;爱奇艺&lt;/li&gt;
+&lt;li&gt;哔哩哔哩&lt;/li&gt;
+&lt;li&gt;抖音&lt;/li&gt;
+&lt;li&gt;快手&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这些网站的共同点: 使用精心雕琢的标题和容易理解的内容, 辅以数学算法打磨, 最大限度的吸引你的眼球&lt;/p&gt;
+&lt;p&gt;一周的工作时间结束, 这些网站就成了你的主要娱乐.&lt;/p&gt;
+&lt;p&gt;这些事情都是损害你抵抗分心事物的能力, 使你在试图深度工作的时候更难集中注意力.&lt;/p&gt;
+&lt;p&gt;这些事情总是唾手可得, 让你即时满足.(也许增加这些事情获得难度是一个办法, 最小阻力之路)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;用什么来消遣&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;用什么来消遣?&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在你全部的清醒时间都给自己的大脑找到有意义的事情去做，而不是放任自己在迷糊的状态下漫无目的的浏览几个小时的网页，那么在这一天结束的时候，你会觉得更加充实，第2天开始也更加轻松。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;核心思想&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;核心思想&lt;/h2&gt;
+&lt;p&gt;在你的娱乐时间做更多的思考, 主动思考我应该怎么度过这一天?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这些致瘾的网址只有在真空中才能生存: 如果你在某一段时间没有给自己安排任务, 这些网站总是一种有诱惑的选择. 如果你在自由时间有高质量的事情去做, 这些网站对你的注意力的控制就会减弱.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div id=&#34;操作&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;操作&lt;/h2&gt;
+&lt;p&gt;在周末到来之前确定要做的事情是十分重要的&lt;/p&gt;
+&lt;p&gt;一些安排好的爱好为这些时间提供了充分的养料
+为了特定的目标完成特定的活动, 这将填满你的时间&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读&lt;/li&gt;
+&lt;li&gt;锻炼&lt;/li&gt;
+&lt;li&gt;唱歌&lt;/li&gt;
+&lt;li&gt;爱好&lt;/li&gt;
+&lt;li&gt;新的技能&lt;/li&gt;
+&lt;li&gt;和老友见面&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;总结&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;总结&lt;/h1&gt;
+&lt;p&gt;如果你想抵御娱乐网站对你时间和精力的诱惑，那么就给大脑找一些高质量的替代活动，这样不仅可以使我们避免分心，保持专注的能力，同时还有可能实现一个宏伟目标，体验到&lt;font color=&#34;darkred&#34;&gt;何为生活而不仅仅是生存&lt;/font&gt;。&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Balance Accuracy and MCC</title>

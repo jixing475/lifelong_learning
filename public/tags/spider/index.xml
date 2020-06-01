@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>spider | Jixing Liu</title>
+    <link>/tags/spider/</link>
+      <atom:link href="/tags/spider/index.xml" rel="self" type="application/rss+xml" />
+    <description>spider</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 05 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>spider</title>
+      <link>/tags/spider/</link>
+    </image>
+    
+    <item>
+      <title>Use selenium in python</title>
+      <link>/post/use-selenium-in-python/</link>
+      <pubDate>Sun, 05 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/use-selenium-in-python/</guid>
+      <description>
+
+
+&lt;!-- --- --&gt;
+&lt;!-- title: &#34;hello world&#34; --&gt;
+&lt;!-- description: | --&gt;
+&lt;!--   Taking the `radix` R package for a test spin with `Scikit Learn`! --&gt;
+&lt;!-- author: --&gt;
+&lt;!--   - name: Jixing Liu --&gt;
+&lt;!--     url: https://jixing.netlify.com/ --&gt;
+&lt;!--     affiliation: DeepDrug --&gt;
+&lt;!--     affiliation_url: http://www.deepdrug.cn/en/ --&gt;
+&lt;!-- date: &#34;2020-04-06&#34; --&gt;
+&lt;!-- #bibliography: biblio.bib   --&gt;
+&lt;!-- output: --&gt;
+&lt;!--   radix::radix_article: --&gt;
+&lt;!--     toc: true --&gt;
+&lt;!--     toc_depth: 3 --&gt;
+&lt;!--     number_sections: true --&gt;
+&lt;!--     self_contained: true --&gt;
+&lt;!-- --- --&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(reticulate)
+reticulate::use_python(&amp;quot;/Users/zero/anaconda3/envs/reticulate/bin/python3&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

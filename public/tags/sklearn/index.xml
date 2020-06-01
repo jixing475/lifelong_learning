@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sklearn | Jixing Liu</title>
+    <link>/tags/sklearn/</link>
+      <atom:link href="/tags/sklearn/index.xml" rel="self" type="application/rss+xml" />
+    <description>sklearn</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 06 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>sklearn</title>
+      <link>/tags/sklearn/</link>
+    </image>
+    
+    <item>
+      <title>sklearn classification </title>
+      <link>/post/sklearn-classification/</link>
+      <pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/sklearn-classification/</guid>
+      <description>
+
+
+&lt;div id=&#34;set-environment&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;set environment&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;links&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/dformoso/sklearn-classification&#34;&gt;dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/dformoso/sklearn-classification&#34;&gt;dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

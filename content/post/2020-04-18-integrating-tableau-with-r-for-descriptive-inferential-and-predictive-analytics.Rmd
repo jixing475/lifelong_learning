@@ -1,0 +1,59 @@
+---
+title: Integrating Tableau with R for Descriptive, Inferential and Predictive analytics
+author: ZERO
+date: '2020-04-18'
+slug: integrating-tableau-with-r-for-descriptive-inferential-and-predictive-analytics
+categories:
+  - Tools
+tags:
+  - tableau
+  - shiny
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-18T18:13:44+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+```
+
+## host your html file 
+
+
+You would need to __host your HTML on a publicly accessible website somewhere__, then use a webpage part object on your dashboard to embed that page.
+
+Skip that though, generate a clock to embed here - [Free Clocks for Your Website](https://community.tableau.com/external-link.jspa?url=https%3A%2F%2Fwww.timeanddate.com%2Fclocks%2Ffree.html)
+
+  
+## use flexdashboard
+
+[flexdashboard Examples](https://rmarkdown.rstudio.com/flexdashboard/examples.html)
+
+
+
+
+
+
+## links
+
+
+
+[Embed HTML Local in Tableau ( Import JS to Tabl... |Tableau Community Forums](https://community.tableau.com/thread/241667)
+
+[(28) Integrating Tableau with R for Descriptive, Inferential and Predictive analytics - YouTube](https://www.youtube.com/watch?v=ZBROGk0AP8Y&feature=emb_logo)

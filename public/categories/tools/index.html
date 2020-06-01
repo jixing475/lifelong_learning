@@ -239,7 +239,7 @@
   <meta property="og:description" content="Personal website for Jixing Liu"><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
   <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-03-31T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2020-06-01T00:00:00&#43;00:00">
   
 
   
@@ -549,17 +549,134 @@
     
     
     <div>
-      <h2><a href="/post/tidymodels-machine-learning-ecosystem/" >Tidymodels Machine Learning Ecosystem</a></h2>
+      <h2><a href="/post/taste-ggtext/" >taste ggtext</a></h2>
       <div class="article-style">
         
-          Introduction  {tidyverse} ecosystem that has become the defacto standard for data importation, manipulation, and visualization in R.
-  My graduate training left me with a deep understanding of linear models and design-based causal inference, but with little or no training in other types of predictive modeling, unsupervised machine learning, version control, or putting models into production.
+          load pkgs library(ggplot2) library(dplyr) #install.packages(&quot;ggcharts&quot;) data(biomedicalrevenue, package = &quot;ggcharts&quot;)  example plot &lt;- biomedicalrevenue %&gt;% filter(company %in% c(&quot;Roche&quot;, &quot;Novartis&quot;)) %&gt;% ggplot(aes(year, revenue, color = company)) + geom_line(size = 1.2) + ggtitle( paste0( &quot;&lt;span style = &#39;color:darkred&#39;&gt;__Roche__&lt;/span&gt;&quot;, &quot; *overtook* &lt;span style = &#39;color:darkorange&#39;&gt;**Novartis**&lt;/span&gt;&quot;, &quot; in 2016&quot; ) ) + scale_color_manual( values = c(&quot;Roche&quot; = &quot;#93C1DE&quot;, &quot;Novartis&quot; = &quot;darkorange&quot;), guide = &quot;none&quot; ) + ggcharts::theme_hermit(ticks = &quot;x&quot;, grid = &quot;X&quot;) + theme(plot.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/thematic/" >ggplot2 thematic</a></h2>
+      <div class="article-style">
+        
+          install pkg # remotes::install_github(&quot;rstudio/thematic&quot;) library(thematic) library(thematic) thematic_on( bg = &quot;#222222&quot;, fg = &quot;white&quot;, accent = &quot;#0CE3AC&quot;, font = &quot;auto&quot; ) library(ggplot2) ggplot(mtcars, aes(wt, mpg)) + geom_point() + geom_smooth() ## Error : RStudio not running ggplot(mtcars, aes(wt, mpg)) + geom_point(aes(color = factor(cyl))) + geom_smooth(color = &quot;white&quot;) ## Error : RStudio not running  links Unified and Automatic Theming of ggplot2, lattice, and base R Graphics • thematic
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/example-time-to-event-survival-analysis-using-visr/" >Example Time To Event (Survival) Analysis using visR</a></h2>
+      <div class="article-style">
+        
+          setup  load pkgs library(visR) library(survival) library(gt)  set var # Constants DATASET &lt;- paste0(&quot;NCCTG Lung Cancer Dataset (from survival package &quot;, packageVersion(&quot;survival&quot;), &quot;)&quot;) #attrition_chart_fn &lt;- &quot;data/attrition_diagram.svg&quot; # Globql formatting options options(digits = 3) # Global table settings options(DT.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/a-gentle-introduction-to-tidymodels/" >a gentle introduction to tidymodels</a></h2>
+      <div class="article-style">
+        
+          SETUP  Load library library(tidymodels)  EDA iris %&gt;% janitor::clean_names() %&gt;% set_names(colnames(.) %&gt;% str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;% str_to_title()) %&gt;% select_if(is.numeric) %&gt;% gather() %&gt;% ggplot(aes(x = value)) + facet_wrap(~ key, scales = &quot;free&quot;, ncol = 4) + geom_histogram() iris %&gt;% janitor::clean_names() %&gt;% set_names(colnames(.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/ml-workflow/" >ML Workflow</a></h2>
+      <div class="article-style">
+        
+          Setup  Load pkg library(tidymodels) # Loads parsnip, rsample, recipes, yardstick library(skimr) # Quickly get a sense of data library(knitr)   Load Data telco &lt;- read_csv(&quot;data/WA_Fn-UseC_-Telco-Customer-Churn.csv&quot;) telco %&gt;% head() %&gt;% kable()    customerID  gender  SeniorCitizen  Partner  Dependents  tenure  PhoneService  MultipleLines  InternetService  OnlineSecurity  OnlineBackup  DeviceProtection  TechSupport  StreamingTV  StreamingMovies  Contract  PaperlessBilling  PaymentMethod  MonthlyCharges  TotalCharges  Churn      7590-VHVEG  Female  0  Yes  No  1  No  No phone service  DSL  No  Yes  No  No  No  No  Month-to-month  Yes  Electronic check  29.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/tidymodels-tidy-machine-learning-in-r/" >Tidymodels: tidy machine learning in R</a></h2>
+      <div class="article-style">
+        
+          Setup  function x_to_na &lt;- function (s, x = 0) { sapply(s, function(y) ifelse(y %in% x, NA, y)) }  What is tidymodels Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/deep-learning-with-keras-in-r/" >Deep Learning With Keras in R</a></h2>
+      <div class="article-style">
+        
+          Load Libraries  Import Data Download theIBM Watson Telco Data Set here. Next, useread_csv()to import the data into a nice tidy data frame. We use theglimpse()function to quickly inspect the data.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/integrating-tableau-with-r-for-descriptive-inferential-and-predictive-analytics/" >Integrating Tableau with R for Descriptive, Inferential and Predictive analytics</a></h2>
+      <div class="article-style">
+        
+          host your html file You would need to host your HTML on a publicly accessible website somewhere, then use a webpage part object on your dashboard to embed that page.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/recipes/" >Recipes for machine learning</a></h2>
+      <div class="article-style">
+        
+          select variable When recipe steps are used, there are different approaches that can be used to select which variables or features should be used.
+The three main characteristics of variables that can be queried:
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/ggplot2-workshop/" >ggplot2 Workshop</a></h2>
+      <div class="article-style">
+        
+          introduction This document contains all the code that is displayed during the workshop. The document is an RMarkdown document which means that it can be compiled, along with the code chunks thus executing and capturing the output of the code within the document.
         
       </div>
     </div>
   
 
   
+<nav>
+  <ul class="pagination justify-content-center">
+    
+    
+    <li class="page-item"><a class="page-link" href="/categories/tools/page/2/">&raquo;</a></li>
+    
+  </ul>
+</nav>
+
 
 </div>
 

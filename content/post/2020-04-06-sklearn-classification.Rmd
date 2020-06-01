@@ -1,0 +1,109 @@
+---
+title: 'sklearn classification '
+author: ZERO
+date: '2020-04-06'
+slug: sklearn-classification
+categories:
+  - Tools
+tags:
+  - Machine learning
+  - sklearn
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-06T14:54:51+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE)  # Toggle off warning output
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+library(tidyverse)
+theme_set(theme_light())
+
+library(reticulate)
+reticulate::use_python("/Users/zero/anaconda3/envs/reticulate/bin/python3")
+```
+
+
+# set environment
+
+
+
+```{sh eval=FALSE, include=FALSE}
+
+ssh -L 4321:localhost:4321 -L 8888:localhost:8888 -p 37482 jixing@241q703q35.wicp.vip
+
+# tmux a -t docker 
+
+
+docker run -itd \
+  --restart always \
+  --name jupyter \
+  --hostname jupyter \
+  -p 8888:8888 \
+  -p 6006:6006 \
+  jupyter/tensorflow-notebook:latest \
+  start-notebook.sh --NotebookApp.token=''
+
+```
+
+
+```{python eval=FALSE, include=FALSE}
+import math
+import numpy as np
+import pandas as pd
+# Visualization 
+import matplotlib.pyplot as plt
+import missingno
+import seaborn as sns
+from pandas.plotting import scatter_matrix
+from mpl_toolkits.mplot3d import Axes3D
+
+
+# Let’s plot the distribution of each feature
+def plot_distribution(dataset, cols=5, width=20, height=15, hspace=0.2, wspace=0.5):
+    plt.style.use('seaborn-whitegrid')
+    fig = plt.figure(figsize=(width,height))
+    fig.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=wspace, hspace=hspace)
+    rows = math.ceil(float(dataset.shape[1]) / cols)
+    for i, column in enumerate(dataset.columns):
+        ax = fig.add_subplot(rows, cols, i + 1)
+        ax.set_title(column)
+        if dataset.dtypes[column] == np.object:
+            g = sns.countplot(y=column, data=dataset)
+            substrings = [s.get_text()[:18] for s in g.get_yticklabels()]
+            g.set(yticklabels=substrings)
+            plt.xticks(rotation=25)
+        else:
+            g = sns.distplot(dataset[column])
+            plt.xticks(rotation=25)
+
+
+iris = sns.load_dataset("iris") 
+iris.head()
+
+
+plot_distribution(iris, cols=3, width=20, height=20, hspace=0.45, wspace=0.5)
+plt.show()
+```
+
+
+
+# links
+
++ [dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.](https://github.com/dformoso/sklearn-classification)
+
++ [dformoso/sklearn-classification: Data Science Notebook on a Classification Task, using sklearn and Tensorflow.](https://github.com/dformoso/sklearn-classification)
+

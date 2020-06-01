@@ -1,0 +1,223 @@
+---
+title: Example Time To Event (Survival) Analysis using visR
+author: ZERO
+date: '2020-05-04'
+slug: example-time-to-event-survival-analysis-using-visr
+categories:
+  - Tools
+tags:
+  - clinical
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-05-04T18:18:49+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+## setup
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE) 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+## load pkgs
+```{r}
+library(visR)
+library(survival)
+library(gt)
+```
+
+
+## set var
+```{r}
+# Constants
+DATASET <- paste0("NCCTG Lung Cancer Dataset (from survival package ", 
+                  packageVersion("survival"), ")")
+
+#attrition_chart_fn <- "data/attrition_diagram.svg"
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+```
+
+## load data
+
+```{r}
+data(lung)
+
+lung_cohort <- lung %>% 
+  rename(ECOG = ph.ecog,
+         Karnofsky = ph.karno,
+         institution = inst
+         ) %>% 
+  mutate(patid = paste0("Pat", row_number()),
+         institution = factor(institution),
+         sex = factor(if_else(sex == 1, "male", "female")),
+         ECOG = factor(case_when(ECOG == 0 ~ "0 asymptomatic",
+                          ECOG == 1 ~ "1 ambulatory",
+                          ECOG == 2 ~ "2 in bed less than 50% of day",
+                          ECOG == 3 ~ "3 in bed more than 50% of day",
+                          ECOG == 4 ~ "4 bedbound",
+                          ECOG == 5 ~ "5 dead")),
+         dx_age_group = factor(case_when(age < 30 ~ "< 30y",
+                                         age >= 30 & age <= 50 ~ "30-50y",
+                                         age > 50 & age <= 70 ~ "51-70y",
+                                         age > 70 ~ "> 70y"),
+                               levels=c("< 30y", "30-50y", "51-70y", "> 70y")),
+    status = if_else(status == 1, 0, 1)) %>% 
+    select(-meal.cal, -pat.karno)
+```
+
+## EDA
+```{r}
+skimr::skim(lung_cohort)
+```
+
+## follow chart Cohort Selection
+
+For this exercise we will only include patients with (1) ECOG available (2) and non-missing weight-loss data in our analysis
+
+### Attrition Table
+
+过滤表
+
+```{r}
+cohort_attrition <- vr_attrition_table(
+  data = lung_cohort,
+  criteria_descriptions = c("1. ECOG available", 
+                            "2. Weight loss data available", 
+                            "3. Non-missing vital status",
+                            "4. Positive follow up time"),
+  criteria_conditions   = c("!is.na(ECOG)",
+                            "!is.na(wt.loss)",
+                            "!is.na(status)",
+                            "time >= 0"),
+  subject_column_name   = 'patid')
+
+ 
+vr_render_table(data = cohort_attrition, 
+                title = "Attrition Table", 
+                caption = "Summary of samples fulfilling inclusion/exclusion criteria", 
+                datasource = DATASET, 
+                engine = "gt")
+```
+
+
+### flow-chart diagram
+
+```{r}
+complement_descriptions <- c(                                                   
+    "Having exclusion criterion: non ECOG",                                            
+    "Having exclusion criterion: missing weight loss ",
+    "Having exclusion criterion: missing vital status",
+    "Having exclusion criterion: negative follow up time"
+)
+
+# Create attrition flowchart
+#attrition_chart_fn <- "attrition_diagram.svg"
+# attrition_flow <- vr_attrition(
+#   N_array = cohort_attrition$`Remaining N`,
+#   descriptions = cohort_attrition$Criteria,
+#   complement_descriptions = complement_descriptions,
+#   output_path = attrition_chart_fn)
+
+# knitr::include_graphics(attrition_chart_fn)
+```
+
+### analysis data
+
+```{r}
+lung_cohort <- lung_cohort %>% 
+  filter(!is.na(ECOG),
+         !is.na(wt.loss),
+         !is.na(status),
+         time >= 0)
+```
+
+## Table 1
+
+Cohort Overview
+
+if the there are systematic differences between the chemotherapy and hormone therapy arms.
+
+
+
+```{r}
+# some modifications to the table for nice printing of categories
+lung_cohort_tab1 <- lung_cohort %>% 
+  mutate(status = factor(case_when(status == 0 ~ "Alive/Censored",
+                                   status == 1 ~ "Dead",
+                                   is.na(status) ~ "Missing"))) %>% 
+  filter(!is.na(time) & !is.na(age) & !is.na(Karnofsky)) %>% 
+  select(-institution)
+
+# visR table1 convenience function
+vr_table_one(
+  data = lung_cohort_tab1,
+  title = "Overview over Lung Cancer patients",
+  caption = "Baseline characteristics of study cohort stratified by treatment type",
+  datasource = DATASET,
+  groupCols = c("sex")
+)
+```
+
+
+
+## Kaplan-Meier Curve
+
+```{r}
+surv_eq <- "survival::Surv(time, status) ~ sex"
+
+vr_kaplan_meier(
+    lung_cohort,
+    equation = surv_eq,
+    data_source = DATASET, 
+    time_unit = "days",
+    title = "Comparison of survival in male and female lung cancer patients"
+)
+```
+
+### Summary of Kaplan Meier Curve
+
+```{r}
+km_summary <- vr_kaplan_meier_summary(lung_cohort, equation = surv_eq)
+
+km_summary[[1]] %>%
+  vr_render_table("Overall Survival",
+                  "Median survival times in days for each strata",
+                  DATASET)
+
+
+km_summary[[2]] %>%
+  vr_render_table("Equality between Strata",
+                  "Summary table with test of equality over strata",
+                  DATASET)
+```
+
+
+
+
+
+

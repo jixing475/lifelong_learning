@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Jixing Liu">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Setup  function x_to_na &lt;- function (s, x = 0) { sapply(s, function(y) ifelse(y %in% x, NA, y)) }  What is tidymodels Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/tidymodels-tidy-machine-learning-in-r/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/tidymodels-tidy-machine-learning-in-r/">
+
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@studentZero475">
+  <meta property="twitter:creator" content="@studentZero475">
+  
+  <meta property="og:site_name" content="Jixing Liu">
+  <meta property="og:url" content="/post/tidymodels-tidy-machine-learning-in-r/">
+  <meta property="og:title" content="Tidymodels: tidy machine learning in R | Jixing Liu">
+  <meta property="og:description" content="Setup  function x_to_na &lt;- function (s, x = 0) { sapply(s, function(y) ifelse(y %in% x, NA, y)) }  What is tidymodels Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including"><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
+  <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-04-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-04-26T16:01:04&#43;08:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/tidymodels-tidy-machine-learning-in-r/"
+  },
+  "headline": "Tidymodels: tidy machine learning in R",
+  
+  "datePublished": "2020-04-26T00:00:00Z",
+  "dateModified": "2020-04-26T16:01:04+08:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Jixing Liu"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Jixing Liu",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "Setup  function x_to_na \u0026lt;- function (s, x = 0) { sapply(s, function(y) ifelse(y %in% x, NA, y)) }  What is tidymodels Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Tidymodels: tidy machine learning in R | Jixing Liu</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Jixing Liu</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-end" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Tidymodels: tidy machine learning in R</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Apr 26, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/tools/">Tools</a></span>
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+</div>
+<div id="function" class="section level2">
+<h2>function</h2>
+<pre class="r"><code>x_to_na &lt;- function (s, x = 0)
+{
+    sapply(s, function(y)
+        ifelse(y %in% x, NA, y))
+}</code></pre>
+</div>
+<div id="what-is-tidymodels" class="section level2">
+<h2>What is tidymodels</h2>
+<p>Much like the tidyverse consists of many core packages, such as ggplot2 and dplyr, tidymodels also consists of several core packages, including</p>
+<ul>
+<li><p><code>rsample</code>: for sample splitting (e.g. train/test or cross-validation)</p></li>
+<li><p><code>recipes</code>: for pre-processing</p></li>
+<li><p><code>parsnip</code>: for specifying the model</p></li>
+<li><p><code>yardstick</code>: for evaluating the model</p></li>
+</ul>
+<p>We will also be using the <code>tune</code> package (for parameter tuning procedure) and the <code>workflows</code> package (for putting everything together) that I had thought were a part of CRAN’s tidymodels package bundle, but apparently they aren’t. These will need to be loaded separately for now.</p>
+</div>
+<div id="getting-set-up" class="section level2">
+<h2>Getting set up</h2>
+<pre class="r"><code># load the relevant tidymodels libraries
+library(tidymodels)
+library(tidyverse)
+library(workflows)
+library(tune)</code></pre>
+</div>
+<div id="load-data" class="section level2">
+<h2>Load Data</h2>
+<pre class="r"><code># load the Pima Indians dataset from the mlbench dataset
+library(mlbench)
+data(PimaIndiansDiabetes)
+# rename dataset to have shorter name because lazy
+df &lt;- PimaIndiansDiabetes
+head(df)</code></pre>
+<pre><code>##   pregnant glucose pressure triceps insulin mass pedigree age diabetes
+## 1        6     148       72      35       0 33.6    0.627  50      pos
+## 2        1      85       66      29       0 26.6    0.351  31      neg
+## 3        8     183       64       0       0 23.3    0.672  32      pos
+## 4        1      89       66      23      94 28.1    0.167  21      neg
+## 5        0     137       40      35     168 43.1    2.288  33      pos
+## 6        5     116       74       0       0 25.6    0.201  30      neg</code></pre>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<div id="skim" class="section level3">
+<h3>skim</h3>
+<pre class="r"><code>skimr::skim(df)</code></pre>
+<table style='width: auto;'
+        class='table table-condensed'>
+<caption>
+<span id="tab:unnamed-chunk-4">Table 1: </span>Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+df
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+768
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:left;">
+ordered
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:left;">
+top_counts
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+diabetes
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+neg: 500, pos: 268
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+pregnant
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.85
+</td>
+<td style="text-align:right;">
+3.37
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+3.00
+</td>
+<td style="text-align:right;">
+6.00
+</td>
+<td style="text-align:right;">
+17.00
+</td>
+<td style="text-align:left;">
+▇▃▂▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+glucose
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+120.89
+</td>
+<td style="text-align:right;">
+31.97
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+99.00
+</td>
+<td style="text-align:right;">
+117.00
+</td>
+<td style="text-align:right;">
+140.25
+</td>
+<td style="text-align:right;">
+199.00
+</td>
+<td style="text-align:left;">
+▁▁▇▆▂
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pressure
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+69.11
+</td>
+<td style="text-align:right;">
+19.36
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+62.00
+</td>
+<td style="text-align:right;">
+72.00
+</td>
+<td style="text-align:right;">
+80.00
+</td>
+<td style="text-align:right;">
+122.00
+</td>
+<td style="text-align:left;">
+▁▁▇▇▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+triceps
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20.54
+</td>
+<td style="text-align:right;">
+15.95
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+23.00
+</td>
+<td style="text-align:right;">
+32.00
+</td>
+<td style="text-align:right;">
+99.00
+</td>
+<td style="text-align:left;">
+▇▇▂▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+insulin
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+79.80
+</td>
+<td style="text-align:right;">
+115.24
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+30.50
+</td>
+<td style="text-align:right;">
+127.25
+</td>
+<td style="text-align:right;">
+846.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mass
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+31.99
+</td>
+<td style="text-align:right;">
+7.88
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+27.30
+</td>
+<td style="text-align:right;">
+32.00
+</td>
+<td style="text-align:right;">
+36.60
+</td>
+<td style="text-align:right;">
+67.10
+</td>
+<td style="text-align:left;">
+▁▃▇▂▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pedigree
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.47
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.63
+</td>
+<td style="text-align:right;">
+2.42
+</td>
+<td style="text-align:left;">
+▇▃▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+33.24
+</td>
+<td style="text-align:right;">
+11.76
+</td>
+<td style="text-align:right;">
+21.00
+</td>
+<td style="text-align:right;">
+24.00
+</td>
+<td style="text-align:right;">
+29.00
+</td>
+<td style="text-align:right;">
+41.00
+</td>
+<td style="text-align:right;">
+81.00
+</td>
+<td style="text-align:left;">
+▇▃▁▁▁
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="distribution" class="section level3">
+<h3>distribution</h3>
+<pre class="r"><code>df %&gt;%
+    janitor::clean_names() %&gt;%
+    set_names(colnames(.) %&gt;%
+                  str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;%
+                  str_to_title()) %&gt;%
+    select_if(is.numeric) %&gt;%
+    gather() %&gt;%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = &quot;free&quot;, ncol = 4) +
+    geom_histogram()</code></pre>
+<p><img src="/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>df %&gt;%
+    janitor::clean_names() %&gt;%
+    set_names(colnames(.) %&gt;%
+                  str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;%
+                  str_to_title()) %&gt;%
+    select_if(is.factor) %&gt;%
+    gather() %&gt;%
+    ggplot(aes(x = value)) +
+    geom_bar()</code></pre>
+<p><img src="/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-5-2.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="replace-na" class="section level3">
+<h3>replace NA</h3>
+<pre class="r"><code># df_clean &lt;- df %&gt;%
+#   mutate_at(vars(triceps, glucose, pressure, insulin, mass),
+#             function(.var) {
+#               if_else(condition = (.var == 0), # if true (i.e. the entry is 0)
+#                       true = as.numeric(NA),  # replace the value with NA
+#                       false = .var # otherwise leave it as it is
+#                       )
+#             })
+
+df_clean &lt;- df %&gt;%
+  mutate_at(vars(triceps, glucose, pressure, insulin, mass), ~ x_to_na(.x))</code></pre>
+</div>
+</div>
+<div id="split-into-traintest" class="section level2">
+<h2>Split into train/test</h2>
+<pre class="r"><code>set.seed(234589)
+# split the data into trainng (75%) and testing (25%)
+set.seed(seed = 1972) 
+
+train_test_split &lt;-
+    rsample::initial_split(
+        data = df_clean,     
+        prop = 3/4 
+    ) 
+
+train_test_split</code></pre>
+<pre><code>## &lt;576/192/768&gt;</code></pre>
+<pre class="r"><code>train_tbl &lt;- train_test_split %&gt;% training() 
+test_tbl  &lt;- train_test_split %&gt;% testing() </code></pre>
+<div id="cv-fold" class="section level3">
+<h3>cv-fold</h3>
+<p>At some point we’re going to want to do some parameter tuning, and to do that we’re going to want to use cross-validation. So we can create a cross-validated version of the training set in preparation for that moment using vfold_cv().</p>
+<pre class="r"><code># create CV object from training data
+train_cv &lt;- vfold_cv(train_tbl)</code></pre>
+</div>
+</div>
+<div id="define-a-recipe" class="section level2">
+<h2>Define a recipe</h2>
+<pre class="r"><code># define the recipe function
+recipe_simple &lt;- function(data) {
+  # which consists of the formula (outcome ~ predictors)
+  recipe(diabetes ~ pregnant + glucose + pressure + triceps +
+           insulin + mass + pedigree + age,
+         data = data) %&gt;%
+    # and some pre-processing steps
+    step_normalize(all_numeric()) %&gt;%
+    step_knnimpute(all_predictors()) %&gt;% 
+    prep(data = data)
+}
+
+recipe_prepped &lt;- recipe_simple(data = df_clean)
+
+train_baked &lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &lt;- bake(recipe_prepped, new_data = test_tbl)</code></pre>
+</div>
+<div id="specify-the-model" class="section level2">
+<h2>Specify the model</h2>
+<blockquote>
+<p>Parsnip offers a unified interface for the massive variety of models that exist in R.</p>
+</blockquote>
+<ol style="list-style-type: decimal">
+<li><p>The <strong>model type</strong>: what kind of model you want to fit, set using a different function depending on the model, such as <code>rand_forest()</code> for random forest, <code>logistic_reg()</code> for logistic regression, <code>svm_poly()</code> for a polynomial SVM model etc. The full list of models available via parsnip can be found <a href="https://tidymodels.github.io/parsnip/articles/articles/Models.html">here</a>.</p></li>
+<li><p>The <strong>arguments</strong>: the model parameter values (now consistently named across different models), set using <code>set_args()</code>.</p></li>
+<li><p>The <strong>engine</strong>: the underlying package the model should come from (e.g. “ranger” for the ranger implementation of Random Forest), set using <code>set_engine()</code>.</p></li>
+<li><p>The <strong>mode</strong>: the type of prediction - since several packages can do both classification (binary/categorical prediction) and regression (continuous prediction), set using <code>set_mode()</code>.</p></li>
+</ol>
+<div id="rf" class="section level3">
+<h3>RF</h3>
+<blockquote>
+<p>📌 this code doesn’t actually fit the model. Like the recipe, it just outlines a description of the model.</p>
+</blockquote>
+<blockquote>
+<p>setting a parameter to tune() means that it will be tuned later in the tune stage of the pipeline. You could also just specify a particular value of the parameter if you don’t want to tune it e.g. using set_args(mtry = 4).</p>
+</blockquote>
+<pre class="r"><code>rf_model &lt;- 
+  # specify that the model is a random forest
+  rand_forest() %&gt;%
+  # specify that the `mtry` parameter needs to be tuned
+  set_args(mtry = tune()) %&gt;%
+  # select the engine/package that underlies the model
+  set_engine(&quot;ranger&quot;) %&gt;%
+  # choose either the continuous regression or binary classification mode
+  set_mode(&quot;classification&quot;)</code></pre>
+</div>
+<div id="put-it-all-together-in-a-workflow" class="section level3">
+<h3>Put it all together in a workflow</h3>
+<pre class="r"><code># set the workflow
+rf_workflow &lt;- workflow() %&gt;%
+  # add the recipe
+  add_recipe(recipe_prepped) %&gt;%
+  # add the model
+  add_model(rf_model)</code></pre>
+</div>
+<div id="tune-the-parameters" class="section level3">
+<h3>Tune the parameters</h3>
+<blockquote>
+<p>📌 You can tune multiple parameters at once by providing multiple parameters to the expand.grid() function, e.g. expand.grid(mtry = c(3, 4, 5), trees = c(100, 500)).</p>
+</blockquote>
+<pre class="r"><code># specify which values eant to try
+rf_grid &lt;- expand.grid(mtry = c(3, 4, 5))
+# extract results
+rf_tune_results &lt;- 
+  rf_workflow %&gt;%
+  tune_grid(resamples = train_cv, #CV object
+            grid = rf_grid, # grid of values to try
+            metrics = metric_set(accuracy, roc_auc) # metrics we care about
+            )
+
+# print results
+rf_tune_results %&gt;%
+  collect_metrics()</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##    mtry .metric  .estimator  mean     n std_err
+##   &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1     3 accuracy binary     0.759    10  0.0216
+## 2     3 roc_auc  binary     0.843    10  0.0160
+## 3     4 accuracy binary     0.759    10  0.0211
+## 4     4 roc_auc  binary     0.841    10  0.0163
+## 5     5 accuracy binary     0.764    10  0.0200
+## 6     5 roc_auc  binary     0.841    10  0.0155</code></pre>
+</div>
+</div>
+<div id="finalize-the-workflow" class="section level2">
+<h2>Finalize the workflow</h2>
+<pre class="r"><code>param_final &lt;- 
+  rf_tune_results %&gt;%
+  select_best(metric = &quot;accuracy&quot;, maximize = TRUE)
+param_final</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##    mtry
+##   &lt;dbl&gt;
+## 1     5</code></pre>
+<pre class="r"><code># add this parameter to the workflow using the finalize_workflow() function.
+rf_workflow &lt;- 
+  rf_workflow %&gt;%
+  finalize_workflow(param_final)</code></pre>
+</div>
+<div id="fit-the-final-model" class="section level2">
+<h2>Fit the final model</h2>
+<pre class="r"><code>rf_fit &lt;- rf_workflow %&gt;%
+  # fit on entire training set and evaluate on test set
+  last_fit(train_test_split)
+
+rf_fit</code></pre>
+<pre><code>## # # Monte Carlo cross-validation (0.75/0.25) with 1 resamples  
+## # A tibble: 1 x 6
+##   splits        id           .metrics      .notes      .predictions    .workflow
+##   &lt;list&gt;        &lt;chr&gt;        &lt;list&gt;        &lt;list&gt;      &lt;list&gt;          &lt;list&gt;   
+## 1 &lt;split [576/… train/test … &lt;tibble [2 ×… &lt;tibble [0… &lt;tibble [192 ×… &lt;workflo…</code></pre>
+</div>
+<div id="evaluate-the-model-on-the-test-set" class="section level2">
+<h2>Evaluate the model on the test set</h2>
+<div id="performance" class="section level3">
+<h3>performance</h3>
+<pre class="r"><code>test_performance &lt;- rf_fit %&gt;% collect_metrics()
+test_performance</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.755
+## 2 roc_auc  binary         0.829</code></pre>
+</div>
+<div id="predict" class="section level3">
+<h3>predict</h3>
+<pre class="r"><code># generate predictions from the test set
+test_predictions &lt;- rf_fit %&gt;% collect_predictions()
+test_predictions</code></pre>
+<pre><code>## # A tibble: 192 x 6
+##    id               .pred_neg .pred_pos  .row .pred_class diabetes
+##    &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;       &lt;fct&gt;   
+##  1 train/test split     0.249    0.751      1 pos         pos     
+##  2 train/test split     0.292    0.708      3 pos         pos     
+##  3 train/test split     0.402    0.598      5 pos         pos     
+##  4 train/test split     0.587    0.413     10 neg         pos     
+##  5 train/test split     0.428    0.572     14 pos         pos     
+##  6 train/test split     0.785    0.215     19 neg         neg     
+##  7 train/test split     0.417    0.583     25 pos         pos     
+##  8 train/test split     0.203    0.797     32 pos         pos     
+##  9 train/test split     0.973    0.0272    34 neg         neg     
+## 10 train/test split     0.277    0.723     37 pos         neg     
+## # … with 182 more rows</code></pre>
+<pre class="r"><code># test_predictions &lt;- rf_fit %&gt;% pull(.predictions)
+# test_predictions</code></pre>
+</div>
+<div id="confusion-matrix" class="section level3">
+<h3>confusion matrix</h3>
+<pre class="r"><code># generate a confusion matrix
+test_predictions %&gt;% 
+  conf_mat(truth = diabetes, estimate = .pred_class)</code></pre>
+<pre><code>##           Truth
+## Prediction neg pos
+##        neg 104  25
+##        pos  22  41</code></pre>
+<pre class="r"><code>test_predictions %&gt;%
+  ggplot() +
+  geom_density(aes(x = .pred_pos, fill = diabetes), 
+               alpha = 0.5)</code></pre>
+<p><img src="/post/2020-04-26-tidymodels-tidy-machine-learning-in-r_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/machine-learning/">Machine learning</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/tidymodels-tidy-machine-learning-in-r/&amp;text=Tidymodels:%20tidy%20machine%20learning%20in%20R" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/tidymodels-tidy-machine-learning-in-r/&amp;t=Tidymodels:%20tidy%20machine%20learning%20in%20R" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Tidymodels:%20tidy%20machine%20learning%20in%20R&amp;body=/post/tidymodels-tidy-machine-learning-in-r/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/tidymodels-tidy-machine-learning-in-r/&amp;title=Tidymodels:%20tidy%20machine%20learning%20in%20R" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Tidymodels:%20tidy%20machine%20learning%20in%20R%20/post/tidymodels-tidy-machine-learning-in-r/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/tidymodels-tidy-machine-learning-in-r/&amp;title=Tidymodels:%20tidy%20machine%20learning%20in%20R" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hu07fc0e18af06276e9e6299e1311e0948_94601_270x270_fill_q90_lanczos_center.jpeg" alt="Jixing Liu">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Jixing Liu</a></h5>
+      <h6 class="card-subtitle">Data algorithm engineer</h6>
+      <p class="card-text">My research interests include Bioinformatics, Deep learning and data visualization matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/studentZero475" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/jixing475" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/post/ml-workflow/">ML Workflow</a></li>
+      
+      <li><a href="/post/a-gentle-introduction-to-tidymodels/">a gentle introduction to tidymodels</a></li>
+      
+      <li><a href="/post/r-square-and-q-square-what-the-difference/">R square and Q square , what the difference</a></li>
+      
+      <li><a href="/post/sklearn-classification/">sklearn classification </a></li>
+      
+      <li><a href="/post/balance-accuracy-and-mcc/">Balance Accuracy and MCC</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.37431be2d92d7fb0160054761ab79602.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

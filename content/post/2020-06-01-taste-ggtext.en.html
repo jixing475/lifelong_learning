@@ -1,0 +1,95 @@
+---
+title: taste ggtext
+author: ZERO
+date: '2020-06-01'
+slug: taste-ggtext
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-01T10:23:39+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="load-pkgs" class="section level2">
+<h2>load pkgs</h2>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)
+#install.packages(&quot;ggcharts&quot;)
+data(biomedicalrevenue, package = &quot;ggcharts&quot;)</code></pre>
+</div>
+<div id="example" class="section level2">
+<h2>example</h2>
+<pre class="r"><code>plot &lt;- biomedicalrevenue %&gt;%
+  filter(company %in% c(&quot;Roche&quot;, &quot;Novartis&quot;)) %&gt;%
+  ggplot(aes(year, revenue, color = company)) +
+  geom_line(size = 1.2) +
+  ggtitle(
+    paste0(
+      &quot;&lt;span style = &#39;color:darkred&#39;&gt;__Roche__&lt;/span&gt;&quot;,
+      &quot; *overtook* &lt;span style = &#39;color:darkorange&#39;&gt;**Novartis**&lt;/span&gt;&quot;,
+      &quot; in 2016&quot;
+    )
+  ) +
+  scale_color_manual(
+    values = c(&quot;Roche&quot; = &quot;#93C1DE&quot;, &quot;Novartis&quot; = &quot;darkorange&quot;),
+    guide = &quot;none&quot;
+  ) +
+  ggcharts::theme_hermit(ticks = &quot;x&quot;, grid = &quot;X&quot;)  +
+  theme(plot.title = ggtext::element_markdown())
+plot</code></pre>
+<p><img src="/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="语法" class="section level2">
+<h2>语法</h2>
+<p>目前 ggtext 支持的 markdwon 语法有限</p>
+</div>
+<div id="mdthemes" class="section level2">
+<h2>📦 {mdthemes}</h2>
+<pre class="r"><code>#remotes::install_github(&quot;thomas-neitmann/mdthemes&quot;)</code></pre>
+<p>单个主题元素设置 Markdown 语法太费事, 使用 mdthemes 📦, 一次性设置.</p>
+<blockquote>
+<p>Setting individual theme elements to <code>ggtext::element_markdown()</code> can add quite a bit of boilerplate code to your plot.</p>
+</blockquote>
+<pre class="r"><code>plot + mdthemes::md_theme_minimal()</code></pre>
+<p><img src="/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="title-the-subtitle-axis-labels-and-captions-set-one-time" class="section level2">
+<h2>title, the subtitle, axis labels and captions set one-time</h2>
+<blockquote>
+<p>Apart from the title, the subtitle, axis labels and captions are set to element_markdown() for all mdthemes.</p>
+</blockquote>
+<pre class="r"><code>plot +
+  labs(
+    x = &quot;**Year**&quot;,
+    y = &quot;Revenue (*Billion* USD)&quot;,
+    caption = &quot;Data Source: *en.wikipedia.org/wiki/List_of_largest_biomedical_companies_by_revenue*&quot;
+  ) +
+  mdthemes::md_theme_minimal()</code></pre>
+<p><img src="/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-5-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mdthemes-包含的主题非常丰富-且可自定义主题" class="section level2">
+<h2>mdthemes 包含的主题非常丰富, 且可自定义主题</h2>
+<blockquote>
+<p>The {mdthemes} packages currently contains all themes from {ggplot2}, {ggthemes}, {hrbrthemes}, {tvthemes} and {cowplot} with support for rendering text as markdown.</p>
+</blockquote>
+<blockquote>
+<p>If you want to turn a theme that is not part of the {mdthemes} package into an md_theme you can use the as_md_theme() function.</p>
+</blockquote>
+<pre class="r"><code>plot + mdthemes::as_md_theme(hrbrthemes::theme_ipsum()) </code></pre>
+<p><img src="/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="links" class="section level1">
+<h1>links</h1>
+<p><a href="https://thomas-neitmann.github.io/ggcharts/articles/themes.html">Themes • ggcharts</a></p>
+</div>

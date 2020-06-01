@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vis | Jixing Liu</title>
+    <link>/tags/vis/</link>
+      <atom:link href="/tags/vis/index.xml" rel="self" type="application/rss+xml" />
+    <description>vis</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 01 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>vis</title>
+      <link>/tags/vis/</link>
+    </image>
+    
+    <item>
+      <title>taste ggtext</title>
+      <link>/post/taste-ggtext/</link>
+      <pubDate>Mon, 01 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/taste-ggtext/</guid>
+      <description>
+
+
+&lt;div id=&#34;load-pkgs&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;load pkgs&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggplot2)
+library(dplyr)
+#install.packages(&amp;quot;ggcharts&amp;quot;)
+data(biomedicalrevenue, package = &amp;quot;ggcharts&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;example&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot &amp;lt;- biomedicalrevenue %&amp;gt;%
+  filter(company %in% c(&amp;quot;Roche&amp;quot;, &amp;quot;Novartis&amp;quot;)) %&amp;gt;%
+  ggplot(aes(year, revenue, color = company)) +
+  geom_line(size = 1.2) +
+  ggtitle(
+    paste0(
+      &amp;quot;&amp;lt;span style = &amp;#39;color:darkred&amp;#39;&amp;gt;__Roche__&amp;lt;/span&amp;gt;&amp;quot;,
+      &amp;quot; *overtook* &amp;lt;span style = &amp;#39;color:darkorange&amp;#39;&amp;gt;**Novartis**&amp;lt;/span&amp;gt;&amp;quot;,
+      &amp;quot; in 2016&amp;quot;
+    )
+  ) +
+  scale_color_manual(
+    values = c(&amp;quot;Roche&amp;quot; = &amp;quot;#93C1DE&amp;quot;, &amp;quot;Novartis&amp;quot; = &amp;quot;darkorange&amp;quot;),
+    guide = &amp;quot;none&amp;quot;
+  ) +
+  ggcharts::theme_hermit(ticks = &amp;quot;x&amp;quot;, grid = &amp;quot;X&amp;quot;)  +
+  theme(plot.title = ggtext::element_markdown())
+plot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;语法&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;语法&lt;/h2&gt;
+&lt;p&gt;目前 ggtext 支持的 markdwon 语法有限&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;mdthemes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;📦 {mdthemes}&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;thomas-neitmann/mdthemes&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;单个主题元素设置 Markdown 语法太费事, 使用 mdthemes 📦, 一次性设置.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Setting individual theme elements to &lt;code&gt;ggtext::element_markdown()&lt;/code&gt; can add quite a bit of boilerplate code to your plot.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot + mdthemes::md_theme_minimal()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;title-the-subtitle-axis-labels-and-captions-set-one-time&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;title, the subtitle, axis labels and captions set one-time&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Apart from the title, the subtitle, axis labels and captions are set to element_markdown() for all mdthemes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot +
+  labs(
+    x = &amp;quot;**Year**&amp;quot;,
+    y = &amp;quot;Revenue (*Billion* USD)&amp;quot;,
+    caption = &amp;quot;Data Source: *en.wikipedia.org/wiki/List_of_largest_biomedical_companies_by_revenue*&amp;quot;
+  ) +
+  mdthemes::md_theme_minimal()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;mdthemes-包含的主题非常丰富-且可自定义主题&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;mdthemes 包含的主题非常丰富, 且可自定义主题&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The {mdthemes} packages currently contains all themes from {ggplot2}, {ggthemes}, {hrbrthemes}, {tvthemes} and {cowplot} with support for rendering text as markdown.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you want to turn a theme that is not part of the {mdthemes} package into an md_theme you can use the as_md_theme() function.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot + mdthemes::as_md_theme(hrbrthemes::theme_ipsum()) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-taste-ggtext.en_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;links&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://thomas-neitmann.github.io/ggcharts/articles/themes.html&#34;&gt;Themes • ggcharts&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ggplot2 thematic</title>
+      <link>/post/thematic/</link>
+      <pubDate>Tue, 05 May 2020 00:00:00 +0000</pubDate>
+      <guid>/post/thematic/</guid>
+      <description>
+
+
+&lt;div id=&#34;install-pkg&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;install pkg&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# remotes::install_github(&amp;quot;rstudio/thematic&amp;quot;)
+library(thematic)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(thematic)
+thematic_on(
+  bg = &amp;quot;#222222&amp;quot;, fg = &amp;quot;white&amp;quot;, accent = &amp;quot;#0CE3AC&amp;quot;,
+  font = &amp;quot;auto&amp;quot;
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggplot2)
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  geom_smooth()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Error : RStudio not running&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-05-05-thematic_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(aes(color = factor(cyl))) +
+  geom_smooth(color = &amp;quot;white&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Error : RStudio not running&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-05-05-thematic_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://rstudio.github.io/thematic/&#34;&gt;Unified and Automatic Theming of ggplot2, lattice, and base R Graphics • thematic&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ggplot2 Workshop</title>
+      <link>/post/ggplot2-workshop/</link>
+      <pubDate>Mon, 13 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/ggplot2-workshop/</guid>
+      <description>
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;introduction&lt;/h2&gt;
+&lt;p&gt;This document contains all the code that is displayed during the workshop. The
+document is an RMarkdown document which means that it can be compiled, along
+with the code chunks thus executing and capturing the output of the code within
+the document. To read more about RMarkdown see the website for the package, as
+well as the &lt;a href=&#34;https://rmarkdown.rstudio.com/lesson-1.html&#34;&gt;Get Started&lt;/a&gt; guide.&lt;/p&gt;
+&lt;div id=&#34;exercises&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Exercises&lt;/h3&gt;
+&lt;p&gt;While it is encouraged to follow along in this document as the workshop
+progresses and execute the code to see the result, an important part is also to
+experiment and play, thus learning how the different settings affect the output.&lt;/p&gt;
+&lt;p&gt;The document will contain code chunks with the code examples discussed during
+the talk, but it will also contain chunks intended for completing small
+exercises. These will use the examples as a starting point and ask you to modify
+the code to achieve a given output. Completing these are optional, but highly
+recommended, either during or after the workshop.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;dependencies&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Dependencies&lt;/h3&gt;
+&lt;p&gt;This document comes with a list of required packages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;datasets&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Datasets&lt;/h3&gt;
+&lt;p&gt;We will use an assortment of datasets throughout the document. The purpose is
+mostly to showcase different plots, and less on getting some divine insight into
+the world. While not necessary we will call &lt;code&gt;data(&amp;lt;dataset&amp;gt;)&lt;/code&gt; before using a new
+dataset to indicate the introduction of a new dataset.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;introduction-1&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;We will look at the basic ggplot2 use using the faithful dataset, giving
+information on the eruption pattern of the Old Faithful geyser in Yellowstone
+National Park.&lt;/p&gt;
+&lt;p&gt;If an aesthetic is linked to data it is put into &lt;code&gt;aes()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;如果数据的颜色是映射到一列数据则放在 &lt;code&gt;aes()&lt;/code&gt; 里面&lt;/p&gt;
+&lt;p&gt;If you simple want to set it to a value, put it outside of &lt;code&gt;aes()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Some geoms only need a single mapping and will calculate the rest for you&lt;/p&gt;
+&lt;p&gt;单变量 mapping: histogram&lt;/p&gt;
+&lt;p&gt;geoms are drawn in the order they are added. The point layer is thus drawn on
+top of the density contours in the example below.&lt;/p&gt;
+&lt;p&gt;这个有点像 phoshop 中的图层概念, geometry 是一层一层往上堆叠的&lt;/p&gt;
+&lt;div id=&#34;exercise&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercise&lt;/h4&gt;
+&lt;p&gt;Modify the code below to make the points larger squares and slightly transparent.
+See &lt;code&gt;?geom_point&lt;/code&gt; for more information on the point layer.&lt;/p&gt;
+&lt;p&gt;Hint 1: transparency is controlled with &lt;code&gt;alpha&lt;/code&gt;, and shape with &lt;code&gt;shape&lt;/code&gt;
+Hint 2: rememberthe difference between mapping and setting aesthetics&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Colour the two distributions in the histogram with different colours&lt;/p&gt;
+&lt;p&gt;Hint 1: For polygons you can map two different colour-like aesthetics: &lt;code&gt;colour&lt;/code&gt;
+(the colour of the stroke) and &lt;code&gt;fill&lt;/code&gt; (the fill colour)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Colour the distributions in the histogram by whether &lt;code&gt;waiting&lt;/code&gt; is above or below
+&lt;code&gt;60&lt;/code&gt;. What happens?&lt;/p&gt;
+&lt;p&gt;Change the plot above by setting &lt;code&gt;position = &#39;dodge&#39;&lt;/code&gt; in &lt;code&gt;geom_histogram()&lt;/code&gt;
+(while keeping the colouring by &lt;code&gt;waiting&lt;/code&gt;). What do &lt;code&gt;position&lt;/code&gt; control?&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Add a line that separates the two point distributions. See &lt;code&gt;?geom_abline&lt;/code&gt; for
+how to draw straight lines from a slope and intercept.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;stat&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Stat&lt;/h3&gt;
+&lt;p&gt;We will use the &lt;code&gt;mpg&lt;/code&gt; dataset giving information about fuel economy on different
+car models.&lt;/p&gt;
+&lt;p&gt;&lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;Every geom has a stat&lt;/strong&gt; &lt;/font&gt;. This is why new data (&lt;code&gt;count&lt;/code&gt;) can appear when using
+&lt;code&gt;geom_bar()&lt;/code&gt;., the default &lt;code&gt;stat&lt;/code&gt; for &lt;code&gt;geom_bar&lt;/code&gt; is &lt;code&gt;count&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The stat can be overwritten. If we have precomputed count we don’t want any
+additional computations to perform and we use the &lt;code&gt;identity&lt;/code&gt; stat to leave the
+data alone&lt;/p&gt;
+&lt;p&gt;Most obvious geom+stat combinations have a dedicated geom constructor. The one
+above is available directly as &lt;code&gt;geom_col()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Values calculated by the stat is available with the &lt;code&gt;after_stat()&lt;/code&gt; function
+inside &lt;code&gt;aes()&lt;/code&gt;. You can do all sorts of computations inside that.&lt;/p&gt;
+&lt;p&gt;Many stats provide multiple variations of the same calculation, and provides a
+default (here, &lt;code&gt;density&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;While the others must be used with the &lt;code&gt;after_stat()&lt;/code&gt; function&lt;/p&gt;
+&lt;div id=&#34;exercises-1&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;While most people use &lt;code&gt;geom_*()&lt;/code&gt; when adding layers, it is just as valid to add
+a &lt;code&gt;stat_*()&lt;/code&gt; with an attached geom.&lt;/p&gt;
+&lt;p&gt;大多数人使用 &lt;code&gt;geom&lt;/code&gt; 时, 使用了默认的 &lt;code&gt;stat&lt;/code&gt; , 只是不知道而已&lt;/p&gt;
+&lt;p&gt;Look at &lt;code&gt;geom_bar()&lt;/code&gt; and figure out which stat it uses as default. Then modify the code to use the stat directly instead
+(i.e. adding &lt;code&gt;stat_*()&lt;/code&gt; instead of &lt;code&gt;geom_bar()&lt;/code&gt;)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Use &lt;code&gt;stat_summary()&lt;/code&gt; to add a red dot at the mean &lt;code&gt;hwy&lt;/code&gt; for each group&lt;/p&gt;
+&lt;p&gt;stat_summary is like dplyr::summarise&lt;/p&gt;
+&lt;p&gt;fun 作用于 &lt;code&gt;aes&lt;/code&gt; 中的 y, x 类似于 &lt;code&gt;group_by&lt;/code&gt; 中的 factor variable.&lt;/p&gt;
+&lt;p&gt;Hint: You will need to change the default geom of &lt;code&gt;stat_summary()&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;scales&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Scales&lt;/h3&gt;
+&lt;p&gt;Scales define how the mapping you specify inside &lt;code&gt;aes()&lt;/code&gt; should happen. All
+mappings have an associated scale even if not specified.&lt;/p&gt;
+&lt;p&gt;take control by adding one explicitly. All scales follow the same naming
+conventions.&lt;/p&gt;
+&lt;p&gt;scale_mapping_* : scale_x, y, colour, fill etc.&lt;/p&gt;
+&lt;p&gt;Positional mappings (x and y) also have associated scales.&lt;/p&gt;
+&lt;div id=&#34;exercises-2&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;Use &lt;code&gt;RColorBrewer::display.brewer.all()&lt;/code&gt; to see all the different palettes from
+Color Brewer and pick your favourite. Modify the code below to use it&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Modify the code below to create a bubble chart (scatterplot with size mapped to
+a continuous variable) showing &lt;code&gt;cyl&lt;/code&gt; with size. Make sure that only the present
+amount of cylinders (4, 5, 6, and 8) are present in the legend.&lt;/p&gt;
+&lt;p&gt;Hint: The &lt;code&gt;breaks&lt;/code&gt; argument in the scale is used to control which values are
+present in the legend.&lt;/p&gt;
+&lt;p&gt;Explore the different types of size scales available in ggplot2. Is the default
+the most appropriate here?&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Modify the code below so that colour is no longer mapped to the discrete &lt;code&gt;class&lt;/code&gt;
+variable, but to the continuous &lt;code&gt;cty&lt;/code&gt; variable. What happens to the guide?&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;The type of guide can be controlled with the &lt;code&gt;guide&lt;/code&gt; argument in the scale, or
+with the &lt;code&gt;guides()&lt;/code&gt; function. Continuous colours have a gradient colour bar by
+default, but setting it to &lt;code&gt;legend&lt;/code&gt; will turn it back to the standard look. What
+happens when multiple aesthetics are mapped to the same variable and uses the
+guide type?&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;facets&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Facets&lt;/h3&gt;
+&lt;p&gt;The facet defines how data is split among panels. The default facet
+(&lt;code&gt;facet_null()&lt;/code&gt;) puts all the data in a single panel, while &lt;code&gt;facet_wrap()&lt;/code&gt; and
+&lt;code&gt;facet_grid()&lt;/code&gt; allows you to specify different types of small multiples&lt;/p&gt;
+&lt;div id=&#34;exercises-3&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;One of the great things about facets is that &lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;they share the axes between the different panels&lt;/strong&gt;.&lt;/font&gt; Sometimes this is undiserable though, and &lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;the behaviour can be changed with the &lt;code&gt;scales&lt;/code&gt; argument&lt;/strong&gt;&lt;/font&gt; .
+Experiment with the different possible settings in the plot below:&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Usually the space occupied by each panel is equal. This can create problems when
+different scales are used. Modify the code below so that the y scale differs
+between the panels in the plot. What happens?&lt;/p&gt;
+&lt;p&gt;Use the &lt;code&gt;space&lt;/code&gt; argument in &lt;code&gt;facet_grid()&lt;/code&gt; to change the plot above so each bar
+has the same width again.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Facets can be based on multiple variables by adding them together. Try to
+recreate the same panels present in the plot below by using &lt;code&gt;facet_wrap()&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;coordinates&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Coordinates&lt;/h3&gt;
+&lt;p&gt;The coordinate system is the fabric you draw your layers on in the end. The
+default `coord_cartesion provides the standard rectangular x-y coordinate
+system. Changing the coordinate system can have dramatic effects&lt;/p&gt;
+&lt;p&gt;You can zoom both on the scale…&lt;/p&gt;
+&lt;p&gt;and in the coord. You usually want the latter as it avoids changing the plottet
+data&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Setting limits on the coordinate system will zoom the plot (like you’re looking at it with a &lt;font color=&#34;darkred&#34;&gt; &lt;strong&gt;magnifying glass&lt;/strong&gt;&lt;/font&gt; ), and will not change the underlying data like setting limits on a scale will.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;exercises-4&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;In the same way as limits can be set in both the positional scale and the coord,
+so can transformations, using &lt;code&gt;coord_trans()&lt;/code&gt;. Modify the code below to apply a
+log transformation to the y axis; first using &lt;code&gt;scale_y_continuous()&lt;/code&gt;,
+and then using &lt;code&gt;coord_trans()&lt;/code&gt;. Compare the results — how do they differ?&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Coordinate systems are particularly important in cartography. While we will not
+spend a lot of time with it in this workshop, spatial plotting is well supported
+in ggplot2 with &lt;code&gt;geom_sf()&lt;/code&gt; and &lt;code&gt;coord_sf()&lt;/code&gt; (which interfaces with the sf
+package). The code below produces a world map. Try changing the &lt;code&gt;crs&lt;/code&gt; argument
+in &lt;code&gt;coord_sf()&lt;/code&gt; to be &lt;code&gt;&#39;+proj=robin&#39;&lt;/code&gt; (This means using the Robinson projection).&lt;/p&gt;
+&lt;p&gt;Maps are a huge area in data visualisation and simply too big to cover in this
+workshop. If you want to explore further I advice you to explore the
+&lt;a href=&#34;https://www.r-spatial.org&#34;&gt;r-spatial wbsite&lt;/a&gt; as well as the website for the
+&lt;a href=&#34;https://r-spatial.github.io/sf&#34;&gt;sf package&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;theme&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Theme&lt;/h3&gt;
+&lt;p&gt;Theming defines the feel and look of your final visualisation and is something
+you will normally defer to the final polishing of the plot. It is very easy to
+change looks with a prebuild theme&lt;/p&gt;
+&lt;p&gt;Further adjustments can be done in the end to get exactly the look you want&lt;/p&gt;
+&lt;div id=&#34;exercises-5&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;Themes can be overwhelming, especially as you often try to optimise for beauty
+while you learn. To remove the last part of the equation, the exercise is to
+take the plot given below and make it as hideous as possible using the theme
+function. Go absolutely crazy, but take note of the effect as you change
+different settings.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;extensions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;📌 Extensions&lt;/h2&gt;
+&lt;p&gt;While ggplot2 comes with a lot of batteries included, the extension ecosystem
+provides priceless additinal features&lt;/p&gt;
+&lt;div id=&#34;plot-composition&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Plot composition&lt;/h3&gt;
+&lt;p&gt;We start by creating 3 separate plots&lt;/p&gt;
+&lt;p&gt;Combining them with patchwork is a breeze using the different operators&lt;/p&gt;
+&lt;div id=&#34;excercises&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Excercises&lt;/h4&gt;
+&lt;p&gt;Patchwork will assign the same amount of space to each plot by default, but this
+can be controlled with the &lt;code&gt;widths&lt;/code&gt; and &lt;code&gt;heights&lt;/code&gt; argument in &lt;code&gt;plot_layout()&lt;/code&gt;.
+This can take a numeric vector giving their relative sizes (e.g. &lt;code&gt;c(2, 1)&lt;/code&gt; will
+make the first plot twice as big as the second). Modify the code below so that
+the middle plot takes up half of the total space:&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;The &lt;code&gt;&amp;amp;&lt;/code&gt; operator can be used with any type of ggplot2 object, not just themes.
+Modify the code below so the two plots share the same y-axis (same limits)&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Patchwork contains many features for fine tuning the layout and annotation. Very
+complex layouts can be obtained by providing a design specification to the
+&lt;code&gt;design&lt;/code&gt; argument in &lt;code&gt;plot_layout()&lt;/code&gt;. The design can be defined as a textual
+representation of the cells. Use the layout given below. How should the textual
+representation be undertood.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;animation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Animation&lt;/h3&gt;
+&lt;p&gt;ggplot2 is usually focused on static plots, but gganimate extends the API and
+grammar to describe animations. As such it feels like a very natural extension
+of using ggplot2&lt;/p&gt;
+&lt;p&gt;There are many different transitions that control how data is interpreted for
+animation, as well as a range of other animation specific features&lt;/p&gt;
+&lt;div id=&#34;exercises-6&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;The animation below will animate between points showing cars with different
+cylinders.&lt;/p&gt;
+&lt;p&gt;gganimate uses the &lt;code&gt;group&lt;/code&gt; aesthetic to match observations between states. By
+default the group aesthetic is set to the same value, so observations are
+matched by their position (first row of 4 cyl is matched to first row of 5 cyl
+etc.). This is clearly wrong here (why?). Add a mapping to the &lt;code&gt;group&lt;/code&gt; aesthetic
+to ensure that points do not move between the different states.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;In the presence of discrete aesthetic mappings (&lt;code&gt;colour&lt;/code&gt; below), the group is
+deduced if not given. The default behaviour of objects that appear and disappear
+during the animation is to simply pop in and out of existance. &lt;code&gt;enter_*()&lt;/code&gt; and
+&lt;code&gt;exit_*()&lt;/code&gt; functions can be used to control this behaviour. Experiment with the
+different enter and exit functions provided by gganimate below. What happens if
+you add multiple enter or exit functions to the same animation?&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;In the animation below (as in all the other animations) the changes happens at
+constant speed. How values change during an animation is called easing and can
+be controlled using the &lt;code&gt;ease_aes()&lt;/code&gt; function. Read the documentation for
+&lt;code&gt;ease_aes()&lt;/code&gt; and experiment with different easings in the animation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;annotation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Annotation&lt;/h3&gt;
+&lt;p&gt;Text is a huge part of storytelling with your visualisation. Historically,
+textual annotations has not been the best part of ggplot2 but new extensions
+make up for that.&lt;/p&gt;
+&lt;p&gt;Standard geom_text will often result in overlaping labels&lt;/p&gt;
+&lt;p&gt;ggrepel takes care of that&lt;/p&gt;
+&lt;p&gt;If you want to highlight certain parts of your data and describe it, the
+&lt;code&gt;geom_mark_*()&lt;/code&gt; family of geoms have your back&lt;/p&gt;
+&lt;div id=&#34;exercises-7&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercises&lt;/h4&gt;
+&lt;p&gt;ggrepel has a tonne of settings for controlling how text labels move. Often,
+though, the most effective is simply to not label everything. There are two
+strategies for that: Either only use a subset of the data for the repel layer,
+or setting the label to &lt;code&gt;&#34;&#34;&lt;/code&gt; for those you don’t want to plot. Try both in the
+plot below where you only label 10 random points.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Explore the documentation for &lt;code&gt;geom_text_repel&lt;/code&gt;. Find a way to ensure that the
+labels in the plot below only repels in the vertical direction&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;ggforce comes with 4 different types of mark geoms. Try them all out in the code
+below:&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;networks&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Networks&lt;/h3&gt;
+&lt;p&gt;ggplot2 has been focused on tabular data. Network data in any shape and form is
+handled by ggraph&lt;/p&gt;
+&lt;p&gt;dendrograms are just a specific type of network&lt;/p&gt;
+&lt;div id=&#34;exercies&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Exercies&lt;/h4&gt;
+&lt;p&gt;Most network plots are defined by a layout algorithm, which takes the network
+structure and calculate a position for each node. The layout algorithm is
+global and set in the &lt;code&gt;ggraph()&lt;/code&gt;. The default &lt;code&gt;auto&lt;/code&gt; layout will inspect the
+network object and try to choose a sensible layout for it (e.g. dendrogram for a
+hierarchical clustering as above). There is, however no optimal layout and it is
+often a good idea to try out different layouts. Try out different layouts in the
+graph below. See the &lt;a href=&#34;https://ggraph.data-imaginist.com/reference/index.html&#34;&gt;the website&lt;/a&gt;
+for an overview of the different layouts.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;There are many different ways to draw edges. Try to use &lt;code&gt;geom_edge_parallel()&lt;/code&gt;
+in the graph below to show the presence of multiple edges&lt;/p&gt;
+&lt;p&gt;Faceting works in ggraph as it does in ggplot2, but you must choose to facet by
+either nodes or edges. Modify the graph below to facet the edges by the &lt;code&gt;year&lt;/code&gt;
+variable (using &lt;code&gt;facet_edges()&lt;/code&gt;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;looks&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Looks&lt;/h3&gt;
+&lt;p&gt;Many people have already desgned beautiful (and horrible) themes for you. Use
+them as a base&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;drawing-anything&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Drawing anything&lt;/h2&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>How To Create Bar Race Animation Charts In R</title>
+      <link>/post/how-to-create-bar-race-animation-charts-in-r/</link>
+      <pubDate>Wed, 01 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/how-to-create-bar-race-animation-charts-in-r/</guid>
+      <description>
+
+
+&lt;div id=&#34;load-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;load data&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div id=&#34;packages&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Packages&lt;/h1&gt;
+&lt;p&gt;The packages that are required to build animated plots in R are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ggplot2&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gganimate.com/index.html&#34;&gt;gganimate&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While those above two are the essential packages, We have also used the entire &lt;code&gt;tidyverse&lt;/code&gt;, &lt;code&gt;janitor&lt;/code&gt; and &lt;code&gt;scales&lt;/code&gt; in this project for Data Manipulation, Cleaning and Formatting.&lt;/p&gt;
+&lt;div id=&#34;data-preprocessing&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;data preprocessing&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gdp &amp;lt;- gdp_data[1:217,]
+
+gdp_tidy &amp;lt;- gdp %&amp;gt;%
+  mutate_at(vars(contains(&amp;quot;YR&amp;quot;)), as.numeric) %&amp;gt;%
+  #gather(year, value, 3:13) %&amp;gt;%
+  pivot_longer(cols = contains(&amp;quot;YR&amp;quot;),
+               names_to = &amp;quot;year&amp;quot;,
+               values_to = &amp;quot;value&amp;quot;) %&amp;gt;%
+  janitor::clean_names(.) %&amp;gt;%
+  mutate(year = as.numeric(stringr::str_sub(year, 1, 4)))
+
+# write_csv(gdp_tidy,&amp;quot;./data/gdp_tidy.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;animated-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Animated Plot&lt;/h2&gt;
+&lt;p&gt;An Animated Plot building process involves two primary sections:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Building the entire &lt;strong&gt;set of actual static plots&lt;/strong&gt; using ggplot2&lt;/li&gt;
+&lt;li&gt;Animating the static plots with desired parameters using &lt;strong&gt;gganimate&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The final step after these two primary steps is to render the animation in the desired file format, like GIF or MP4 (Video).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-label-columns&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;create label columns&lt;/h2&gt;
+&lt;p&gt;create a few more columns that will help us display labels in the plot.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gdp_formatted &amp;lt;- gdp_tidy %&amp;gt;%
+  group_by(year) %&amp;gt;% # The * 1 makes it possible to have non-integer ranks while sliding
+  mutate(rank = rank(-value), # -100 最小, 排第一
+         Value_rel = value/value[rank==1],
+         Value_lbl = paste0(&amp;quot; &amp;quot;,round(value/1e9))) %&amp;gt;%
+  group_by(country_name) %&amp;gt;%
+  filter(rank &amp;lt;=10) %&amp;gt;%
+  ungroup() %&amp;gt;% 
+  filter(!is.na(value)) %&amp;gt;% 
+  select(-series_code, -series_name)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;staticplot  &amp;lt;- 
+  gdp_formatted %&amp;gt;%
+  ggplot(aes(
+    rank,
+    group = country_name,
+    fill = as.factor(country_name),
+    color = as.factor(country_name)
+  )) +
+  geom_tile(aes(y = value/2,
+                height = value,
+                width = 0.9), 
+            alpha = 0.8, color = NA) +
+  geom_text(aes(y = 0, label = paste(country_name, &amp;quot; &amp;quot;)), vjust = 0.2, hjust = 1) +
+  geom_text(aes(y=value,label = Value_lbl, hjust=0)) +
+  coord_flip(clip = &amp;quot;off&amp;quot;, expand = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_reverse() +
+  guides(color = FALSE, fill = FALSE) +
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+         axis.title.y=element_blank(),
+        legend.position=&amp;quot;none&amp;quot;,
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.grid.major.x = element_line( size=.1, color=&amp;quot;grey&amp;quot; ),
+        panel.grid.minor.x = element_line( size=.1, color=&amp;quot;grey&amp;quot; ),
+        plot.title=element_text(size=25, hjust=0.5, face=&amp;quot;bold&amp;quot;, colour=&amp;quot;grey&amp;quot;, vjust=-1),
+        plot.subtitle=element_text(size=18, hjust=0.5, face=&amp;quot;italic&amp;quot;, color=&amp;quot;grey&amp;quot;),
+        plot.caption =element_text(size=8, hjust=0.5, face=&amp;quot;italic&amp;quot;, color=&amp;quot;grey&amp;quot;),
+        plot.background=element_blank(),
+       plot.margin = margin(2,2, 2, 4, &amp;quot;cm&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;animation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Animation&lt;/h2&gt;
+&lt;p&gt;The key function here is transition_states() which stitches the individual static plots together by year. view_follow() is used to give a view as if the background lines (gridlines) are moving as the animation is progressing.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;anim  &amp;lt;-
+  staticplot +
+  transition_states(year, transition_length = 4, state_length = 2) +
+  view_follow(fixed_x = TRUE)  +
+  labs(title = &amp;#39;GDP per Year : {closest_state}&amp;#39;,
+       subtitle  =  &amp;quot;Top 10 Countries&amp;quot;,
+       caption  = &amp;quot;GDP in Billions USD | Data Source: World Bank Data&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;rendering&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Rendering&lt;/h2&gt;
+&lt;p&gt;With the animation being built (ready) and saved in the object anim , It’s time for us to render the animation using animate() function. The renderer used in the animate() differs based on the type of output file required.&lt;/p&gt;
+&lt;p&gt;For GIF File Format:&lt;/p&gt;
+&lt;div id=&#34;for-gif&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;For GIF:&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;animate(anim, 200, fps = 20,  width = 1200, height = 1000,
+        renderer = gifski_renderer(here(&amp;quot;figure/gganim.gif&amp;quot;)))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-01-how-to-create-bar-race-animation-charts-in-r_files/figure-html/unnamed-chunk-6-1.gif&#34; /&gt;&lt;!-- --&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;for-mp4&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;For MP4&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# animate(anim, 200, fps = 20,  width = 1200, height = 1000,
+#         renderer = ffmpeg_renderer()) -&amp;gt; for_mp4anim_save(&amp;quot;animation.mp4&amp;quot;, animation = for_mp4 )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/Users/zero/myrepo/lifelong_learning/figure/gganim.gif&#34; width=&#34;30%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Links&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.programmingwithr.com/how-to-create-animated-bar-race-charts-in-r/&#34;&gt;How to create Bar Race Animation Charts in R · Programming with R&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

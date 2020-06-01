@@ -1,0 +1,148 @@
+---
+title: a gentle introduction to tidymodels
+author: ZERO
+date: '2020-04-26'
+slug: a-gentle-introduction-to-tidymodels
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-26T18:11:39+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="setup" class="section level2">
+<h2>SETUP</h2>
+</div>
+<div id="load-library" class="section level2">
+<h2>Load library</h2>
+<pre class="r"><code>library(tidymodels)</code></pre>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<pre class="r"><code>iris %&gt;%
+    janitor::clean_names() %&gt;%
+    set_names(colnames(.) %&gt;%
+                  str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;%
+                  str_to_title()) %&gt;%
+    select_if(is.numeric) %&gt;%
+    gather() %&gt;%
+    ggplot(aes(x = value)) +
+    facet_wrap(~ key, scales = &quot;free&quot;, ncol = 4) +
+    geom_histogram()</code></pre>
+<p><img src="/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>iris %&gt;%
+    janitor::clean_names() %&gt;%
+    set_names(colnames(.) %&gt;%
+                  str_replace_all(., &quot;_&quot;, &quot; &quot;) %&gt;%
+                  str_to_title()) %&gt;%
+    select_if(is.factor) %&gt;%
+    gather() %&gt;%
+    ggplot(aes(x = value)) +
+    geom_bar()</code></pre>
+<p><img src="/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-2-2.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="split" class="section level2">
+<h2>split</h2>
+<pre class="r"><code>df  &lt;- iris
+set.seed(seed = 1972) 
+
+train_test_split &lt;-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.6   
+    ) 
+
+train_test_split</code></pre>
+<pre><code>## &lt;90/60/150&gt;</code></pre>
+<pre class="r"><code>train_tbl &lt;- train_test_split %&gt;% training() 
+test_tbl  &lt;- train_test_split %&gt;% testing() </code></pre>
+</div>
+<div id="recipes" class="section level2">
+<h2>recipes</h2>
+<pre class="r"><code>recipe_simple &lt;- function(dataset) {
+  recipe(Species ~ ., data = dataset ) %&gt;%
+    step_corr(all_predictors()) %&gt;%
+    step_center(all_predictors(), -all_outcomes()) %&gt;%
+    step_scale(all_predictors(), -all_outcomes()) %&gt;%
+    prep(dataset)
+}
+
+recipe_prepped &lt;- recipe_simple(dataset = train_tbl)
+
+train_baked &lt;- bake(recipe_prepped, new_data = train_tbl)
+test_baked  &lt;- bake(recipe_prepped, new_data = test_tbl)
+
+recipe_prepped</code></pre>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          4
+## 
+## Training data contained 90 data points and no missing data.
+## 
+## Operations:
+## 
+## Correlation filter removed Petal.Length [trained]
+## Centering for Sepal.Length, Sepal.Width, Petal.Width [trained]
+## Scaling for Sepal.Length, Sepal.Width, Petal.Width [trained]</code></pre>
+</div>
+<div id="model-training" class="section level2">
+<h2>Model Training</h2>
+<pre class="r"><code>iris_ranger &lt;- 
+  rand_forest(trees = 100, mode = &quot;classification&quot;) %&gt;%
+  set_engine(&quot;ranger&quot;) %&gt;%
+  fit(Species ~ ., data = train_baked)</code></pre>
+</div>
+<div id="predictions" class="section level2">
+<h2>Predictions</h2>
+<pre class="r"><code>iris_ranger %&gt;%
+  predict(test_baked) %&gt;%
+  bind_cols(test_baked) %&gt;%
+  glimpse()</code></pre>
+<pre><code>## Rows: 60
+## Columns: 5
+## $ .pred_class  &lt;fct&gt; setosa, setosa, setosa, setosa, setosa, setosa, setosa, …
+## $ Sepal.Length &lt;dbl&gt; -0.8625644, -1.4471337, -0.9794783, -0.5118229, -0.97947…
+## $ Sepal.Width  &lt;dbl&gt; 1.2051348, 0.2410270, 1.4461618, 2.1692426, 0.9641078, 0…
+## $ Petal.Width  &lt;dbl&gt; -1.3494745, -1.3494745, -1.3494745, -1.0831309, -1.34947…
+## $ Species      &lt;fct&gt; setosa, setosa, setosa, setosa, setosa, setosa, setosa, …</code></pre>
+</div>
+<div id="model-validation" class="section level2">
+<h2>Model Validation</h2>
+<pre class="r"><code>iris_ranger %&gt;%
+  predict(test_baked) %&gt;%
+  bind_cols(test_baked) %&gt;%
+  metrics(truth = Species, estimate = .pred_class)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy multiclass     0.967
+## 2 kap      multiclass     0.950</code></pre>
+</div>
+<div id="per-classifier-metrics" class="section level2">
+<h2>Per classifier metrics</h2>
+<pre class="r"><code>iris_ranger %&gt;%
+  predict(test_baked, type = &quot;prob&quot;) %&gt;%
+  bind_cols(test_baked) %&gt;%
+  roc_curve(Species, .pred_setosa:.pred_virginica) %&gt;%
+  autoplot()</code></pre>
+<p><img src="/post/2020-04-26-a-gentle-introduction-to-tidymodels_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="links" class="section level2">
+<h2>links</h2>
+<p><a href="https://rviews.rstudio.com/2019/06/19/a-gentle-intro-to-tidymodels/">A Gentle Introduction to tidymodels · R Views</a></p>
+</div>

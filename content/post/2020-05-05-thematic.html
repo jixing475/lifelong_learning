@@ -1,0 +1,48 @@
+---
+title: ggplot2 thematic
+author: ZERO
+date: '2020-05-05'
+slug: thematic
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-05-05T16:22:58+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="install-pkg" class="section level2">
+<h2>install pkg</h2>
+<pre class="r"><code># remotes::install_github(&quot;rstudio/thematic&quot;)
+library(thematic)</code></pre>
+<pre class="r"><code>library(thematic)
+thematic_on(
+  bg = &quot;#222222&quot;, fg = &quot;white&quot;, accent = &quot;#0CE3AC&quot;,
+  font = &quot;auto&quot;
+)</code></pre>
+<pre class="r"><code>library(ggplot2)
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  geom_smooth()</code></pre>
+<pre><code>## Error : RStudio not running</code></pre>
+<p><img src="/post/2020-05-05-thematic_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(mtcars, aes(wt, mpg)) +
+  geom_point(aes(color = factor(cyl))) +
+  geom_smooth(color = &quot;white&quot;)</code></pre>
+<pre><code>## Error : RStudio not running</code></pre>
+<p><img src="/post/2020-05-05-thematic_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="links" class="section level2">
+<h2>links</h2>
+<p><a href="https://rstudio.github.io/thematic/">Unified and Automatic Theming of ggplot2, lattice, and base R Graphics • thematic</a></p>
+</div>

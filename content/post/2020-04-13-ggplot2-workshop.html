@@ -1,0 +1,323 @@
+---
+title: ggplot2 Workshop
+author: ZERO
+date: '2020-04-13'
+slug: ggplot2-workshop
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-13T15:54:53+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="introduction" class="section level2">
+<h2>introduction</h2>
+<p>This document contains all the code that is displayed during the workshop. The
+document is an RMarkdown document which means that it can be compiled, along
+with the code chunks thus executing and capturing the output of the code within
+the document. To read more about RMarkdown see the website for the package, as
+well as the <a href="https://rmarkdown.rstudio.com/lesson-1.html">Get Started</a> guide.</p>
+<div id="exercises" class="section level3">
+<h3>Exercises</h3>
+<p>While it is encouraged to follow along in this document as the workshop
+progresses and execute the code to see the result, an important part is also to
+experiment and play, thus learning how the different settings affect the output.</p>
+<p>The document will contain code chunks with the code examples discussed during
+the talk, but it will also contain chunks intended for completing small
+exercises. These will use the examples as a starting point and ask you to modify
+the code to achieve a given output. Completing these are optional, but highly
+recommended, either during or after the workshop.</p>
+</div>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<p>This document comes with a list of required packages.</p>
+</div>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
+<p>We will use an assortment of datasets throughout the document. The purpose is
+mostly to showcase different plots, and less on getting some divine insight into
+the world. While not necessary we will call <code>data(&lt;dataset&gt;)</code> before using a new
+dataset to indicate the introduction of a new dataset.</p>
+</div>
+</div>
+<div id="introduction-1" class="section level2">
+<h2>Introduction</h2>
+<p>We will look at the basic ggplot2 use using the faithful dataset, giving
+information on the eruption pattern of the Old Faithful geyser in Yellowstone
+National Park.</p>
+<p>If an aesthetic is linked to data it is put into <code>aes()</code></p>
+<p>如果数据的颜色是映射到一列数据则放在 <code>aes()</code> 里面</p>
+<p>If you simple want to set it to a value, put it outside of <code>aes()</code></p>
+<p>Some geoms only need a single mapping and will calculate the rest for you</p>
+<p>单变量 mapping: histogram</p>
+<p>geoms are drawn in the order they are added. The point layer is thus drawn on
+top of the density contours in the example below.</p>
+<p>这个有点像 phoshop 中的图层概念, geometry 是一层一层往上堆叠的</p>
+<div id="exercise" class="section level4">
+<h4>Exercise</h4>
+<p>Modify the code below to make the points larger squares and slightly transparent.
+See <code>?geom_point</code> for more information on the point layer.</p>
+<p>Hint 1: transparency is controlled with <code>alpha</code>, and shape with <code>shape</code>
+Hint 2: rememberthe difference between mapping and setting aesthetics</p>
+<hr />
+<p>Colour the two distributions in the histogram with different colours</p>
+<p>Hint 1: For polygons you can map two different colour-like aesthetics: <code>colour</code>
+(the colour of the stroke) and <code>fill</code> (the fill colour)</p>
+<hr />
+<p>Colour the distributions in the histogram by whether <code>waiting</code> is above or below
+<code>60</code>. What happens?</p>
+<p>Change the plot above by setting <code>position = 'dodge'</code> in <code>geom_histogram()</code>
+(while keeping the colouring by <code>waiting</code>). What do <code>position</code> control?</p>
+<hr />
+<p>Add a line that separates the two point distributions. See <code>?geom_abline</code> for
+how to draw straight lines from a slope and intercept.</p>
+</div>
+<div id="stat" class="section level3">
+<h3>Stat</h3>
+<p>We will use the <code>mpg</code> dataset giving information about fuel economy on different
+car models.</p>
+<p><font color="darkred"> <strong>Every geom has a stat</strong> </font>. This is why new data (<code>count</code>) can appear when using
+<code>geom_bar()</code>., the default <code>stat</code> for <code>geom_bar</code> is <code>count</code></p>
+<p>The stat can be overwritten. If we have precomputed count we don’t want any
+additional computations to perform and we use the <code>identity</code> stat to leave the
+data alone</p>
+<p>Most obvious geom+stat combinations have a dedicated geom constructor. The one
+above is available directly as <code>geom_col()</code></p>
+<p>Values calculated by the stat is available with the <code>after_stat()</code> function
+inside <code>aes()</code>. You can do all sorts of computations inside that.</p>
+<p>Many stats provide multiple variations of the same calculation, and provides a
+default (here, <code>density</code>)</p>
+<p>While the others must be used with the <code>after_stat()</code> function</p>
+<div id="exercises-1" class="section level4">
+<h4>Exercises</h4>
+<p>While most people use <code>geom_*()</code> when adding layers, it is just as valid to add
+a <code>stat_*()</code> with an attached geom.</p>
+<p>大多数人使用 <code>geom</code> 时, 使用了默认的 <code>stat</code> , 只是不知道而已</p>
+<p>Look at <code>geom_bar()</code> and figure out which stat it uses as default. Then modify the code to use the stat directly instead
+(i.e. adding <code>stat_*()</code> instead of <code>geom_bar()</code>)</p>
+<hr />
+<p>Use <code>stat_summary()</code> to add a red dot at the mean <code>hwy</code> for each group</p>
+<p>stat_summary is like dplyr::summarise</p>
+<p>fun 作用于 <code>aes</code> 中的 y, x 类似于 <code>group_by</code> 中的 factor variable.</p>
+<p>Hint: You will need to change the default geom of <code>stat_summary()</code></p>
+</div>
+</div>
+<div id="scales" class="section level3">
+<h3>Scales</h3>
+<p>Scales define how the mapping you specify inside <code>aes()</code> should happen. All
+mappings have an associated scale even if not specified.</p>
+<p>take control by adding one explicitly. All scales follow the same naming
+conventions.</p>
+<p>scale_mapping_* : scale_x, y, colour, fill etc.</p>
+<p>Positional mappings (x and y) also have associated scales.</p>
+<div id="exercises-2" class="section level4">
+<h4>Exercises</h4>
+<p>Use <code>RColorBrewer::display.brewer.all()</code> to see all the different palettes from
+Color Brewer and pick your favourite. Modify the code below to use it</p>
+<hr />
+<p>Modify the code below to create a bubble chart (scatterplot with size mapped to
+a continuous variable) showing <code>cyl</code> with size. Make sure that only the present
+amount of cylinders (4, 5, 6, and 8) are present in the legend.</p>
+<p>Hint: The <code>breaks</code> argument in the scale is used to control which values are
+present in the legend.</p>
+<p>Explore the different types of size scales available in ggplot2. Is the default
+the most appropriate here?</p>
+<hr />
+<p>Modify the code below so that colour is no longer mapped to the discrete <code>class</code>
+variable, but to the continuous <code>cty</code> variable. What happens to the guide?</p>
+<hr />
+<p>The type of guide can be controlled with the <code>guide</code> argument in the scale, or
+with the <code>guides()</code> function. Continuous colours have a gradient colour bar by
+default, but setting it to <code>legend</code> will turn it back to the standard look. What
+happens when multiple aesthetics are mapped to the same variable and uses the
+guide type?</p>
+</div>
+</div>
+<div id="facets" class="section level3">
+<h3>Facets</h3>
+<p>The facet defines how data is split among panels. The default facet
+(<code>facet_null()</code>) puts all the data in a single panel, while <code>facet_wrap()</code> and
+<code>facet_grid()</code> allows you to specify different types of small multiples</p>
+<div id="exercises-3" class="section level4">
+<h4>Exercises</h4>
+<p>One of the great things about facets is that <font color="darkred"> <strong>they share the axes between the different panels</strong>.</font> Sometimes this is undiserable though, and <font color="darkred"> <strong>the behaviour can be changed with the <code>scales</code> argument</strong></font> .
+Experiment with the different possible settings in the plot below:</p>
+<hr />
+<p>Usually the space occupied by each panel is equal. This can create problems when
+different scales are used. Modify the code below so that the y scale differs
+between the panels in the plot. What happens?</p>
+<p>Use the <code>space</code> argument in <code>facet_grid()</code> to change the plot above so each bar
+has the same width again.</p>
+<hr />
+<p>Facets can be based on multiple variables by adding them together. Try to
+recreate the same panels present in the plot below by using <code>facet_wrap()</code></p>
+</div>
+</div>
+<div id="coordinates" class="section level3">
+<h3>Coordinates</h3>
+<p>The coordinate system is the fabric you draw your layers on in the end. The
+default `coord_cartesion provides the standard rectangular x-y coordinate
+system. Changing the coordinate system can have dramatic effects</p>
+<p>You can zoom both on the scale…</p>
+<p>and in the coord. You usually want the latter as it avoids changing the plottet
+data</p>
+<blockquote>
+<p>Setting limits on the coordinate system will zoom the plot (like you’re looking at it with a <font color="darkred"> <strong>magnifying glass</strong></font> ), and will not change the underlying data like setting limits on a scale will.</p>
+</blockquote>
+<div id="exercises-4" class="section level4">
+<h4>Exercises</h4>
+<p>In the same way as limits can be set in both the positional scale and the coord,
+so can transformations, using <code>coord_trans()</code>. Modify the code below to apply a
+log transformation to the y axis; first using <code>scale_y_continuous()</code>,
+and then using <code>coord_trans()</code>. Compare the results — how do they differ?</p>
+<hr />
+<p>Coordinate systems are particularly important in cartography. While we will not
+spend a lot of time with it in this workshop, spatial plotting is well supported
+in ggplot2 with <code>geom_sf()</code> and <code>coord_sf()</code> (which interfaces with the sf
+package). The code below produces a world map. Try changing the <code>crs</code> argument
+in <code>coord_sf()</code> to be <code>'+proj=robin'</code> (This means using the Robinson projection).</p>
+<p>Maps are a huge area in data visualisation and simply too big to cover in this
+workshop. If you want to explore further I advice you to explore the
+<a href="https://www.r-spatial.org">r-spatial wbsite</a> as well as the website for the
+<a href="https://r-spatial.github.io/sf">sf package</a></p>
+</div>
+</div>
+<div id="theme" class="section level3">
+<h3>Theme</h3>
+<p>Theming defines the feel and look of your final visualisation and is something
+you will normally defer to the final polishing of the plot. It is very easy to
+change looks with a prebuild theme</p>
+<p>Further adjustments can be done in the end to get exactly the look you want</p>
+<div id="exercises-5" class="section level4">
+<h4>Exercises</h4>
+<p>Themes can be overwhelming, especially as you often try to optimise for beauty
+while you learn. To remove the last part of the equation, the exercise is to
+take the plot given below and make it as hideous as possible using the theme
+function. Go absolutely crazy, but take note of the effect as you change
+different settings.</p>
+</div>
+</div>
+</div>
+<div id="extensions" class="section level2">
+<h2>📌 Extensions</h2>
+<p>While ggplot2 comes with a lot of batteries included, the extension ecosystem
+provides priceless additinal features</p>
+<div id="plot-composition" class="section level3">
+<h3>Plot composition</h3>
+<p>We start by creating 3 separate plots</p>
+<p>Combining them with patchwork is a breeze using the different operators</p>
+<div id="excercises" class="section level4">
+<h4>Excercises</h4>
+<p>Patchwork will assign the same amount of space to each plot by default, but this
+can be controlled with the <code>widths</code> and <code>heights</code> argument in <code>plot_layout()</code>.
+This can take a numeric vector giving their relative sizes (e.g. <code>c(2, 1)</code> will
+make the first plot twice as big as the second). Modify the code below so that
+the middle plot takes up half of the total space:</p>
+<hr />
+<p>The <code>&amp;</code> operator can be used with any type of ggplot2 object, not just themes.
+Modify the code below so the two plots share the same y-axis (same limits)</p>
+<hr />
+<p>Patchwork contains many features for fine tuning the layout and annotation. Very
+complex layouts can be obtained by providing a design specification to the
+<code>design</code> argument in <code>plot_layout()</code>. The design can be defined as a textual
+representation of the cells. Use the layout given below. How should the textual
+representation be undertood.</p>
+</div>
+</div>
+<div id="animation" class="section level3">
+<h3>Animation</h3>
+<p>ggplot2 is usually focused on static plots, but gganimate extends the API and
+grammar to describe animations. As such it feels like a very natural extension
+of using ggplot2</p>
+<p>There are many different transitions that control how data is interpreted for
+animation, as well as a range of other animation specific features</p>
+<div id="exercises-6" class="section level4">
+<h4>Exercises</h4>
+<p>The animation below will animate between points showing cars with different
+cylinders.</p>
+<p>gganimate uses the <code>group</code> aesthetic to match observations between states. By
+default the group aesthetic is set to the same value, so observations are
+matched by their position (first row of 4 cyl is matched to first row of 5 cyl
+etc.). This is clearly wrong here (why?). Add a mapping to the <code>group</code> aesthetic
+to ensure that points do not move between the different states.</p>
+<hr />
+<p>In the presence of discrete aesthetic mappings (<code>colour</code> below), the group is
+deduced if not given. The default behaviour of objects that appear and disappear
+during the animation is to simply pop in and out of existance. <code>enter_*()</code> and
+<code>exit_*()</code> functions can be used to control this behaviour. Experiment with the
+different enter and exit functions provided by gganimate below. What happens if
+you add multiple enter or exit functions to the same animation?</p>
+<hr />
+<p>In the animation below (as in all the other animations) the changes happens at
+constant speed. How values change during an animation is called easing and can
+be controlled using the <code>ease_aes()</code> function. Read the documentation for
+<code>ease_aes()</code> and experiment with different easings in the animation.</p>
+</div>
+</div>
+<div id="annotation" class="section level3">
+<h3>Annotation</h3>
+<p>Text is a huge part of storytelling with your visualisation. Historically,
+textual annotations has not been the best part of ggplot2 but new extensions
+make up for that.</p>
+<p>Standard geom_text will often result in overlaping labels</p>
+<p>ggrepel takes care of that</p>
+<p>If you want to highlight certain parts of your data and describe it, the
+<code>geom_mark_*()</code> family of geoms have your back</p>
+<div id="exercises-7" class="section level4">
+<h4>Exercises</h4>
+<p>ggrepel has a tonne of settings for controlling how text labels move. Often,
+though, the most effective is simply to not label everything. There are two
+strategies for that: Either only use a subset of the data for the repel layer,
+or setting the label to <code>""</code> for those you don’t want to plot. Try both in the
+plot below where you only label 10 random points.</p>
+<hr />
+<p>Explore the documentation for <code>geom_text_repel</code>. Find a way to ensure that the
+labels in the plot below only repels in the vertical direction</p>
+<hr />
+<p>ggforce comes with 4 different types of mark geoms. Try them all out in the code
+below:</p>
+</div>
+</div>
+<div id="networks" class="section level3">
+<h3>Networks</h3>
+<p>ggplot2 has been focused on tabular data. Network data in any shape and form is
+handled by ggraph</p>
+<p>dendrograms are just a specific type of network</p>
+<div id="exercies" class="section level4">
+<h4>Exercies</h4>
+<p>Most network plots are defined by a layout algorithm, which takes the network
+structure and calculate a position for each node. The layout algorithm is
+global and set in the <code>ggraph()</code>. The default <code>auto</code> layout will inspect the
+network object and try to choose a sensible layout for it (e.g. dendrogram for a
+hierarchical clustering as above). There is, however no optimal layout and it is
+often a good idea to try out different layouts. Try out different layouts in the
+graph below. See the <a href="https://ggraph.data-imaginist.com/reference/index.html">the website</a>
+for an overview of the different layouts.</p>
+<hr />
+<p>There are many different ways to draw edges. Try to use <code>geom_edge_parallel()</code>
+in the graph below to show the presence of multiple edges</p>
+<p>Faceting works in ggraph as it does in ggplot2, but you must choose to facet by
+either nodes or edges. Modify the graph below to facet the edges by the <code>year</code>
+variable (using <code>facet_edges()</code>)</p>
+</div>
+</div>
+<div id="looks" class="section level3">
+<h3>Looks</h3>
+<p>Many people have already desgned beautiful (and horrible) themes for you. Use
+them as a base</p>
+</div>
+</div>
+<div id="drawing-anything" class="section level2">
+<h2>Drawing anything</h2>
+</div>

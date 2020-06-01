@@ -1,0 +1,215 @@
+---
+title: ML Workflow
+author: ZERO
+date: '2020-04-26'
+slug: ml-workflow
+categories:
+  - Tools
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-26T15:31:21+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+## Setup 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+## Load pkg
+```{r}
+library(tidymodels)  # Loads parsnip, rsample, recipes, yardstick
+library(skimr)       # Quickly get a sense of data
+library(knitr) 
+```
+
+## Load Data
+
+```{r}
+telco <- read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+
+telco %>% head() %>% kable()
+```
+
+
+## EDA: Skim the Data
+```{r}
+telco %>% skim()
+```
+
+
+### data processing
+
+```{r}
+telco <- telco %>%
+    select(-customerID) %>%
+    drop_na()
+```
+
+```{r}
+df <- telco
+```
+
+## Tidymodels Workflow
+
+## Train/Test Split
+```{r}
+set.seed(seed = 1972) 
+
+train_test_split <-
+    rsample::initial_split(
+        data = df,     
+        prop = 0.80   
+    ) 
+
+train_test_split
+
+train_tbl <- train_test_split %>% training() 
+test_tbl  <- train_test_split %>% testing() 
+```
+## Prepare
+
+```{r}
+recipe_simple <- function(dataset) {
+    recipe(Churn ~ ., data = dataset) %>%
+        step_string2factor(all_nominal(), -all_outcomes()) %>%
+        prep(data = dataset)
+}
+
+recipe_prepped <- recipe_simple(dataset = train_tbl)
+
+train_baked <- bake(recipe_prepped, new_data = train_tbl)
+test_baked  <- bake(recipe_prepped, new_data = test_tbl)
+```
+
+### Generalized Linear Model (Baseline)
+
+
+##### Fit the Model
+
+```{r}
+logistic_glm <- logistic_reg(mode = "classification") %>%
+    set_engine("glm") %>%
+    fit(Churn ~ ., data = train_baked)
+```
+
+##### Assess Performance
+
+```{r}
+predictions_glm <- logistic_glm %>%
+    predict(new_data = test_baked) %>%
+    bind_cols(test_baked %>% select(Churn))
+
+predictions_glm %>% head() %>% kable()
+```
+##### Accuracy, Precision , Recall and F1 Score
+```{r}
+
+tibble(
+  "accuracy" =
+    accuracy(predictions_glm, Churn, .pred_class) %>%
+    select(.estimate),
+  "precision" =
+    precision(predictions_glm, Churn, .pred_class) %>%
+    select(.estimate),
+  "recall" =
+    recall(predictions_glm, Churn, .pred_class) %>%
+    select(.estimate),
+  "F1 score" =
+    f_meas(predictions_glm, Churn, .pred_class) %>%
+    select(.estimate),
+) %>%
+  unnest(cols = c(accuracy, precision, recall, `F1 score`)) %>%
+  kable()
+```
+
+
+
+
+### Random Forest
+
+#### Cross Validation - 10-Fold
+
+```{r}
+cross_val_tbl <- vfold_cv(train_tbl, v = 10)
+cross_val_tbl
+cross_val_tbl %>% pluck("splits", 1)
+```
+
+#### Random Forest
+
+```{r}
+rf_fun <- function(split, id, try, tree) {
+    
+    analysis_set <- split %>% analysis()
+    analysis_prepped <- analysis_set %>% recipe_simple()
+    analysis_baked <- analysis_prepped %>% bake(new_data = analysis_set)
+    
+    model_rf <-
+        rand_forest(
+            mode = "classification",
+            mtry = try,
+            trees = tree
+        ) %>%
+        set_engine("ranger",
+                   importance = "impurity"
+        ) %>%
+        fit(Churn ~ ., data = analysis_baked)
+    
+    assessment_set     <- split %>% assessment()
+    assessment_prepped <- assessment_set %>% recipe_simple()
+    assessment_baked   <- assessment_prepped %>% bake(new_data = assessment_set)
+    
+    tibble(
+        "id" = id,
+        "truth" = assessment_baked$Churn,
+        "prediction" = model_rf %>%
+            predict(new_data = assessment_baked) %>%
+            unlist()
+    )
+    
+}
+```
+
+#### Modeling with purrr
+```{r}
+pred_rf <- map2_df(
+    .x = cross_val_tbl$splits,
+    .y = cross_val_tbl$id,
+    ~ rf_fun(split = .x, id = .y, try = 3, tree = 200)
+)
+
+head(pred_rf)
+```
+#### Assess Performance
+
+```{r}
+pred_rf %>%
+    conf_mat(truth, prediction) %>%
+    summary() %>%
+    select(-.estimator) %>%
+    filter(.metric %in% c("accuracy", "precision", "recall", "f_meas")) %>%
+    kable()
+```

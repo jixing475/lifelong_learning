@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>shiny | Jixing Liu</title>
+    <link>/tags/shiny/</link>
+      <atom:link href="/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
+    <description>shiny</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>shiny</title>
+      <link>/tags/shiny/</link>
+    </image>
+    
+    <item>
+      <title>Integrating Tableau with R for Descriptive, Inferential and Predictive analytics</title>
+      <link>/post/integrating-tableau-with-r-for-descriptive-inferential-and-predictive-analytics/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/integrating-tableau-with-r-for-descriptive-inferential-and-predictive-analytics/</guid>
+      <description>
+
+
+&lt;div id=&#34;host-your-html-file&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;host your html file&lt;/h2&gt;
+&lt;p&gt;You would need to &lt;strong&gt;host your HTML on a publicly accessible website somewhere&lt;/strong&gt;, then use a webpage part object on your dashboard to embed that page.&lt;/p&gt;
+&lt;p&gt;Skip that though, generate a clock to embed here - &lt;a href=&#34;https://community.tableau.com/external-link.jspa?url=https%3A%2F%2Fwww.timeanddate.com%2Fclocks%2Ffree.html&#34;&gt;Free Clocks for Your Website&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;use-flexdashboard&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;use flexdashboard&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://rmarkdown.rstudio.com/flexdashboard/examples.html&#34;&gt;flexdashboard Examples&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://community.tableau.com/thread/241667&#34;&gt;Embed HTML Local in Tableau ( Import JS to Tabl… |Tableau Community Forums&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=ZBROGk0AP8Y&amp;amp;feature=emb_logo&#34;&gt;(28) Integrating Tableau with R for Descriptive, Inferential and Predictive analytics - YouTube&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

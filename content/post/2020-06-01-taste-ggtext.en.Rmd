@@ -1,0 +1,130 @@
+---
+title: taste ggtext
+author: ZERO
+date: '2020-06-01'
+slug: taste-ggtext
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-01T10:23:39+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+# Global ggplot settings
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+## load pkgs
+```{r}
+library(ggplot2)
+library(dplyr)
+#install.packages("ggcharts")
+data(biomedicalrevenue, package = "ggcharts")
+```
+
+
+## example
+```{r}
+plot <- biomedicalrevenue %>%
+  filter(company %in% c("Roche", "Novartis")) %>%
+  ggplot(aes(year, revenue, color = company)) +
+  geom_line(size = 1.2) +
+  ggtitle(
+    paste0(
+      "<span style = 'color:darkred'>__Roche__</span>",
+      " *overtook* <span style = 'color:darkorange'>**Novartis**</span>",
+      " in 2016"
+    )
+  ) +
+  scale_color_manual(
+    values = c("Roche" = "#93C1DE", "Novartis" = "darkorange"),
+    guide = "none"
+  ) +
+  ggcharts::theme_hermit(ticks = "x", grid = "X")  +
+  theme(plot.title = ggtext::element_markdown())
+plot
+```
+
+## 语法
+
+目前 ggtext 支持的 markdwon 语法有限
+
+
+## 📦 {mdthemes}
+
+```{r}
+#remotes::install_github("thomas-neitmann/mdthemes")
+```
+
+单个主题元素设置 Markdown 语法太费事,  使用 mdthemes 📦, 一次性设置.
+
+> Setting individual theme elements to `ggtext::element_markdown()` can add quite a bit of boilerplate code to your plot.
+
+```{r}
+plot + mdthemes::md_theme_minimal()
+```
+
+## title, the subtitle, axis labels and captions set one-time
+
+> Apart from the title, the subtitle, axis labels and captions are set to element_markdown() for all mdthemes.
+
+
+```{r}
+plot +
+  labs(
+    x = "**Year**",
+    y = "Revenue (*Billion* USD)",
+    caption = "Data Source: *en.wikipedia.org/wiki/List_of_largest_biomedical_companies_by_revenue*"
+  ) +
+  mdthemes::md_theme_minimal()
+```
+
+## mdthemes 包含的主题非常丰富, 且可自定义主题
+
+> The {mdthemes} packages currently contains all themes from {ggplot2}, {ggthemes}, {hrbrthemes}, {tvthemes} and {cowplot} with support for rendering text as markdown.
+
+> If you want to turn a theme that is not part of the {mdthemes} package into an md_theme you can use the as_md_theme() function.
+
+
+```{r}
+plot + mdthemes::as_md_theme(hrbrthemes::theme_ipsum()) 
+```
+
+
+
+# links
+
+[Themes • ggcharts](https://thomas-neitmann.github.io/ggcharts/articles/themes.html)

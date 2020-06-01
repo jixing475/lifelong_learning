@@ -1,0 +1,37 @@
+---
+title: R square and Q square , what the difference
+author: ZERO
+date: '2020-04-18'
+slug: r-square-and-q-square-what-the-difference
+categories:
+  - reading
+tags:
+  - Machine learning
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-18T09:40:59+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="r-square-和-q-square" class="section level2">
+<h2>R square 和 Q square</h2>
+<p>其实他们的计算方式是一模一样的, 只是一个是在训练数据集上算的结果, 一个是在测试集上的计算结果.</p>
+<p>R2 和 Q2 相差太多的话则说明回归的模型有过拟合</p>
+<p><span class="math display">\[
+\begin{array}{l}R^{2}=1-R S S / T S S \\ R S S=\sum(y-\hat{\mathbf{y}})^{2} \\ T S S=\sum(y-\overline{\mathbf{y}})^{2}\end{array}
+\]</span></p>
+<blockquote>
+<p>Q2 is the R2 when the PLS built on a training set is applied to a test set. So a good value for Q2 is a value that is close to the R2. That means that your PLS model works independently of the specific data that was used to train the PLS model. Adding more variables always makes R2 go up, but might not make Q2 go up.</p>
+</blockquote>
+<blockquote>
+<p>As I have seen that the “Difference between R2 and Q2 should not be more than 0.3” [International Journal of Drug Design and Discovery, 2011, 2 (3) 511-519].</p>
+</blockquote>
+</div>

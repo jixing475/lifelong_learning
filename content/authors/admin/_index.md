@@ -13,7 +13,7 @@ education:
     year: 2013
 email: "jixing475@163.com"
 interests:
-- Artificial Intelligence
+- AI for medical
 - Bioinformatics
 - data visualization
 name: Jixing Liu
@@ -40,6 +40,5 @@ user_groups:
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Hello, my name is Jixing Liu. I’m a Data scientist at Deepdrug. I love to analysis data and make things in R and Python. Working on AI for medical, biology and chemistry, visualization styles, modeling techniques and general workflow problems.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
