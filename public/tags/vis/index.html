@@ -239,7 +239,7 @@
   <meta property="og:description" content="Personal website for Jixing Liu"><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
   <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-06-01T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2020-06-02T00:00:00&#43;00:00">
   
 
   
@@ -384,86 +384,6 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#projects"><span>Projects</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#featured"><span>Publications</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/courses/"><span>Courses</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
           <a class="nav-link " href="/#contact"><span>Contact</span></a>
         </li>
 
@@ -544,6 +464,30 @@
   
 
   
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/change-blogdown-syntax-highlighting-in-blogdown/" >change blogdown syntax highlighting in blogdown</a></h2>
+      <div class="article-style">
+        
+          how  [markup.highlight] codeFences = true hl_Lines = &quot;&quot; lineNoStart = 1 lineNos = false lineNumbersInTable = true noClasses = true style = &quot;solarized-dark&quot; tabWidth = 4  the config.toml file contains this section which is the bit that actually parametrises the highlighting.
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div>
+      <h2><a href="/post/seeing-the-stars-of-github-repos-rise/" >Seeing The Stars Of Github Repos Rise</a></h2>
+      <div class="article-style">
+        
+          get repo star history data #remotes::install_github(&quot;thomas-neitmann/ghstars&quot;, upgrade = &quot;never&quot;) library(ghstars) repos &lt;- c(&quot;thomas-neitmann/ggcharts&quot;, &quot;thomas-neitmann/mdthemes&quot;) star_history &lt;- get_repo_star_history(repos) head(star_history) ## repo date day stars cumulative_stars ## 1 thomas-neitmann/ggcharts 2020-01-07 0 1 1 ## 2 thomas-neitmann/ggcharts 2020-01-14 7 1 2 ## 3 thomas-neitmann/ggcharts 2020-01-28 21 1 3 ## 4 thomas-neitmann/ggcharts 2020-02-01 25 1 4 ## 5 thomas-neitmann/ggcharts 2020-02-02 26 1 5 ## 6 thomas-neitmann/ggcharts 2020-02-03 27 2 7 plot(star_history)  plot plot(star_history)  pkg star history star_histories &lt;- get_pkg_star_history(c(&quot;Rcpp&quot;, &quot;scales&quot;)) plot(star_histories) data &lt;- bind_rows(star_histories, star_history) plot(data)  links thomas-neitmann/ghstars: Retrieve GitHub Stars for any Repository
+        
+      </div>
+    </div>
   
     
     

@@ -5,17 +5,17 @@ bio: My research interests include Bioinformatics, Deep learning and data visual
   matter.
 education:
   courses:
-  - course: MA in 临床肾脏病学
-    institution: 南方医科大学
+  - course: MA in Clinical Nephrology
+    institution: Southern Medical University
     year: 2016
-  - course: BS in 中西医结合
-    institution: 湖南中医药大学
+  - course: BS in Integration of traditional Chinese and western medicine
+    institution: Hunan University of Chinese Medicine
     year: 2013
 email: "jixing475@163.com"
 interests:
-- AI for medical
-- Bioinformatics
-- data visualization
+- AI for Biomedical
+- AI for Drug Development
+- Data Visualization
 name: Jixing Liu
 organizations:
 - name: DeepDrug

@@ -1,0 +1,205 @@
+---
+title: dplyr 1.0.0 features
+author: ZERO
+date: '2020-06-02'
+slug: dplyr-1-0-0-features
+categories:
+  - Tools
+tags:
+  - EDA
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-02T13:51:14+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+# Global ggplot settings
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+## data
+
+```{r}
+# data
+library(AmesHousing)
+
+# Load the housing data, clean names, then grab just six columns 
+# to simplify the dataset for display purposes.
+ames_data <- make_ames() %>%
+  janitor::clean_names() %>%
+  select(sale_price, bsmt_fin_sf_1, first_flr_sf, 
+         total_bsmt_sf, neighborhood, gr_liv_area)
+
+feet_to_yards <- function(x) {x / 9}
+```
+
+## across replace *_if *_at *_all
+
+>  across() makes manipulating multiple columns more intuitive and consistent with other dplyr syntax.
+
+## mutate_at
+
+### before
+
+```{r}
+ames_data %>%
+  mutate_at(.vars = vars(contains("_sf") | contains("area")) , .funs = feet_to_yards) %>% 
+  head()
+```
+
+### now
+
+```{r}
+ames_data %>%
+  mutate(across(.cols = c(contains("_sf"), contains("area")), 
+                .fns = feet_to_yards)) %>%
+  head()
+```
+
+## mutate_if
+
+### before
+
+```{r}
+ames_data %>% 
+  mutate_if(is.numeric, log) %>% 
+  head()
+```
+
+### now
+
+```{r}
+ames_data %>% 
+  mutate(across(.cols = where(is.numeric), .fns = log)) %>% 
+  head()
+```
+
+## summarized
+
+```{r}
+ames_data %>%
+  group_by(neighborhood) %>%
+  summarize(across(
+    .cols = where(is.numeric),
+    .fns = mean,
+    .names = "mean_{col}"
+  )) %>%
+  head()
+```
+
+## mutate_at 2
+
+```{r}
+ames_data %>%
+  mutate(across(
+    .cols = where(is.integer) & ends_with("_sf"),
+    .fns = as.double
+  )) %>% 
+  head()
+```
+
+
+## slice
+
+## top_n
+
+### before
+
+```{r}
+# Old way to grab the five most expensive homes by sale price
+ames_data %>% 
+  arrange(desc(sale_price)) %>% 
+  top_n(n = 5, sale_price)
+```
+
+## now
+
+```{r}
+ames_data %>% 
+  slice_max(sale_price, n = 5)
+```
+## sample_n
+
+### before
+
+```{r}
+ames_data %>% 
+  sample_n(4)
+
+ames_data %>% 
+  sample_frac(0.002)
+```
+
+### now
+
+```{r}
+ames_data %>% 
+  slice_sample(n = 4)
+
+ames_data %>% 
+  slice_sample(prop = 0.002)
+```
+
+## nest_by
+
+### nested
+```{r}
+nested_ames <- 
+  ames_data %>%
+  nest_by(neighborhood) 
+
+```
+
+### add model
+```{r}
+nested_ames_with_model <- 
+nested_ames %>% 
+  mutate(linear_model = list(
+    lm(sale_price ~ gr_liv_area, data = data)
+  ))
+```
+
+
+### 
+
+```{r}
+north_ames_model <- nested_ames_with_model %>%
+  filter(neighborhood == "North_Ames") %>%
+  pull(linear_model)
+
+north_ames_model
+```
+
+
+## links
+
+[Tychobra](https://www.tychobra.com/posts/2020-05-27-new-dplyr-features/)

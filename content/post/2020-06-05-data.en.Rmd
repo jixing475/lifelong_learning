@@ -1,0 +1,73 @@
+---
+title: Data
+author: ZERO
+date: '2020-06-05'
+slug: data
+categories:
+  - reading
+tags:
+  - data clean
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-05T16:29:04+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+# Global ggplot settings
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+> 模型的好坏取决于驱动它的数据
+
+## 数据收集
+
+数据收集重点放在两个问题上: 是什么和为什么?
+
+1. 学习的核心问题是什么
+2. 为什么用这个特征集
+
+## 数据评价: 质量和多样性
+
+质量: 科学数据带来了特殊的挑战，需要专业知识来解释其细微差别和复杂性。例如，数据经常整合自有不同表示和命名的数据源。当不同的分子不正确地被合并到一条记录中，或者同一分子在多条记录中被分解时，就会导致错误. 数据的高质量是模型准确的前提条件.
+
+多样性:基于内部数据的模型训练可以将算法的输出限制在一个较窄的域内，防止模型对新数据的泛化(数据多样性不够的话, 会造成模型的泛化能力不行). 
+
+## 数据管理
+
+机器学习需要考虑如何收集和存储调用数据(收集: 包括数据调研和数据整理, 整理成机器可读的模式).
+
+建立相应的收集方式, 及统一的清理流程.
+数据以统一的格式存储在专业的数据库上, 方便调用和管理.
+
+
+
+
+

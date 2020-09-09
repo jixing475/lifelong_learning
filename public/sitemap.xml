@@ -33,32 +33,82 @@
   </url>
   
   <url>
+    <loc>/tags/bioinformatics/</loc>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
-    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/taste-ggtext/</loc>
-    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/tools/</loc>
-    <lastmod>2020-06-01T10:23:39+08:00</lastmod>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/tumor-purity-analysis/</loc>
+    <lastmod>2020-06-27T13:38:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/data/</loc>
+    <lastmod>2020-06-05T16:29:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/data-clean/</loc>
+    <lastmod>2020-06-05T16:29:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/easy-parsing-json-in-r/</loc>
+    <lastmod>2020-06-05T13:12:56+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/reading/</loc>
+    <lastmod>2020-06-05T16:29:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/change-blogdown-syntax-highlighting-in-blogdown/</loc>
+    <lastmod>2020-06-02T09:27:13+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/dplyr-1-0-0-features/</loc>
+    <lastmod>2020-06-02T13:51:14+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/eda/</loc>
+    <lastmod>2020-06-02T13:51:14+08:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/vis/</loc>
+    <lastmod>2020-06-02T09:27:13+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/seeing-the-stars-of-github-repos-rise/</loc>
+    <lastmod>2020-06-01T10:57:19+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/taste-ggtext/</loc>
     <lastmod>2020-06-01T10:23:39+08:00</lastmod>
   </url>
   
@@ -114,11 +164,6 @@
   
   <url>
     <loc>/post/r-square-and-q-square-what-the-difference/</loc>
-    <lastmod>2020-04-18T09:40:59+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/reading/</loc>
     <lastmod>2020-04-18T09:40:59+08:00</lastmod>
   </url>
   

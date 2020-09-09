@@ -1,0 +1,58 @@
+---
+title: Seeing The Stars Of Github Repos Rise
+author: ZERO
+date: '2020-06-01'
+slug: seeing-the-stars-of-github-repos-rise
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-01T10:57:19+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="get-repo-star-history-data" class="section level2">
+<h2>get repo star history data</h2>
+<pre class="r"><code>#remotes::install_github(&quot;thomas-neitmann/ghstars&quot;, upgrade = &quot;never&quot;)
+library(ghstars)
+repos &lt;- c(&quot;thomas-neitmann/ggcharts&quot;, &quot;thomas-neitmann/mdthemes&quot;)
+star_history &lt;- get_repo_star_history(repos)
+head(star_history)</code></pre>
+<pre><code>##                       repo       date day stars cumulative_stars
+## 1 thomas-neitmann/ggcharts 2020-01-07   0     1                1
+## 2 thomas-neitmann/ggcharts 2020-01-14   7     1                2
+## 3 thomas-neitmann/ggcharts 2020-01-28  21     1                3
+## 4 thomas-neitmann/ggcharts 2020-02-01  25     1                4
+## 5 thomas-neitmann/ggcharts 2020-02-02  26     1                5
+## 6 thomas-neitmann/ggcharts 2020-02-03  27     2                7</code></pre>
+<pre class="r"><code>plot(star_history)</code></pre>
+<p><img src="/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-1-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plot" class="section level2">
+<h2>plot</h2>
+<pre class="r"><code>plot(star_history)</code></pre>
+<p><img src="/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pkg-star-history" class="section level2">
+<h2>pkg star history</h2>
+<pre class="r"><code>star_histories &lt;- get_pkg_star_history(c(&quot;Rcpp&quot;, &quot;scales&quot;))
+plot(star_histories)</code></pre>
+<p><img src="/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-3-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>data &lt;- bind_rows(star_histories, star_history)
+plot(data)</code></pre>
+<p><img src="/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="links" class="section level2">
+<h2>links</h2>
+<p><a href="https://github.com/thomas-neitmann/ghstars">thomas-neitmann/ghstars: Retrieve GitHub Stars for any Repository</a></p>
+</div>

@@ -438,86 +438,6 @@ Highlight your code snippets, take notes on math classes, and draw diagrams from
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#projects"><span>Projects</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#featured"><span>Publications</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/courses/"><span>Courses</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
           <a class="nav-link " href="/#contact"><span>Contact</span></a>
         </li>
 
@@ -675,27 +595,24 @@ data.head()
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-python">import pandas as pd
-data = pd.read_csv(&quot;data.csv&quot;)
-data.head()
-</code></pre>
-<h3 id="math">Math</h3>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#719e07">import</span> pandas <span style="color:#719e07">as</span> pd
+data <span style="color:#719e07">=</span> pd<span style="color:#719e07">.</span>read_csv(<span style="color:#2aa198"></span><span style="color:#2aa198">&#34;</span><span style="color:#2aa198">data.csv</span><span style="color:#2aa198">&#34;</span>)
+data<span style="color:#719e07">.</span>head()
+</code></pre></div><h3 id="math">Math</h3>
 <p>Academic supports a Markdown extension for $\LaTeX$ math. You can enable this feature by toggling the <code>math</code> option in your <code>config/_default/params.toml</code> file.</p>
 <p>To render <em>inline</em> or <em>block</em> math, wrap your LaTeX math with <code>$...$</code> or <code>$$...$$</code>, respectively.</p>
 <p>Example <strong>math block</strong>:</p>
-<pre><code class="language-tex">$$\gamma_{n} = \frac{ 
-\left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
-\left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}
-{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}$$
-</code></pre>
-<p>renders as</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#586e75">$$</span><span style="color:#268bd2">\gamma</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#b58900">}</span><span style="color:#b58900"> </span><span style="color:#719e07">=</span><span style="color:#b58900"> </span><span style="color:#268bd2">\frac</span><span style="color:#b58900">{</span><span style="color:#b58900"> 
+</span><span style="color:#b58900"></span><span style="color:#268bd2">\left</span><span style="color:#b58900"> | </span><span style="color:#268bd2">\left</span><span style="color:#b58900"> </span><span style="color:#719e07">(</span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900"> x</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#b58900">}</span><span style="color:#b58900"> </span><span style="color:#719e07">-</span><span style="color:#b58900"> </span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900"> x</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#719e07">-</span><span style="color:#2aa198">1</span><span style="color:#b58900">}</span><span style="color:#b58900"> </span><span style="color:#268bd2">\right</span><span style="color:#b58900"> </span><span style="color:#719e07">)</span><span style="color:#b58900">^</span><span style="color:#b58900">T 
+</span><span style="color:#b58900"></span><span style="color:#268bd2">\left</span><span style="color:#b58900"> </span><span style="color:#719e07">[</span><span style="color:#268bd2">\nabla</span><span style="color:#b58900"> F </span><span style="color:#719e07">(</span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900"> x</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#b58900">}</span><span style="color:#719e07">)</span><span style="color:#b58900"> </span><span style="color:#719e07">-</span><span style="color:#b58900"> </span><span style="color:#268bd2">\nabla</span><span style="color:#b58900"> F </span><span style="color:#719e07">(</span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900"> x</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#719e07">-</span><span style="color:#2aa198">1</span><span style="color:#b58900">}</span><span style="color:#719e07">)</span><span style="color:#b58900"> </span><span style="color:#268bd2">\right</span><span style="color:#b58900"> </span><span style="color:#719e07">]</span><span style="color:#b58900"> </span><span style="color:#268bd2">\right</span><span style="color:#b58900"> |</span><span style="color:#b58900">}</span><span style="color:#b58900">
+</span><span style="color:#b58900"></span><span style="color:#b58900">{</span><span style="color:#268bd2">\left</span><span style="color:#b58900"> </span><span style="color:#268bd2">\|</span><span style="color:#268bd2">\nabla</span><span style="color:#b58900"> F</span><span style="color:#719e07">(</span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900">{</span><span style="color:#b58900">x</span><span style="color:#b58900">}</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#b58900">}</span><span style="color:#719e07">)</span><span style="color:#b58900"> </span><span style="color:#719e07">-</span><span style="color:#b58900"> </span><span style="color:#268bd2">\nabla</span><span style="color:#b58900"> F</span><span style="color:#719e07">(</span><span style="color:#268bd2">\mathbf</span><span style="color:#b58900">{</span><span style="color:#b58900">x</span><span style="color:#b58900">}</span><span style="color:#b58900">_</span><span style="color:#b58900">{</span><span style="color:#b58900">n</span><span style="color:#719e07">-</span><span style="color:#2aa198">1</span><span style="color:#b58900">}</span><span style="color:#719e07">)</span><span style="color:#b58900"> </span><span style="color:#268bd2">\right</span><span style="color:#b58900"> </span><span style="color:#268bd2">\|</span><span style="color:#b58900">^</span><span style="color:#2aa198">2</span><span style="color:#b58900">}</span><span style="color:#2aa198">$$</span>
+</code></pre></div><p>renders as</p>
 <p>$$\gamma_{n} = \frac{ \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T \left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}{\left |\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right |^2}$$</p>
 <p>Example <strong>inline math</strong> <code>$\nabla F(\mathbf{x}_{n})$</code> renders as $\nabla F(\mathbf{x}_{n})$.</p>
 <p>Example <strong>multi-line math</strong> using the <code>\\</code> math linebreak:</p>
-<pre><code class="language-tex">$$f(k;p_0^*) = \begin{cases} p_0^* &amp; \text{if }k=1, \\
-1-p_0^* &amp; \text {if }k=0.\end{cases}$$
-</code></pre>
-<p>renders as</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tex" data-lang="tex"><span style="color:#586e75">$$</span><span style="color:#b58900">f</span><span style="color:#719e07">(</span><span style="color:#b58900">k;p</span><span style="color:#b58900">_</span><span style="color:#2aa198">0</span><span style="color:#b58900">^</span><span style="color:#719e07">*</span><span style="color:#719e07">)</span><span style="color:#b58900"> </span><span style="color:#719e07">=</span><span style="color:#b58900"> </span><span style="color:#268bd2">\begin</span><span style="color:#b58900">{</span><span style="color:#b58900">cases</span><span style="color:#b58900">}</span><span style="color:#b58900"> p</span><span style="color:#b58900">_</span><span style="color:#2aa198">0</span><span style="color:#b58900">^</span><span style="color:#719e07">*</span><span style="color:#b58900"> </span><span style="color:#b58900">&amp;</span><span style="color:#b58900"> </span><span style="color:#268bd2">\text</span><span style="color:#b58900">{</span><span style="color:#b58900">if </span><span style="color:#b58900">}</span><span style="color:#b58900">k</span><span style="color:#719e07">=</span><span style="color:#2aa198">1</span><span style="color:#b58900">, </span><span style="color:#268bd2">\\</span><span style="color:#b58900">
+</span><span style="color:#b58900"></span><span style="color:#2aa198">1</span><span style="color:#719e07">-</span><span style="color:#b58900">p</span><span style="color:#b58900">_</span><span style="color:#2aa198">0</span><span style="color:#b58900">^</span><span style="color:#719e07">*</span><span style="color:#b58900"> </span><span style="color:#b58900">&amp;</span><span style="color:#b58900"> </span><span style="color:#268bd2">\text</span><span style="color:#b58900"> </span><span style="color:#b58900">{</span><span style="color:#b58900">if </span><span style="color:#b58900">}</span><span style="color:#b58900">k</span><span style="color:#719e07">=</span><span style="color:#2aa198">0</span><span style="color:#b58900">.</span><span style="color:#268bd2">\end</span><span style="color:#b58900">{</span><span style="color:#b58900">cases</span><span style="color:#b58900">}</span><span style="color:#2aa198">$$</span>
+</code></pre></div><p>renders as</p>
 <p>$$f(k;p_0^*) = \begin{cases} p_0^* &amp; \text{if }k=1, \<br>
 1-p_0^* &amp; \text {if }k=0.\end{cases}$$</p>
 <h3 id="diagrams">Diagrams</h3>
@@ -710,13 +627,12 @@ C --&gt;|Two| E[Result 2]
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-mermaid">graph TD
+<pre><code class="language-mermaid" data-lang="mermaid">graph TD
 A[Hard] --&gt;|Text| B(Round)
 B --&gt; C{Decision}
 C --&gt;|One| D[Result 1]
 C --&gt;|Two| E[Result 2]
-</code></pre>
-<p>An example <strong>sequence diagram</strong>:</p>
+</code></pre><p>An example <strong>sequence diagram</strong>:</p>
 <pre><code>```mermaid
 sequenceDiagram
 Alice-&gt;&gt;John: Hello John, how are you?
@@ -730,7 +646,7 @@ Bob--&gt;&gt;John: Jolly good!
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-mermaid">sequenceDiagram
+<pre><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
 Alice-&gt;&gt;John: Hello John, how are you?
 loop Healthcheck
     John-&gt;&gt;John: Fight against hypochondria
@@ -739,8 +655,7 @@ Note right of John: Rational thoughts!
 John--&gt;&gt;Alice: Great!
 John-&gt;&gt;Bob: How about you?
 Bob--&gt;&gt;John: Jolly good!
-</code></pre>
-<p>An example <strong>Gantt diagram</strong>:</p>
+</code></pre><p>An example <strong>Gantt diagram</strong>:</p>
 <pre><code>```mermaid
 gantt
 section Section
@@ -753,7 +668,7 @@ Parallel 4   :         des6, after des4, 1d
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-mermaid">gantt
+<pre><code class="language-mermaid" data-lang="mermaid">gantt
 section Section
 Completed :done,    des1, 2014-01-06,2014-01-08
 Active        :active,  des2, 2014-01-07, 3d
@@ -761,8 +676,7 @@ Parallel 1   :         des3, after des1, 1d
 Parallel 2   :         des4, after des1, 1d
 Parallel 3   :         des5, after des3, 1d
 Parallel 4   :         des6, after des4, 1d
-</code></pre>
-<p>An example <strong>class diagram</strong>:</p>
+</code></pre><p>An example <strong>class diagram</strong>:</p>
 <pre><code>```mermaid
 classDiagram
 Class01 &lt;|-- AveryLongClass : Cool
@@ -783,7 +697,7 @@ class Class10 {
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-mermaid">classDiagram
+<pre><code class="language-mermaid" data-lang="mermaid">classDiagram
 Class01 &lt;|-- AveryLongClass : Cool
 &lt;&lt;interface&gt;&gt; Class01
 Class09 --&gt; C2 : Where am i?
@@ -799,8 +713,7 @@ class Class10 {
   int id
   size()
 }
-</code></pre>
-<p>An example <strong>state diagram</strong>:</p>
+</code></pre><p>An example <strong>state diagram</strong>:</p>
 <pre><code>```mermaid
 stateDiagram
 [*] --&gt; Still
@@ -812,21 +725,19 @@ Crash --&gt; [*]
 ```
 </code></pre>
 <p>renders as</p>
-<pre><code class="language-mermaid">stateDiagram
+<pre><code class="language-mermaid" data-lang="mermaid">stateDiagram
 [*] --&gt; Still
 Still --&gt; [*]
 Still --&gt; Moving
 Moving --&gt; Still
 Moving --&gt; Crash
 Crash --&gt; [*]
-</code></pre>
-<h3 id="todo-lists">Todo lists</h3>
+</code></pre><h3 id="todo-lists">Todo lists</h3>
 <p>You can even write your todo lists in Academic too:</p>
-<pre><code class="language-markdown">- [x] Write math example
-- [x] Write diagram example
-- [ ] Do something else
-</code></pre>
-<p>renders as</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown"><span style="color:#719e07">- </span><span style="color:#719e07">[x]</span> Write math example
+<span style="color:#719e07">- </span><span style="color:#719e07">[x]</span> Write diagram example
+<span style="color:#719e07">- </span><span style="color:#719e07">[ ]</span> Do something else
+</code></pre></div><p>renders as</p>
 <ul>
 <li><input checked="" disabled="" type="checkbox">Write math example</li>
 <li><input checked="" disabled="" type="checkbox">Write diagram example</li>
@@ -834,12 +745,11 @@ Crash --&gt; [*]
 </ul>
 <h3 id="tables">Tables</h3>
 <p>Represent your data in tables:</p>
-<pre><code class="language-markdown">| First Header  | Second Header |
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">| First Header  | Second Header |
 | ------------- | ------------- |
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
-</code></pre>
-<p>renders as</p>
+</code></pre></div><p>renders as</p>
 <table>
 <thead>
 <tr>
@@ -861,11 +771,10 @@ Crash --&gt; [*]
 <h3 id="asides">Asides</h3>
 <p>Academic supports a 
 <a href="https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts" target="_blank" rel="noopener">shortcode for asides</a>, also referred to as <em>notices</em>, <em>hints</em>, or <em>alerts</em>. By wrapping a paragraph in <code>{{% alert note %}} ... {{% /alert %}}</code>, it will render as an aside.</p>
-<pre><code class="language-markdown">{{% alert note %}}
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">{{% alert note %}}
 A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
 {{% /alert %}}
-</code></pre>
-<p>renders as</p>
+</code></pre></div><p>renders as</p>
 <div class="alert alert-note">
   <div>
     A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
@@ -876,11 +785,10 @@ A Markdown aside is useful for displaying notices, hints, or definitions to your
 <a href="https://sourcethemes.com/academic/docs/page-builder/#icons" target="_blank" rel="noopener">icons from <em>Font Awesome</em> and <em>Academicons</em></a> in addition to 
 <a href="https://sourcethemes.com/academic/docs/writing-markdown-latex/#emojis" target="_blank" rel="noopener">emojis</a>.</p>
 <p>Here are some examples using the <code>icon</code> shortcode to render icons:</p>
-<pre><code class="language-markdown">{{&lt; icon name=&quot;terminal&quot; pack=&quot;fas&quot; &gt;}} Terminal  
-{{&lt; icon name=&quot;python&quot; pack=&quot;fab&quot; &gt;}} Python  
-{{&lt; icon name=&quot;r-project&quot; pack=&quot;fab&quot; &gt;}} R
-</code></pre>
-<p>renders as</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">{{&lt; icon name=&#34;terminal&#34; pack=&#34;fas&#34; &gt;}} Terminal  
+{{&lt; icon name=&#34;python&#34; pack=&#34;fab&#34; &gt;}} Python  
+{{&lt; icon name=&#34;r-project&#34; pack=&#34;fab&#34; &gt;}} R
+</code></pre></div><p>renders as</p>
 <p>
   <i class="fas fa-terminal  pr-1 fa-fw"></i> Terminal<br>
 
@@ -1011,7 +919,7 @@ A Markdown aside is useful for displaying notices, hints, or definitions to your
   <div class="media author-card content-widget-hr">
     
       
-      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hu07fc0e18af06276e9e6299e1311e0948_94601_270x270_fill_q90_lanczos_center.jpeg" alt="Jixing Liu">
+      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hubb1c622718f4f900b4183cf856c12615_36066_270x270_fill_q90_lanczos_center.JPG" alt="Jixing Liu">
     
 
     <div class="media-body">

@@ -1,0 +1,38 @@
+---
+title: Tumor Purity Analysis
+author: ZERO
+date: '2020-06-27'
+slug: tumor-purity-analysis
+categories:
+  - Tools
+tags:
+  - bioinformatics
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-27T13:38:28+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+## links
+
+[使用ESTIMATE来对转录组表达数据根据stromal和immune细胞比例估算肿瘤纯度](https://mp.weixin.qq.com/s/JTD8ZmH2YYCIqcbs-97JzA)
+
+
+[使用ESTIMATE计算肿瘤的免疫得分](https://mp.weixin.qq.com/s/UehaaJZgARryH7P25v9wNQ)
+
+[jixing475/Computational-Genomics-Project: A systematic analysis of four tumor-purity-estimating methods on about 7500 patients across 15 cancer types from The Cancer Genome Atlas (TCGA).](https://github.com/jixing475/Computational-Genomics-Project)
+
+[Stromal-Immune Score-Based Gene Signature: A Prognosis Stratification Tool in Gastric Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6861210/)
+
+[Tumor Microenvironment-based Gene Signatures Divides Novel Immune and Stromal Subgroup Classification of Lung Adenocarcinoma | Semantic Scholar](https://www.semanticscholar.org/paper/Tumor-Microenvironment-based-Gene-Signatures-Novel-Zeng-Li/3486bf24188fb274a7aa342d010ab6dd303e0ac5)
+
+
+[ZengZihang/ISTMEscore: Calculating immune and strmal scores based on bulk transcriptome](https://github.com/ZengZihang/ISTMEscore)
+

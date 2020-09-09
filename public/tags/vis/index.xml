@@ -5,12 +5,127 @@
     <link>/tags/vis/</link>
       <atom:link href="/tags/vis/index.xml" rel="self" type="application/rss+xml" />
     <description>vis</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 01 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 02 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>vis</title>
       <link>/tags/vis/</link>
     </image>
+    
+    <item>
+      <title>change blogdown syntax highlighting in blogdown</title>
+      <link>/post/change-blogdown-syntax-highlighting-in-blogdown/</link>
+      <pubDate>Tue, 02 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/change-blogdown-syntax-highlighting-in-blogdown/</guid>
+      <description>&lt;h2 id=&#34;how&#34;&gt;how&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; [markup.highlight]
+    codeFences = true
+    hl_Lines = &amp;quot;&amp;quot;
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = &amp;quot;solarized-dark&amp;quot;
+    tabWidth = 4
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;the config.toml file contains this section which is the bit that actually parametrises the highlighting.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;syntax-highlighting&#34;&gt;syntax highlighting&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span style=&#34;color:#586e75&#34;&gt;# how to create a bar plot with ggplot2&lt;/span&gt;
+&lt;span style=&#34;color:#268bd2&#34;&gt;library&lt;/span&gt;(ggthemes)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;ggthemes&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span style=&#34;color:#268bd2&#34;&gt;library&lt;/span&gt;(ggplot2)
+&lt;span style=&#34;color:#268bd2&#34;&gt;library&lt;/span&gt;(dplyr)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;dplyr&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## 
+## Attaching package: &#39;dplyr&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span style=&#34;color:#268bd2&#34;&gt;library&lt;/span&gt;(tidyverse)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;tidyverse&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;tidyr&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;purrr&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;stringr&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;## Warning: package &#39;forcats&#39; was built under R version 3.5.2
+&lt;/code&gt;&lt;/pre&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-r&#34; data-lang=&#34;r&#34;&gt;&lt;span style=&#34;color:#586e75&#34;&gt;#how to create a barplot with label using ggplot2 package&lt;/span&gt;
+iris &lt;span style=&#34;color:#719e07&#34;&gt;%&amp;gt;%&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;group_by&lt;/span&gt;(Species) &lt;span style=&#34;color:#719e07&#34;&gt;%&amp;gt;%&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;summarise&lt;/span&gt;(counts &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;n&lt;/span&gt;()) &lt;span style=&#34;color:#719e07&#34;&gt;%&amp;gt;%&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;mutate&lt;/span&gt;(Species &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;fct_reorder&lt;/span&gt;(Species, counts)) &lt;span style=&#34;color:#719e07&#34;&gt;%&amp;gt;%&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;ggplot&lt;/span&gt;(&lt;span style=&#34;color:#268bd2&#34;&gt;aes&lt;/span&gt;(x &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; Species, y &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; counts, fill &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; Species)) &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;geom_bar&lt;/span&gt;(stat &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;identity&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;geom_text&lt;/span&gt;(&lt;span style=&#34;color:#268bd2&#34;&gt;aes&lt;/span&gt;(label &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; counts), hjust &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;1.6&lt;/span&gt;, color &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;white&amp;#34;&lt;/span&gt;, size &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;5&lt;/span&gt;) &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;coord_flip&lt;/span&gt;() &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;theme_minimal&lt;/span&gt;()&lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;scale_color_tableau&lt;/span&gt;() &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;scale_fill_tableau&lt;/span&gt;()&lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;labs&lt;/span&gt;(caption &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;figure 01&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#719e07&#34;&gt;+&lt;/span&gt;
+  &lt;span style=&#34;color:#268bd2&#34;&gt;theme&lt;/span&gt;(axis.text.x &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;element_text&lt;/span&gt;(angle &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;0&lt;/span&gt;, hjust &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;1&lt;/span&gt;),
+        legend.position &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;bottom&amp;#34;&lt;/span&gt;,
+        plot.caption&lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#268bd2&#34;&gt;element_text&lt;/span&gt;(size&lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;12&lt;/span&gt;,family &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;Arial&amp;#34;&lt;/span&gt;,face &lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;bold&amp;#34;&lt;/span&gt;,
+                                  hjust&lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;0&lt;/span&gt;, margin&lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#268bd2&#34;&gt;margin&lt;/span&gt;(t&lt;span style=&#34;color:#719e07&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#2aa198&#34;&gt;15&lt;/span&gt;)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;/post/2020-06-02-change-blogdown-syntax-highlighting-in-blogdown_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;why&#34;&gt;why&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Creating Websites with R Markdown book which outlines the differences between the Rmd and Rmarkdownformats.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Turns out that each format is rendered to HTML through different converters. Rmarkdown uses something called Blackfriday and Rmd uses Pandoc. As I understanding then Rmd is rendered by R and Rmarkdown is rendered by Hugo and so posts need to be rendered by Hugo in order for all the configs in the .toml file to apply.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;简单说就是 rmd 和 Rmarkdown 的编译方式是不同的&lt;/p&gt;
+&lt;h2 id=&#34;links&#34;&gt;links&lt;/h2&gt;
+&lt;p&gt;
+&lt;a href=&#34;https://venciso.netlify.app/2020/05/syntax-highlighting-blogdown/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Syntax Highlighting in Blogdown; a very specific solution | A stats website&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Seeing The Stars Of Github Repos Rise</title>
+      <link>/post/seeing-the-stars-of-github-repos-rise/</link>
+      <pubDate>Mon, 01 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/seeing-the-stars-of-github-repos-rise/</guid>
+      <description>
+
+
+&lt;div id=&#34;get-repo-star-history-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;get repo star history data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;thomas-neitmann/ghstars&amp;quot;, upgrade = &amp;quot;never&amp;quot;)
+library(ghstars)
+repos &amp;lt;- c(&amp;quot;thomas-neitmann/ggcharts&amp;quot;, &amp;quot;thomas-neitmann/mdthemes&amp;quot;)
+star_history &amp;lt;- get_repo_star_history(repos)
+head(star_history)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                       repo       date day stars cumulative_stars
+## 1 thomas-neitmann/ggcharts 2020-01-07   0     1                1
+## 2 thomas-neitmann/ggcharts 2020-01-14   7     1                2
+## 3 thomas-neitmann/ggcharts 2020-01-28  21     1                3
+## 4 thomas-neitmann/ggcharts 2020-02-01  25     1                4
+## 5 thomas-neitmann/ggcharts 2020-02-02  26     1                5
+## 6 thomas-neitmann/ggcharts 2020-02-03  27     2                7&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(star_history)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;plot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(star_history)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;pkg-star-history&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;pkg star history&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;star_histories &amp;lt;- get_pkg_star_history(c(&amp;quot;Rcpp&amp;quot;, &amp;quot;scales&amp;quot;))
+plot(star_histories)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data &amp;lt;- bind_rows(star_histories, star_history)
+plot(data)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-06-01-seeing-the-stars-of-github-repos-rise.en_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;70%&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/thomas-neitmann/ghstars&#34;&gt;thomas-neitmann/ghstars: Retrieve GitHub Stars for any Repository&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>taste ggtext</title>

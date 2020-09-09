@@ -1,0 +1,128 @@
+---
+title: 'Easy Parsing JSON in R '
+author: ZERO
+date: '2020-06-05'
+slug: easy-parsing-json-in-r
+categories:
+  - Tools
+tags:
+  - data clean
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-05T13:12:56+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+# Global ggplot settings
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+
+## load pkg and data
+
+```{r}
+library(tidyverse)
+library(jsonlite)
+
+# link to the API output as a JSON file
+url_json <- "https://site.web.api.espn.com/apis/fitt/v3/sports/football/nfl/qbr?region=us&lang=en&qbrType=seasons&seasontype=2&isqualified=true&sort=schedAdjQBR%3Adesc&season=2019"
+
+# get the raw json into R
+raw_json_list <- jsonlite::read_json(url_json)
+```
+
+
+## JOSN view
+
+### Rstudio Viewer
+
+
+### listviewer
+
+```{r}
+# interactive list or JSON viewer
+# note that you can change the view to raw JSON or the more 
+# interactive `View` option
+# raw_json_list <- jsonlite::read_json(url_json)
+listviewer::jsonedit(raw_json_list, height = "800px", mode = "view")
+```
+
+
+## methods: tidyr
+
+```{r}
+# get names of the QBR categories
+# raw_json_list[["categories"]][[1]][["labels"]]
+category_names <-
+  raw_json_list %>%
+  pluck("categories", 1, "labels")
+```
+
+
+```{r}
+# create tibble out of athlete objects
+athletes <- tibble(athlete = pluck(raw_json_list, "athletes"))
+```
+
+
++ unnest_wider: 对 list 中的每个元素运用`[[]]`,新增一列, 直到所有的元素取完.
+
++ unnest_longer: 对 list 中的每个元素运用`[[]]`,新增一行, 直到所有的元素取完.
+
+
+
+```{r}
+qbr_hadley <- 
+  athletes %>% 
+  unnest_wider(athlete) %>% 
+  hoist(athlete, "displayName", "teamName", "teamShortName") %>% 
+  unnest_longer(categories) %>% 
+  hoist(categories, "totals") %>% 
+  mutate(totals = map(totals, as.double),
+         totals = map(totals, set_names, category_names)) %>% 
+  unnest_wider(totals) %>% 
+  #listviewer::jsonedit(., height = "800px", mode = "view")
+  # headshot = list("headshot", "href"), 
+  # 这里加 list()是更进一步深挖的意思
+  # 如果不加默认是第一层, 加了 list()可以层层递进
+  # hoist(athlete, "headshot") %>% 
+  # hoist(headshot, "href") 
+  # 等价于下面这一行
+  hoist(athlete, headshot = list("headshot", "href")) %>% 
+  select(-athlete, -categories)
+
+```
+
+
+## links
+
+[The Mockup Blog: Easily parsing JSON in R with jsonlite and purrr](https://themockup.blog/posts/2020-05-22-parsing-json-in-r-with-jsonlite/)

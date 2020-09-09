@@ -5,12 +5,45 @@
     <link>/categories/reading/</link>
       <atom:link href="/categories/reading/index.xml" rel="self" type="application/rss+xml" />
     <description>reading</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 05 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>reading</title>
       <link>/categories/reading/</link>
     </image>
+    
+    <item>
+      <title>Data</title>
+      <link>/post/data/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/data/</guid>
+      <description>
+
+
+&lt;blockquote&gt;
+&lt;p&gt;模型的好坏取决于驱动它的数据&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;数据收集&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;数据收集&lt;/h2&gt;
+&lt;p&gt;数据收集重点放在两个问题上: 是什么和为什么?&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;学习的核心问题是什么&lt;/li&gt;
+&lt;li&gt;为什么用这个特征集&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div id=&#34;数据评价-质量和多样性&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;数据评价: 质量和多样性&lt;/h2&gt;
+&lt;p&gt;质量: 科学数据带来了特殊的挑战，需要专业知识来解释其细微差别和复杂性。例如，数据经常整合自有不同表示和命名的数据源。当不同的分子不正确地被合并到一条记录中，或者同一分子在多条记录中被分解时，就会导致错误. 数据的高质量是模型准确的前提条件.&lt;/p&gt;
+&lt;p&gt;多样性:基于内部数据的模型训练可以将算法的输出限制在一个较窄的域内，防止模型对新数据的泛化(数据多样性不够的话, 会造成模型的泛化能力不行).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;数据管理&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;数据管理&lt;/h2&gt;
+&lt;p&gt;机器学习需要考虑如何收集和存储调用数据(收集: 包括数据调研和数据整理, 整理成机器可读的模式).&lt;/p&gt;
+&lt;p&gt;建立相应的收集方式, 及统一的清理流程.
+数据以统一的格式存储在专业的数据库上, 方便调用和管理.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>R square and Q square , what the difference</title>

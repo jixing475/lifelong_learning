@@ -1,0 +1,84 @@
+---
+title: Seeing The Stars Of Github Repos Rise
+author: ZERO
+date: '2020-06-01'
+slug: seeing-the-stars-of-github-repos-rise
+categories:
+  - Tools
+tags:
+  - vis
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-06-01T10:57:19+08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,      # Output code chunks
+    message = FALSE,  # Toggle off message output 
+    warning = FALSE,    # Toggle off warning output
+    fig.width = 6, fig.asp = 0.618, out.width = "70%", fig.align = "center") 
+
+knitr::opts_knit$set(root.dir = usethis::proj_path())
+library(docknitr)
+
+# libraries used in report
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Globql formatting options
+options(digits = 3)
+
+# Global table settings 
+options(DT.options = list(pageLength = 10, 
+                          language = list(search = 'Filter:'), 
+                          scrollX = TRUE))
+# Global ggplot settings
+theme_set(theme_light(base_family = "Avenir"))
+```
+
+## get repo star history data
+
+```{r}
+#remotes::install_github("thomas-neitmann/ghstars", upgrade = "never")
+library(ghstars)
+repos <- c("thomas-neitmann/ggcharts", "thomas-neitmann/mdthemes")
+star_history <- get_repo_star_history(repos)
+head(star_history)
+plot(star_history)
+```
+
+## plot
+
+```{r}
+plot(star_history)
+```
+
+## pkg star history
+```{r}
+star_histories <- get_pkg_star_history(c("Rcpp", "scales"))
+plot(star_histories)
+```
+
+
+```{r}
+data <- bind_rows(star_histories, star_history)
+plot(data)
+```
+
+
+
+## links
+
+[thomas-neitmann/ghstars: Retrieve GitHub Stars for any Repository](https://github.com/thomas-neitmann/ghstars)
+
+
